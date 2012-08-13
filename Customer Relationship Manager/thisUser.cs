@@ -129,6 +129,12 @@ namespace rkcrm
 			set { theUser.HomeDepartment = value; }
 		}
 
+
+		static public User MyUser
+		{
+			get { return theUser; }
+		}
+
 		#endregion
 
 
