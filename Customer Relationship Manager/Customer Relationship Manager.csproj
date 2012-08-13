@@ -861,6 +861,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Security\HEXtoBinary.cs" />
+    <Compile Include="Security\SecurityController.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SplashScreen.cs">
       <SubType>Form</SubType>
