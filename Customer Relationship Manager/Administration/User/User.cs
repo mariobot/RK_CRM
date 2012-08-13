@@ -93,16 +93,23 @@ namespace rkcrm.Administration.User
         {
             get
             {
-                if (intJobTitleID > 0 && clsJobTitle == null)
+                if (intJobTitleID > 0 && (clsJobTitle == null || clsJobTitle.ID != intJobTitleID))
                     using (Job_Title.JobTitleController theController = new Job_Title.JobTitleController())
                     {
                         clsJobTitle = theController.GetJobTitle(intJobTitleID);
                     }
                 return clsJobTitle;
             }
-
-            set { clsJobTitle = value; }
         }
+
+		/// <summary>
+		/// Gets or sets the job title ID of this user
+		/// </summary>
+		public int JobTitleID
+		{
+			get { return intJobTitleID; }
+			set { intJobTitleID = value; }
+		}
 
         /// <summary>
         /// Gets or sets the location of this user
@@ -111,7 +118,7 @@ namespace rkcrm.Administration.User
         {
             get 
             {
-                if (intLocationID > 0 && clsLocation == null)
+                if (intLocationID > 0 && (clsLocation == null || clsLocation.ID != intLocationID))
                     using (Location.LocationController theController = new Location.LocationController())
                     {
                         clsLocation = theController.GetLocation(intLocationID);
@@ -119,9 +126,16 @@ namespace rkcrm.Administration.User
 
                 return clsLocation;
             }
-
-            set { clsLocation = value; }
         }
+
+		/// <summary>
+		/// Gets or sets the location ID of this user
+		/// </summary>
+		public int LocationID
+		{
+			get { return intLocationID; }
+			set { intLocationID = value; }
+		}
 
         /// <summary>
         /// Gets or sets the role of this user
@@ -130,16 +144,23 @@ namespace rkcrm.Administration.User
         {
             get
             {
-                if (intRoleID > 0 && clsRole == null)
+                if (intRoleID > 0 && (clsRole == null || clsRole.ID != intRoleID))
                     using (Role.RoleController theController = new Role.RoleController())
                     {
                         clsRole = theController.GetRole(intRoleID);
                     }
                 return clsRole;
             }
-
-            set { clsRole = value; }
         }
+
+		/// <summary>
+		/// Gets or sets the role ID of this user
+		/// </summary>
+		public int RoleID
+		{
+			get { return intRoleID; }
+			set { intRoleID = value; }
+		}
 
         /// <summary>
         /// Gets or sets the value that determines whether the reminder windows appears on start up 

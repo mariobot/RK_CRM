@@ -121,34 +121,19 @@ namespace rkcrm.Demonstration
         void cboJobTitle_SelectedValueChanged(object sender, EventArgs e)
         {
 			if (!IsLoading && myBoundary.cboJobTitle.SelectedValue != null)
-            {
-                using (JobTitleController theController = new JobTitleController())
-                {
-                    thisUser.JobTitle = theController.GetJobTitle(Convert.ToInt32(myBoundary.cboJobTitle.SelectedValue));
-                }
-            }
+				thisUser.JobTitleID = Convert.ToInt32(myBoundary.cboJobTitle.SelectedValue);
         }
 
         void cboLocation_SelectedValueChanged(object sender, EventArgs e)
         {
 			if (!IsLoading && myBoundary.cboLocation.SelectedValue != null)
-            {
-                using (LocationController theController = new LocationController())
-                {
-                    thisUser.Location = theController.GetLocation(Convert.ToInt32(myBoundary.cboLocation.SelectedValue));
-                }
-            }
+				thisUser.LocationID = Convert.ToInt32(myBoundary.cboLocation.SelectedValue);
         }
 
         void cboRole_SelectedValueChanged(object sender, EventArgs e)
         {
 			if (!IsLoading && myBoundary.cboRole.SelectedValue != null)
-            {
-                using (RoleController theController = new RoleController())
-                {
-                    thisUser.Role = theController.GetRole(Convert.ToInt32(myBoundary.cboRole.SelectedValue));
-                }
-            }
+				thisUser.RoleID = Convert.ToInt32(myBoundary.cboRole.SelectedValue);
         }
 
         void chkReceivesLeads_CheckedChanged(object sender, EventArgs e)

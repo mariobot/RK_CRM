@@ -61,12 +61,20 @@ namespace rkcrm
 		}
 
 		/// <summary>
-		/// Gets or sets the user's job title id 
+		/// Gets the user's job title
 		/// </summary>
 		static public JobTitle JobTitle
 		{
             get { return theUser.JobTitle; }
-            set { theUser.JobTitle = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the user's job title id 
+		/// </summary>
+		static public int JobTitleID
+		{
+			get { return theUser.JobTitleID; }
+			set { theUser.JobTitleID = value; }
 		}
 
 		/// <summary>
@@ -79,12 +87,20 @@ namespace rkcrm
 		}
 
 		/// <summary>
-		/// Gets or sets the loaction id of the user
+		/// Gets the loaction id of the user
 		/// </summary>
 		static public Location Location
 		{
             get { return theUser.Location; }
-            set { theUser.Location = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the loaction of the user
+		/// </summary>
+		static public int LocationID
+		{
+			get { return theUser.LocationID; }
+			set { theUser.LocationID = value; }
 		}
 
 		/// <summary>
@@ -96,12 +112,20 @@ namespace rkcrm
 		}
 
 		/// <summary>
-		/// Gets or sets the role ID of the user
+		/// Gets the role of the user
 		/// </summary>
 		static public Role Role
 		{
             get { return theUser.Role; }
-            set { theUser.Role = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the role of the user
+		/// </summary>
+		static public int RoleID
+		{
+			get { return theUser.RoleID; }
+			set { theUser.RoleID = value; }
 		}
 
 		/// <summary>
@@ -146,9 +170,6 @@ namespace rkcrm
             {
                 theUser.Departments.Clear();
                 theUser.Departments = null;
-                theUser.JobTitle = null;
-                theUser.Location = null;
-                theUser.Role = null;
 
                 theUser = theController.GetUser(System.Environment.UserName);
             }
