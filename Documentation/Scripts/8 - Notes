@@ -1,0 +1,14 @@
+-- Notes BEGIN
+-- ***********
+
+-- Populate contact purposes
+INSERT INTO `ref_contact_purposes` SELECT p.`PurposeID`, p.`Purpose`, p.`is_available`, p.`created`, p.`created_by`, 
+p.`updated`, p.`updated_by` FROM `rkcrm_old`.`ref_purposes` p;
+
+-- Populate Notes
+INSERT INTO `notes` SELECT n.`note_id`, n.`project_id`, n.`notes`, n.`salesrep_id`, n.`support_id`, n.`dept_id`, 
+n.`method_id`, n.`purpose_id`, n.`contact_id`, n.`next_follow_up`, n.`followed_up`, n.`is_archived`, n.`created`, 
+n.`creator_id`, n.`updated`, n.`updater_id` FROM `rkcrm_old`.`notes` n;
+
+-- *********
+-- Notes END

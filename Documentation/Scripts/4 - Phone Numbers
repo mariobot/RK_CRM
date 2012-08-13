@@ -1,0 +1,62 @@
+-- Phone Numbers BEGIN
+-- *******************
+
+-- Populate phone number types
+INSERT INTO `ref_phone_types` (`type_id`, `name`, `abbreviation`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT pt.`PhoneTypeID`, pt.`PhoneType`, pt.`abbreviation`, pt.`is_available`, pt.`created`, pt.`created_by`, pt.`updated`,
+pt.`updated_by` FROM `rkcrm_old`.`ref_number_types` pt;
+
+-- Populate phone numbers
+INSERT INTO `phone_numbers` (`phone_number`, `created`, `creator_id`, `updated`, `updater_id`) 
+(SELECT REPLACE(c.`CompanyNumber`, "-", "") AS `phone`, NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`customers` c) 
+UNION 
+(SELECT REPLACE(c1.`FirstNumber`, "-", ""), NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`contacts` c1 WHERE c1.`FirstNumber` IS NOT NULL AND NOT c1.`FirstNumber` = "") 
+UNION 
+(SELECT REPLACE(c2.`SecondNumber`, "-", ""), NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`contacts` c2 WHERE c2.`SecondNumber` IS NOT NULL AND NOT c2.`SecondNumber` = "") 
+UNION 
+(SELECT REPLACE(c3.`ThirdNumber`, "-", ""), NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`contacts` c3 WHERE c3.`ThirdNumber` IS NOT NULL AND NOT c3.`ThirdNumber` = "")
+ORDER BY `phone`;
+
+UPDATE `phone_numbers` pn JOIN `customer_phone` cp ON pn.`phone_number` = cp.`phone_number` 
+SET pn.`type_id` = 6, pn.`created` = cp.`DateEntered`, pn.`creator_id` = cp.`CreatorID`, pn.`updated` = cp.`LastUpdated`,
+pn.`updater_id` = cp.`UpdaterID`;
+
+UPDATE `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`FirstNumber`, "-", "") AND NOT c.`FirstNumberLabel` = 0
+SET pn.`type_id` = c.`FirstNumberLabel`, pn.`created` = c.`DateEntered`, pn.`creator_id` = c.`CreatorID`, 
+pn.`updated` = c.`LastUpdated`, pn.`updater_id` = c.`UpdaterID`;
+
+UPDATE `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`SecondNumber`, "-", "") AND NOT c.`SecondNumberLabel` = 0
+SET pn.`type_id` = c.`SecondNumberLabel`, pn.`created` = c.`DateEntered`, pn.`creator_id` = c.`CreatorID`, 
+pn.`updated` = c.`LastUpdated`, pn.`updater_id` = c.`UpdaterID`;
+
+UPDATE `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`ThirdNumber`, "-", "") AND NOT c.`ThirdNumberLabel` = 0
+SET pn.`type_id` = c.`ThirdNumberLabel`, pn.`created` = c.`DateEntered`, pn.`creator_id` = c.`CreatorID`,
+pn.`updated` = c.`LastUpdated`, pn.`updater_id` = c.`UpdaterID`;
+
+INSERT INTO `link_customer_phonenumbers`
+(`customer_id`, `phone_number_id`, `duplicate_index`)
+SELECT c.`CustomerID`, pn.`phone_number_id`, IF(c.`MultipleAccounts` = "z", 'a', c.`MultipleAccounts`) 
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`customers` c ON pn.`phone_number` = REPLACE(c.`CompanyNumber`, "-", "");
+
+INSERT INTO `link_contact_phonenumbers`
+(`contact_id`, `phone_number_id`, `extension`, `duplicate_index`, `is_preferred`)
+SELECT c.`ContactID`, pn.`phone_number_id`, c.`FirstExtention`, IF(c.`FirstMultiAccount` = "z", 'a', c.`FirstMultiAccount`), 
+IF(c.`NumberPriority` = 1, TRUE, FALSE)
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`FirstNumber`, "-", "");
+
+INSERT IGNORE INTO `link_contact_phonenumbers`
+(`contact_id`, `phone_number_id`, `extension`, `duplicate_index`, `is_preferred`)
+SELECT c.`ContactID`, pn.`phone_number_id`, c.`SecondExtention`, IF(c.`SecondMultiAccount` = "z", 'a', c.`SecondMultiAccount`), 
+IF(c.`NumberPriority` = 2, TRUE, FALSE) 
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`SecondNumber`, "-", "");
+
+INSERT IGNORE INTO `link_contact_phonenumbers`
+(`contact_id`, `phone_number_id`, `extension`, `duplicate_index`, `is_preferred`)
+SELECT c.`ContactID`, pn.`phone_number_id`, c.`ThirdExtention`, IF(c.`ThirdMultiAccount` = "z", 'a', c.`ThirdMultiAccount`), 
+IF(c.`NumberPriority` = 3, TRUE, FALSE)
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`ThirdNumber`, "-", "");
+
+DROP VIEW `customer_phone`;
+
+-- *****************
+-- Phone Numbers END

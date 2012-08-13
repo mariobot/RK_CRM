@@ -1,0 +1,61 @@
+-- Invoices BEGIN
+-- **************
+
+-- Fix the data on the transaction table
+UPDATE `rkcrm_old`.`transactions` t SET t.`PhoneNumber1` = NULL WHERE t.`PhoneNumber1` = "" OR t.`PhoneNumber1` = "   -   -";
+UPDATE `rkcrm_old`.`transactions` t SET t.`PhoneNumber2` = NULL WHERE t.`PhoneNumber2` = "" OR t.`PhoneNumber2` = "   -   -";
+
+-- Populate invoices
+INSERT INTO `invoices`
+(`invoice_id`, `customer_id`, `order_id`, `falcon_id`, `phone_number1`, `phone_number2`, `falcon_whs`, `amount`, 
+`gross_margin`, `invoiced`, `imported`, `sales_rep`, `sales_rep_intitials`, `entered_by`, `entered_by_initials`, 
+`account_terms`, `invoice_terms`)
+SELECT t.`InvoiceNumber`, t.`CustomerID`, t.`OrderNumber`, t.`CustomerNumber`, REPLACE(t.`PhoneNumber1`, "-", ""), 
+REPLACE(t.`PhoneNumber2`, "-", ""), t.`Department`, t.`TotalMerch`, t.`gross_margin`, t.`DateInvoiced`, 
+t.`DateImported`, t.`SalesRep`, t.`SalesRepInitial`, t.`EnteredBy`, t.`EnteredByInitial`, t.`ACCTTerms`, t.`INVTerms` 
+FROM `rkcrm_old`.`transactions` t;
+
+INSERT INTO `invoices` SELECT e.`invoice_number`, NULL, e.`order_number`, e.`cust_number`, 
+REPLACE(e.`phone_number`, "-", ""), REPLACE(e.`ship_to_number`, "-", ""), e.`whs`, e.`total_merch`, e.`gross_margin`, 
+e.`date_invoiced`, e.`import_date`, e.`sales_rep`, e.`sales_rep_initial`, e.`entered_by`, e.`entered_by_initial`, 
+e.`acct_terms`, e.`inv_terms`
+FROM `rkcrm_old`.`import_errors` e;
+
+-- Populate Sales History
+INSERT INTO `rel_customer_department` (`customer_id`, `department_id`) 
+SELECT c.`customer_id`, d.`department_id` FROM `customers` c, `ref_departments` d WHERE d.`is_profit_center` = 1;
+
+UPDATE `rel_customer_department` cd SET cd.`last_sale` = (SELECT MAX(i.`invoiced`) AS `last_sale`
+FROM `invoices` i 
+JOIN `ref_departments` d ON i.`falcon_whs` = d.`falcon_whs`
+WHERE i.`customer_id` = cd.`customer_id` AND d.`department_id` = cd.`department_id`
+GROUP BY i.`customer_id`, i.`falcon_whs`);
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_door`
+WHERE sh.`department_id` = 4;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_insulation`
+WHERE sh.`department_id` = 5;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_lumber`
+WHERE sh.`department_id` = 6;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_truss`
+WHERE sh.`department_id` = 7;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_window`
+WHERE sh.`department_id` = 8;
+
+UPDATE `rel_customer_department` cd 
+SET cd.`first_sale` = 
+(SELECT MIN(i.`invoiced`) 
+FROM `invoices` i JOIN `ref_departments` d ON i.`falcon_whs` = d.`falcon_whs` 
+WHERE i.`customer_id` = cd.`customer_id` AND d.`department_id` = cd.`department_id`);
+
+-- ************
+-- Invoices END

@@ -1,0 +1,11 @@
+-- Daily Invoicing BEGIN
+-- *********************
+
+INSERT INTO `stats_daily_invoicing` SELECT b.`CurrentBusinessID`, d.`department_id`, b.`InvoicedDate`, b.`SalesRep`, 
+b.`InvoicedTotal`, b.`GrossMarginSum`, b.`AVGSalesPerCustomer`, b.`AVGSalesPerInvoice`, b.`ActiveCustomers`, 
+b.`NewCustomers`, b.`NumberOfSales`
+FROM `rkcrm_old`.`stats_daily_current_business` b
+JOIN `ref_departments` d ON b.`Department` = d.`name`;
+
+-- *******************
+-- Daily Invoicing END

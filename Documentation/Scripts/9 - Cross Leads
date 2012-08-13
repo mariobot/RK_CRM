@@ -1,0 +1,20 @@
+-- Cross Leads BEGIN
+-- *****************
+
+INSERT INTO `cross_leads` SELECT * FROM `rkcrm_old`.`cross_leads` cl;
+
+INSERT INTO `rel_crosslead_department` SELECT cd.`lead_id`, cd.`department_id`, cd.`AssignedTo`, cd.`PlansReceived`, 
+cd.`ExpectedCompletion`, cd.`Assigned`, cd.`AssignedBy` FROM `rkcrm_old`.`rel_crosslead_dept` cd;
+
+INSERT INTO `rel_crosslead_customer` SELECT cs.`customer_id`, cs.`department_id`, cl.`lead_id`, cl.`creator_id`, 
+cl.`created` , cs.`validated`, cs.`never_expires`, cs.`is_archived`, cl.`creator_id`, cl.`created`, cs.`updated`, 
+cs.`updater_id`
+FROM `rkcrm_old`.`cross_sales` cs
+JOIN `rkcrm_old`.`projects` p ON cs.`customer_id` = p.`customer_id`
+JOIN `rkcrm_old`.`cross_leads` cl ON p.`project_id` = cl.`project_id` AND cs.`sales_rep_id` = cl.`creator_id`
+LEFT JOIN `rkcrm_old`.`rel_crosslead_dept` cd ON cl.`lead_id` = cd.`lead_id` AND cd.`department_id` = cs.`department_id`
+WHERE cs.`is_archived` = 0
+GROUP BY cs.`customer_id`, cs.`department_id`;
+
+-- ***************
+-- Cross Leads END

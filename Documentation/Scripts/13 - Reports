@@ -1,0 +1,21 @@
+-- Reports BEGIN
+-- *************
+
+INSERT INTO `ref_report_groups` (`group_id`, `name`, `created`, `creator_id`, `updated`, `updater_id`) 
+SELECT * FROM `rkcrm_old`.`report_groups`;
+
+INSERT INTO `reports` (`report_id`, `name`, `parameter_form`, `created`, `creator_id` ,`updated` ,`updater_id` , `group_id`)
+SELECT r.*, rg.`group_id` FROM `rkcrm_old`.`reports` r
+LEFT JOIN `rkcrm_old`.`rel_reportgroups_reports` rg ON rg.`report_id` = r.`report_id`;
+
+INSERT INTO `rel_report_department` 
+SELECT rd.`report_id`, rd.`department_id` FROM `rkcrm_old`.`rel_report_dept` rd;
+
+INSERT INTO `rel_reportgroup_role` 
+SELECT rr.`group_id`, rr.`role_id` FROM `rkcrm_old`.`rel_reportgroups_roles` rr;
+
+INSERT INTO `rel_report_role`
+SELECT rr.`report_id`, rr.`role_id` FROM `rkcrm_old`.`rel_report_role` rr;
+
+-- ***********
+-- Reports END

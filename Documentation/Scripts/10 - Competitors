@@ -1,0 +1,22 @@
+-- Competitors BEGIN
+-- *****************
+
+INSERT INTO `competitors` 
+SELECT c.`competitor_id`, c.`name`, 1, c.`created`, c.`created_by`, c.`updated`, c.`updated_by` 
+FROM `rkcrm_old`.`ref_competitors` c;
+
+INSERT INTO `rel_competitor_department` 
+SELECT cd.`competitor_id`, cd.`department_id`, cd.`is_available` FROM `rkcrm_old`.`rel_competitor_dept` cd;
+
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = NULL WHERE c.`PreviousVendor` = "";
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = REPLACE(c.`PreviousVendor`, ",", ";") WHERE c.`PreviousVendor` IS NOT NULL;
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = REPLACE(c.`PreviousVendor`, "\\", "; ") WHERE c.`PreviousVendor` IS NOT NULL;
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = REPLACE(c.`PreviousVendor`, "/", "; ") WHERE c.`PreviousVendor` IS NOT NULL;
+
+INSERT INTO `link_customer_competitor`
+SELECT c.`CustomerID`, co.`competitor_id`
+FROM `rkcrm_old`.`customers` c
+JOIN `competitors` co ON co.`name` LIKE CONCAT("%", c.`PreviousVendor`, "%") OR c.`PreviousVendor` LIKE CONCAT("%", co.`name`, "%");
+
+-- ***************
+-- Competitors END

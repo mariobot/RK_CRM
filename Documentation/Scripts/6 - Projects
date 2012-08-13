@@ -1,0 +1,42 @@
+-- Projects BEGIN
+-- **************
+
+-- Propulate the tmp second ids table
+INSERT INTO `tmp_second_ids` (`second_id`) 
+SELECT p.`second_id` FROM `rkcrm_old`.`projects` p WHERE NOT p.`project_id` = p.`second_id` AND NOT p.`second_id` = 0
+GROUP BY p.`second_id`; 
+
+-- Populate project types
+INSERT INTO `ref_project_types`
+(`type_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`) 
+SELECT pt.`ProjectTypeID`, pt.`Type`, pt.`is_available`, pt.`created`, pt.`created_by`, pt.`updated`, pt.`updated_by`
+FROM `rkcrm_old`.`ref_project_types` pt;
+
+-- Projects table fixes
+UPDATE `rkcrm_old`.`projects` p LEFT JOIN `rkcrm_old`.`contacts` co ON p.`contact_id` = co.`ContactID`
+SET p.`contact_id` = 0 WHERE co.`ContactFirstName` IS NULL;
+
+UPDATE `rkcrm_old`.`projects` p SET p.`zip_code` = NULL WHERE p.`zip_code` = "";
+
+-- Populate Projects
+INSERT INTO `projects` SELECT p.`project_id`, p.`customer_id`, p.`name`, p.`address`, p.`apt`, p.`city`, p.`zip_code`, 
+p.`type_id`, IF(p.`contact_id` = 0, NULL, p.`contact_id`), NULL, p.`is_archived`, p.`created`, p.`creator_id`, 
+p.`updated`, p.`updater_id` FROM `rkcrm_old`.`projects` p;
+
+-- Populate project relationships
+INSERT INTO `link_project_project` SELECT t.`id`, p.`project_id` 
+FROM `rkcrm_old`.`projects` p JOIN `tmp_second_ids` t ON p.`second_id` = t.`second_id` ORDER BY t.`id`;
+
+-- Drop Temp table
+DROP TABLE `tmp_second_ids`;
+
+-- Populate project statuses
+INSERT INTO `ref_project_statuses` SELECT `StatusID`, `Status`, `is_available` FROM `rkcrm_old`.`ref_project_status`;
+
+-- Populate project-department relationship table
+INSERT IGNORE INTO `rel_project_department` SELECT pc.`proj_id`, pc.`dept_id`, (pc.`scope` + 1) AS `scope`, pc.`status_id`, 
+pc.`units`, pc.`probability`, pc.`exp_ship`, pc.`created`, pc.`salesrep_id`, pc.`updated`, pc.`salesrep_id` 
+FROM `rkcrm_old`.`project_calculations` pc;
+
+-- ************
+-- Projects END

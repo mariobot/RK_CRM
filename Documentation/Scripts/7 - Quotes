@@ -1,0 +1,13 @@
+-- Quotes BEGIN
+-- ************
+
+-- Populate contact methods
+INSERT INTO `ref_contact_methods` SELECT * FROM `rkcrm_old`.`ref_contact_methods`;
+
+-- Populate Quotes
+INSERT INTO `quotes` SELECT q.`quote_id`, q.`project_id`, q.`dept_id`, (q.`scope` + 1), q.`name`, q.`amount`, 
+q.`description`, q.`salesrep_id`, q.`support_id`, q.`method_id`, q.`contact_id`, q.`is_sold`, q.`is_archived`, q.`created`, 
+q.`creator_id`, q.`updated`, q.`updater_id` FROM `rkcrm_old`.`quotes` q;
+
+-- **********
+-- Quotes END

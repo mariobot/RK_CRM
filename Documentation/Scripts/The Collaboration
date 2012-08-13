@@ -1,0 +1,418 @@
+-- ************************************************-- Populate Database-- ************************************************
+-- Users BEGIN
+-- ***********
+
+-- Populate roles
+INSERT INTO `ref_roles` (`role_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT r.`UserRolesID`, r.`Role`, r.`is_available`, r.`created`, r.`created_by`, r.`updated`, r.`updated_by`
+FROM `rkcrm_old`.`ref_user_roles` r;
+
+-- Populate locations
+INSERT INTO `ref_locations` (`location_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT l.`location_id`, l.`location`, l.`is_available`, l.`created`, l.`created_by`, l.`updated`, l.`updated_by` 
+FROM `rkcrm_old`.`ref_user_loc` l;
+
+-- Populate job titles
+INSERT INTO `ref_job_titles` (`title_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT j.`title_id`, j.`title`, j.`is_available`, j.`created`, j.`created_by`, j.`updated`, j.`updated_by`
+FROM `rkcrm_old`.`ref_user_job_titles` j;
+
+-- Populate departments
+INSERT INTO `ref_departments` (`department_id`, `name`, `falcon_whs`, `is_profit_center`, `is_available`, `created`, 
+`creator_id`, `updated`, `updater_id`) SELECT d.`UserDepartmentID`, d.`Department`, d.`falcon_whs`, d.`is_Profit_Center`, 
+d.`is_available`, d.`created`, d.`created_by`, d.`updated`, d.`updated_by` FROM `rkcrm_old`.`ref_user_dept` d;
+
+-- Populate users
+INSERT INTO `users` (`user_id`, `user_name`, `first_name`, `last_name`, `email_address`, `job_title_id`, 
+`location_id`, `role_id`, `show_reminders`, `receives_crossleads`, `created`, `creator_id`, `updated`, 
+`updater_id`) SELECT u.`UserID`, u.`UserName`, u.`FirstName`, u.`LastName`, u.`email_address`, 
+u.`job_title`, u.`UserLocation`, u.`UserRole`, u.`ShowFollowUpList`, u.`receives_crossleads`, u.`created`, u.`created_by`, 
+u.`updated`, u.`updated_by` FROM `rkcrm_old`.`users` u;
+
+-- Populate user to department relationships
+INSERT INTO `rel_user_departments` 
+SELECT u.`UserID`, u.`UserDepartment`, 1 FROM `rkcrm_old`.`users` u;
+
+-- ********
+-- User END
+
+
+-- Customers BEGIN
+-- ***************
+
+-- Populate customer types
+INSERT INTO `ref_customer_types` (`type_id`, `name`, `description`, `require_unique_name`, `default_company_name`, 
+`default_project_name`, `show_general_notes`, `is_available`, `created`, `creator_id`, 
+`updated`, `updater_id`) SELECT ct.`type_id`, ct.`type`, ct.`description`, ct.`require_unique_name`, ct.`default_company_name`, 
+ct.`default_project_name`, ct.`show_general_notes`, ct.`is_available`, ct.`created`, ct.`creator_id`, ct.`updated`, 
+ct.`updater_id` FROM `rkcrm_old`.`ref_customer_types_new` ct;
+
+-- Populate lead sources
+INSERT INTO `ref_lead_sources` (`source_id`, `name`, `details_required`, `is_available`, `created`, `creator_id`, 
+`updated`, `updater_id`) SELECT l.`SourceID`, l.`LeadSource`, l.`details_required`, l.`is_available`, l.`created`, 
+l.`created_by`, l.`updated`, l.`updated_by` FROM `rkcrm_old`.`ref_lead_sources` l;
+
+-- Populate zip codes
+INSERT INTO `ref_zip_codes` SELECT * FROM `rkcrm_old`.`zip_codes`;
+
+-- Fix Existing zip codes
+UPDATE `rkcrm_old`.`customers` c SET c.`ZipcodeAddress` = NULL WHERE c.`ZipcodeAddress` = "";
+UPDATE `rkcrm_old`.`customers` c SET c.`LeadSourceDetail` = NULL WHERE c.`LeadSourceDetail` = "";
+UPDATE `rkcrm_old`.`customers` c SET c.`StreetNameAddress` = NULL WHERE c.`StreetNameAddress` = "";
+
+-- Populate customers
+INSERT INTO `customers` (`customer_id`, `name`, `address`, `zip_code`, `apt_lot_ste`, `type_id`,
+`falcon_id`, `terms_code`, `first_sale`, `tax_id_expiration`, `creditcard_expiration`, `cannot_cross_lead`, `created`, 
+`creator_id`, `updated`, `updater_id`) SELECT `CustomerID`, `CompanyName`, `StreetNameAddress`, `ZipcodeAddress`, 
+`ApartmentAddress`, `CustomerType`, `FalconNumber`, `TermsCode`, `FirstSaleDate`, 
+`TaxIDExpiration`, `CreditCardExpiration`, `cannot_cross_lead`, `DateEntered`, `CreatorID`, `LastUpdated`, `UpdaterID` 
+FROM `rkcrm_old`.`customers`;
+
+UPDATE `customers` c JOIN `customer_lastsale` cl ON c.`customer_id` = cl.`customer_id` SET c.`last_sale` = cl.`last_sale`;
+
+DROP VIEW `customer_lastsale`;
+
+-- Lead Sources
+INSERT INTO `rel_customer_leadsources` SELECT c.`CustomerID` AS `customer_id`, d.`UserDepartmentID` AS `department_id`, 52 AS `source_id`, 
+NULL AS `details`, NOW() AS `created`, 53 AS `creator_id` 
+FROM `rkcrm_old`.`customers` c, `rkcrm_old`.`ref_user_dept` d
+WHERE d.`is_profit_center` = 1;
+
+UPDATE `rel_customer_leadsources` cl 
+    JOIN `rkcrm_prototype`.`customer_leadsources` l ON cl.`customer_id` = l.`CustomerID` AND cl.`department_id` = l.`dept_id`
+SET cl.`source_id` = l.`LeadSource`, cl.`details` = l.`LeadSourceDetail`, cl.`created` = l.`DateEntered`, cl.`creator_id` = l.`CreatorID`;
+
+DROP VIEW `customer_leadsources`;
+
+-- ************
+-- Customer END
+
+
+-- Contacts BEGIN
+-- **************
+
+-- Populate contact titles
+INSERT INTO `ref_contact_titles` SELECT ct.`TitleID`, ct.`Title`, ct.`is_available`, ct.`created`, ct.`created_by`, 
+ct.`updated`, ct.`updated_by` FROM `rkcrm_old`.`ref_contact_titles` ct;
+
+-- Populate contacts
+INSERT INTO `contacts` SELECT c.`ContactID`, c.`CustomerID`, c.`ContactFirstName`, c.`ContactLastName`, 
+IF(c.`EmailAddress` = "", NULL, c.`EmailAddress`) , IF(c.`ContactTitle` = 0, NULL, c.`ContactTitle`), 
+NOT c.`isUnsubscribed`, c.`DateEntered`, c.`CreatorID`, c.`LastUpdated`, c.`UpdaterID` 
+FROM `rkcrm_old`.`contacts` c;
+
+-- ************
+-- Contacts END
+
+
+-- Phone Numbers BEGIN
+-- *******************
+
+-- Populate phone number types
+INSERT INTO `ref_phone_types` (`type_id`, `name`, `abbreviation`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT pt.`PhoneTypeID`, pt.`PhoneType`, pt.`abbreviation`, pt.`is_available`, pt.`created`, pt.`created_by`, pt.`updated`,
+pt.`updated_by` FROM `rkcrm_old`.`ref_number_types` pt;
+
+-- Populate phone numbers
+INSERT INTO `phone_numbers` (`phone_number`, `created`, `creator_id`, `updated`, `updater_id`) 
+(SELECT REPLACE(c.`CompanyNumber`, "-", "") AS `phone`, NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`customers` c) 
+UNION 
+(SELECT REPLACE(c1.`FirstNumber`, "-", ""), NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`contacts` c1 WHERE c1.`FirstNumber` IS NOT NULL AND NOT c1.`FirstNumber` = "") 
+UNION 
+(SELECT REPLACE(c2.`SecondNumber`, "-", ""), NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`contacts` c2 WHERE c2.`SecondNumber` IS NOT NULL AND NOT c2.`SecondNumber` = "") 
+UNION 
+(SELECT REPLACE(c3.`ThirdNumber`, "-", ""), NOW(), 53, NOW() , 53 FROM `rkcrm_old`.`contacts` c3 WHERE c3.`ThirdNumber` IS NOT NULL AND NOT c3.`ThirdNumber` = "")
+ORDER BY `phone`;
+
+UPDATE `phone_numbers` pn JOIN `customer_phone` cp ON pn.`phone_number` = cp.`phone_number` 
+SET pn.`type_id` = 6, pn.`created` = cp.`DateEntered`, pn.`creator_id` = cp.`CreatorID`, pn.`updated` = cp.`LastUpdated`,
+pn.`updater_id` = cp.`UpdaterID`;
+
+UPDATE `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`FirstNumber`, "-", "") AND NOT c.`FirstNumberLabel` = 0
+SET pn.`type_id` = c.`FirstNumberLabel`, pn.`created` = c.`DateEntered`, pn.`creator_id` = c.`CreatorID`, 
+pn.`updated` = c.`LastUpdated`, pn.`updater_id` = c.`UpdaterID`;
+
+UPDATE `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`SecondNumber`, "-", "") AND NOT c.`SecondNumberLabel` = 0
+SET pn.`type_id` = c.`SecondNumberLabel`, pn.`created` = c.`DateEntered`, pn.`creator_id` = c.`CreatorID`, 
+pn.`updated` = c.`LastUpdated`, pn.`updater_id` = c.`UpdaterID`;
+
+UPDATE `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`ThirdNumber`, "-", "") AND NOT c.`ThirdNumberLabel` = 0
+SET pn.`type_id` = c.`ThirdNumberLabel`, pn.`created` = c.`DateEntered`, pn.`creator_id` = c.`CreatorID`,
+pn.`updated` = c.`LastUpdated`, pn.`updater_id` = c.`UpdaterID`;
+
+INSERT INTO `link_customer_phonenumbers`
+(`customer_id`, `phone_number_id`, `duplicate_index`)
+SELECT c.`CustomerID`, pn.`phone_number_id`, IF(c.`MultipleAccounts` = "z", 'a', c.`MultipleAccounts`) 
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`customers` c ON pn.`phone_number` = REPLACE(c.`CompanyNumber`, "-", "");
+
+INSERT INTO `link_contact_phonenumbers`
+(`contact_id`, `phone_number_id`, `extension`, `duplicate_index`, `is_perferred`)
+SELECT c.`ContactID`, pn.`phone_number_id`, c.`FirstExtention`, IF(c.`FirstMultiAccount` = "z", 'a', c.`FirstMultiAccount`), 
+IF(c.`NumberPriority` = 1, TRUE, FALSE)
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`FirstNumber`, "-", "");
+
+INSERT IGNORE INTO `link_contact_phonenumbers`
+(`contact_id`, `phone_number_id`, `extension`, `duplicate_index`, `is_perferred`)
+SELECT c.`ContactID`, pn.`phone_number_id`, c.`SecondExtention`, IF(c.`SecondMultiAccount` = "z", 'a', c.`SecondMultiAccount`), 
+IF(c.`NumberPriority` = 2, TRUE, FALSE) 
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`SecondNumber`, "-", "");
+
+INSERT IGNORE INTO `link_contact_phonenumbers`
+(`contact_id`, `phone_number_id`, `extension`, `duplicate_index`, `is_perferred`)
+SELECT c.`ContactID`, pn.`phone_number_id`, c.`ThirdExtention`, IF(c.`ThirdMultiAccount` = "z", 'a', c.`ThirdMultiAccount`), 
+IF(c.`NumberPriority` = 3, TRUE, FALSE)
+FROM `phone_numbers` pn JOIN `rkcrm_old`.`contacts` c ON pn.`phone_number` = REPLACE(c.`ThirdNumber`, "-", "");
+
+DROP VIEW `customer_phone`;
+
+-- *****************
+-- Phone Numbers END
+
+
+-- Invoices BEGIN
+-- **************
+
+-- Fix the data on the transaction table
+UPDATE `rkcrm_old`.`transactions` t SET t.`PhoneNumber1` = NULL WHERE t.`PhoneNumber1` = "" OR t.`PhoneNumber1` = "   -   -";
+UPDATE `rkcrm_old`.`transactions` t SET t.`PhoneNumber2` = NULL WHERE t.`PhoneNumber2` = "" OR t.`PhoneNumber2` = "   -   -";
+
+-- Populate invoices
+INSERT INTO `invoices`
+(`invoice_id`, `customer_id`, `order_id`, `falcon_id`, `phone_number1`, `phone_number2`, `falcon_whs`, `amount`, 
+`gross_margin`, `invoiced`, `imported`, `sales_rep`, `sales_rep_intitials`, `entered_by`, `entered_by_initials`, 
+`account_terms`, `invoice_terms`)
+SELECT t.`InvoiceNumber`, t.`CustomerID`, t.`OrderNumber`, t.`CustomerNumber`, REPLACE(t.`PhoneNumber1`, "-", ""), 
+REPLACE(t.`PhoneNumber2`, "-", ""), t.`Department`, t.`TotalMerch`, t.`gross_margin`, t.`DateInvoiced`, 
+t.`DateImported`, t.`SalesRep`, t.`SalesRepInitial`, t.`EnteredBy`, t.`EnteredByInitial`, t.`ACCTTerms`, t.`INVTerms` 
+FROM `rkcrm_old`.`transactions` t;
+
+INSERT INTO `invoices` SELECT e.`invoice_number`, NULL, e.`order_number`, e.`cust_number`, 
+REPLACE(e.`phone_number`, "-", ""), REPLACE(e.`ship_to_number`, "-", ""), e.`whs`, e.`total_merch`, e.`gross_margin`, 
+e.`date_invoiced`, e.`import_date`, e.`sales_rep`, e.`sales_rep_initial`, e.`entered_by`, e.`entered_by_initial`, 
+e.`acct_terms`, e.`inv_terms`
+FROM `rkcrm_old`.`import_errors` e;
+
+-- Populate Sales History
+INSERT INTO `rel_customer_department` (`customer_id`, `department_id`) 
+SELECT c.`customer_id`, d.`department_id` FROM `customers` c, `ref_departments` d WHERE d.`is_profit_center` = 1;
+
+UPDATE `rel_customer_department` cd SET cd.`last_sale` = (SELECT MAX(i.`invoiced`) AS `last_sale`
+FROM `invoices` i 
+JOIN `ref_departments` d ON i.`falcon_whs` = d.`falcon_whs`
+WHERE i.`customer_id` = cd.`customer_id` AND d.`department_id` = cd.`department_id`
+GROUP BY i.`customer_id`, i.`falcon_whs`);
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_door`
+WHERE sh.`department_id` = 4;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_insulation`
+WHERE sh.`department_id` = 5;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_lumber`
+WHERE sh.`department_id` = 6;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_truss`
+WHERE sh.`department_id` = 7;
+
+UPDATE `rel_customer_department` sh JOIN `rkcrm_old`.`customers` c ON c.`CustomerID` = sh.`customer_id` 
+SET sh.`is_active` = NOT c.`deactivated_window`
+WHERE sh.`department_id` = 8;
+
+UPDATE `rel_customer_department` cd 
+SET cd.`first_sale` = 
+(SELECT MIN(i.`invoiced`) 
+FROM `invoices` i JOIN `ref_departments` d ON i.`falcon_whs` = d.`falcon_whs` 
+WHERE i.`customer_id` = cd.`customer_id` AND d.`department_id` = cd.`department_id`);
+
+-- ************
+-- Invoices END
+
+
+-- Projects BEGIN
+-- **************
+
+-- Propulate the tmp second ids table
+INSERT INTO `tmp_second_ids` (`second_id`) 
+SELECT p.`second_id` FROM `rkcrm_old`.`projects` p WHERE NOT p.`project_id` = p.`second_id` AND NOT p.`second_id` = 0
+GROUP BY p.`second_id`; 
+
+-- Populate project types
+INSERT INTO `ref_project_types`
+(`type_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`) 
+SELECT pt.`ProjectTypeID`, pt.`Type`, pt.`is_available`, pt.`created`, pt.`created_by`, pt.`updated`, pt.`updated_by`
+FROM `rkcrm_old`.`ref_project_types` pt;
+
+-- Projects table fixes
+UPDATE `rkcrm_old`.`projects` p LEFT JOIN `rkcrm_old`.`contacts` co ON p.`contact_id` = co.`ContactID`
+SET p.`contact_id` = 0 WHERE co.`ContactFirstName` IS NULL;
+
+UPDATE `rkcrm_old`.`projects` p SET p.`zip_code` = NULL WHERE p.`zip_code` = "";
+
+-- Populate Projects
+INSERT INTO `projects` SELECT p.`project_id`, p.`customer_id`, p.`name`, p.`address`, p.`apt`, p.`city`, p.`zip_code`, 
+p.`type_id`, IF(p.`contact_id` = 0, NULL, p.`contact_id`), NULL, p.`is_archived`, p.`created`, p.`creator_id`, 
+p.`updated`, p.`updater_id` FROM `rkcrm_old`.`projects` p;
+
+-- Populate project relationships
+INSERT INTO `link_project_project` SELECT t.`id`, p.`project_id` 
+FROM `rkcrm_old`.`projects` p JOIN `tmp_second_ids` t ON p.`second_id` = t.`second_id` ORDER BY t.`id`;
+
+-- Drop Temp table
+DROP TABLE `tmp_second_ids`;
+
+-- Populate project statuses
+INSERT INTO `ref_project_statuses` SELECT `StatusID`, `Status`, `is_available` FROM `rkcrm_old`.`ref_project_status`;
+
+-- Populate project-department relationship table
+INSERT IGNORE INTO `rel_project_department` SELECT pc.`proj_id`, pc.`dept_id`, (pc.`scope` + 1) AS `scope`, pc.`status_id`, 
+pc.`units`, pc.`probability`, pc.`exp_ship` FROM `rkcrm_old`.`project_calculations` pc;
+
+-- ************
+-- Projects END
+
+
+-- Quotes BEGIN
+-- ************
+
+-- Populate contact methods
+INSERT INTO `ref_contact_methods` SELECT * FROM `rkcrm_old`.`ref_contact_methods`;
+
+-- Populate Quotes
+INSERT INTO `quotes` SELECT q.`quote_id`, q.`project_id`, q.`dept_id`, (q.`scope` + 1), q.`name`, q.`amount`, 
+q.`description`, q.`salesrep_id`, q.`support_id`, q.`method_id`, q.`contact_id`, q.`is_sold`, q.`is_archived`, q.`created`, 
+q.`creator_id`, q.`updated`, q.`updater_id` FROM `rkcrm_old`.`quotes` q;
+
+-- **********
+-- Quotes END
+
+
+-- Notes BEGIN
+-- ***********
+
+-- Populate contact purposes
+INSERT INTO `ref_contact_purposes` SELECT p.`PurposeID`, p.`Purpose`, p.`is_available`, p.`created`, p.`created_by`, 
+p.`updated`, p.`updated_by` FROM `rkcrm_old`.`ref_purposes` p;
+
+-- Populate Notes
+INSERT INTO `notes` SELECT n.`note_id`, n.`project_id`, n.`notes`, n.`salesrep_id`, n.`support_id`, n.`dept_id`, 
+n.`method_id`, n.`purpose_id`, n.`contact_id`, n.`next_follow_up`, n.`followed_up`, n.`is_archived`, n.`created`, 
+n.`creator_id`, n.`updated`, n.`updater_id` FROM `rkcrm_old`.`notes` n;
+
+-- *********
+-- Notes END
+
+
+-- Cross Leads BEGIN
+-- *****************
+
+INSERT INTO `cross_leads` SELECT * FROM `rkcrm_old`.`cross_leads` cl;
+
+INSERT INTO `rel_crosslead_department` SELECT cd.`lead_id`, cd.`department_id`, cd.`AssignedTo`, cd.`PlansReceived`, 
+cd.`ExpectedCompletion`, cd.`Assigned`, cd.`AssignedBy` FROM `rkcrm_old`.`rel_crosslead_dept` cd;
+
+INSERT INTO `rel_crosslead_customer` SELECT cs.`customer_id`, cs.`department_id`, cl.`lead_id`, cs.`validated`, 
+cs.`never_expires`, cs.`is_archived`, cs.`updated`, cs.`updater_id`
+FROM `rkcrm_old`.`cross_sales` cs
+JOIN `rkcrm_old`.`projects` p ON cs.`customer_id` = p.`customer_id`
+JOIN `rkcrm_old`.`cross_leads` cl ON p.`project_id` = cl.`project_id` AND cs.`sales_rep_id` = cl.`creator_id`
+LEFT JOIN `rkcrm_old`.`rel_crosslead_dept` cd ON cl.`lead_id` = cd.`lead_id` AND cd.`department_id` = cs.`department_id`
+WHERE cs.`is_archived` = 0
+GROUP BY cs.`customer_id`, cs.`department_id`;
+
+-- ***************
+-- Cross Leads END
+
+
+-- Competitors BEGIN
+-- *****************
+
+INSERT INTO `competitors` 
+SELECT c.`competitor_id`, c.`name`, 1, c.`created`, c.`created_by`, c.`updated`, c.`updated_by` 
+FROM `rkcrm_old`.`ref_competitors` c;
+
+INSERT INTO `rel_competitor_department` 
+SELECT cd.`competitor_id`, cd.`department_id`, cd.`is_available` FROM `rkcrm_old`.`rel_competitor_dept` cd;
+
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = NULL WHERE c.`PreviousVendor` = "";
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = REPLACE(c.`PreviousVendor`, ",", ";") WHERE c.`PreviousVendor` IS NOT NULL;
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = REPLACE(c.`PreviousVendor`, "\\", "; ") WHERE c.`PreviousVendor` IS NOT NULL;
+UPDATE `rkcrm_old`.`customers` c SET c.`PreviousVendor` = REPLACE(c.`PreviousVendor`, "/", "; ") WHERE c.`PreviousVendor` IS NOT NULL;
+
+INSERT INTO `link_customer_competitor`
+SELECT c.`CustomerID`, co.`competitor_id`
+FROM `rkcrm_old`.`customers` c
+JOIN `competitors` co ON co.`name` LIKE CONCAT("%", c.`PreviousVendor`, "%") OR c.`PreviousVendor` LIKE CONCAT("%", co.`name`, "%");
+
+-- ***************
+-- Competitors END
+
+
+-- Lost Projects BEGIN
+-- *******************
+
+INSERT INTO `ref_lost_reasons` SELECT * FROM `rkcrm_old`.`ref_lost_reasons`;
+
+INSERT INTO `lost_project_reports` SELECT l.`project_id`, l.`dept_id`, l.`scope`, IFNULL(l.`reason_id`, 9), IF(l.`reason_details` = "", NULL, l.`reason_details`), 
+l.`competitor_id`, IF(l.`competitor_name` = "", NULL, l.`competitor_name`), IF(l.`comments` = "", NULL, l.`comments`), 
+IFNULL(l.`created`, q.`updated`), q.`sales_rep_id`, IFNULL(l.`created`, q.`updated`), q.`sales_rep_id`
+FROM `rkcrm_old`.`lost_sale_reports` l
+JOIN `quotes` q ON l.`project_id` = q.`project_id` AND q.`department_id` = l.`dept_id` AND q.`scope` = (l.`scope` + 1)
+GROUP BY l.`project_id`, l.`dept_id`, l.`scope`;
+
+-- *****************
+-- Lost Projects END
+
+
+-- Import Errors BEGIN
+-- *******************
+
+INSERT INTO `ref_import_errors` SELECT e.`error_type_id`, e.`error_type`, e.`cause`, e.`created`, e.`created_by`, 
+e.`updated`, e.`updated_by` FROM `rkcrm_old`.`ref_import_error_types` e;
+
+INSERT INTO `rel_invoice_errors` SELECT e.`error_type_id`, e.`invoice_number`, t.`DateImported`
+FROM `rkcrm_old`.`import_error_log` e
+LEFT JOIN `rkcrm_old`.`transactions` t ON t.`InvoiceNumber` = e.`invoice_number`
+GROUP BY e.`error_type_id`, e.`invoice_number`;
+
+-- *****************
+-- Import Errors END
+
+
+-- Reports BEGIN
+-- *************
+
+INSERT INTO `ref_report_groups` (`group_id`, `name`, `created`, `creator_id`, `updated`, `updater_id`) 
+SELECT * FROM `rkcrm_old`.`report_groups`;
+
+INSERT INTO `reports` (`report_id`, `name`, `parameter_form`, `created`, `creator_id` ,`updated` ,`updater_id` , `group_id`)
+SELECT r.*, rg.`group_id` FROM `rkcrm_old`.`reports` r
+LEFT JOIN `rkcrm_old`.`rel_reportgroups_reports` rg ON rg.`report_id` = r.`report_id`;
+
+INSERT INTO `rel_report_department` 
+SELECT rd.`report_id`, rd.`department_id` FROM `rkcrm_old`.`rel_report_dept` rd;
+
+INSERT INTO `rel_reportgroup_role` 
+SELECT rr.`group_id`, rr.`role_id` FROM `rkcrm_old`.`rel_reportgroups_roles` rr;
+
+INSERT INTO `rel_report_role`
+SELECT rr.`report_id`, rr.`role_id` FROM `rkcrm_old`.`rel_report_role` rr;
+
+-- ***********
+-- Reports END
+
+
+-- Daily Invoicing BEGIN
+-- *********************
+
+INSERT INTO `stats_daily_invoicing` SELECT b.`CurrentBusinessID`, d.`department_id`, b.`InvoicedDate`, b.`SalesRep`, 
+b.`InvoicedTotal`, b.`GrossMarginSum`, b.`AVGSalesPerCustomer`, b.`AVGSalesPerInvoice`, b.`ActiveCustomers`, 
+b.`NewCustomers`, b.`NumberOfSales`
+FROM `rkcrm_old`.`stats_daily_current_business` b
+JOIN `ref_departments` d ON b.`Department` = d.`name`;
+
+-- *******************
+-- Daily Invoicing END

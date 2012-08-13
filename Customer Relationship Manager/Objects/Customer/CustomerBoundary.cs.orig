@@ -1,0 +1,845 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Windows.Forms;
+using rkcrm.Administration.Customer_Type;
+using rkcrm.Administration.ZipCode;
+using rkcrm.Base_Classes;
+using rkcrm.Objects.Phone_Number;
+using rkcrm.Objects.Customer.Lead_Source;
+
+namespace rkcrm.Objects.Customer
+{
+	class CustomerBoundary : BoundaryBase
+	{
+
+		#region Variables
+
+		internal System.Windows.Forms.MaskedTextBox mtxtPhoneNumber;
+		internal System.Windows.Forms.Label lblPreviousVendors;
+		internal System.Windows.Forms.TextBox txtPreviousVendors;
+		internal System.Windows.Forms.Label lblZipcode;
+		internal System.Windows.Forms.TextBox txtZipcode;
+		internal System.Windows.Forms.Label lblState;
+		internal System.Windows.Forms.TextBox txtState;
+		internal System.Windows.Forms.Label lblCity;
+		internal System.Windows.Forms.TextBox txtCity;
+		internal System.Windows.Forms.Label lblAptBldNum;
+		internal System.Windows.Forms.TextBox txtAptBldNum;
+		internal System.Windows.Forms.Label lblAddress;
+		internal System.Windows.Forms.TextBox txtAddress;
+		internal System.Windows.Forms.Label lblPhoneNumber;
+		internal System.Windows.Forms.Label lblCustomerType;
+		internal System.Windows.Forms.ComboBox cboCustomerType;
+		internal System.Windows.Forms.Label lblName;
+		internal System.Windows.Forms.TextBox txtName;
+		internal Lead_Source.LeadSourceBoundary MyLeadSource;
+		internal ListView lvwLeadSources;
+		internal ColumnHeader chSource;
+		internal ColumnHeader chDepartment;
+		internal ColumnHeader chRange;
+		private ColumnHeader chAddedBy;
+		private GroupBox gbxLeadSource;
+		private ImageList imlLeadSource;
+		private System.ComponentModel.IContainer components;
+		private Panel pnlName;
+		private Panel pnlAddress;
+		private rkcrm.Objects.Customer.Lead_Source.LeadSourceBoundary leadSourceControls;
+		private Button btnAddLeadSource;
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
+		private Customer clsMyCustomer;
+		private List<LeadSource> NewLeadSources;
+
+		#endregion
+
+
+		#region Properties
+
+		/// <summary>
+		/// Gets or sets the rkcrm.Objects.Customer.Customer object used by this control
+		/// </summary>
+		public Customer MyCustomer
+		{
+			get { return clsMyCustomer; }
+			set 
+			{
+				if (clsMyCustomer != value && clsMyCustomer != null)
+					clsMyCustomer.Dispose();
+
+				clsMyCustomer = value;
+				leadSourceControls.MyCustomer = value;
+
+				if (clsMyCustomer != null)
+					if (clsMyCustomer.ID > 0)
+						SetEditingMode();
+					else
+						SetAddingMode();
+				else
+					IsDirty = false;
+			}
+		}
+
+		#endregion
+
+
+		#region Methods
+
+		/// <summary>
+		/// Clears all data from the screen
+		/// </summary>
+		private new void Clear()
+		{
+			base.Clear();
+
+			cboCustomerType.SelectedItem = null;
+			txtAddress.Clear();
+			txtAptBldNum.Clear();
+			txtCity.Clear();
+			txtName.Clear();
+			txtPreviousVendors.Clear();
+			txtState.Clear();
+			txtZipcode.Clear();
+			lvwLeadSources.Items.Clear();
+			mtxtPhoneNumber.Clear();
+		}
+
+		/// <summary>
+		/// Updates the rkcrm.Objects.Customer.Customer in the MyCustomer property with data in the contorls
+		/// </summary>
+		/// <returns></returns>
+		public bool CommitChanges()
+		{
+			try
+			{
+				string TypeName = MyCustomer.GetCustomerType().Name;
+
+				if (!IsSelectionValid(cboCustomerType) && cboCustomerType.Text != TypeName || string.IsNullOrEmpty(cboCustomerType.Text))
+					throw new Exception("The \"Customer Type\" is not valid.");
+				if (string.IsNullOrEmpty(txtName.Text))
+					throw new Exception("The \"Company Name\" cannot be blank.");
+				if (!char.IsLetterOrDigit(txtName.Text[0]))
+					throw new Exception("The \"Company Name\" must begin with a letter or number.");
+				if (txtName.Text != MyCustomer.Name && !IsNameValid())
+					throw new Exception("The \"Company Name\" is not valid.");
+				if (!mtxtPhoneNumber.MaskCompleted)
+					throw new Exception("The \"Phone Number\" is not complete.");
+				if (!IsInteger(txtZipcode.Text))
+					throw new Exception("The \"Zip Code\" must be a 5 digit number.");
+				if (lvwLeadSources.Items.Count == 0 && this.State == BoundaryState.Editing)
+					throw new Exception("There must be at least one \"Lead Source\".");
+
+				if (cboCustomerType.SelectedItem != null)
+					MyCustomer.TypeID = Convert.ToInt32(cboCustomerType.SelectedValue);
+				MyCustomer.PhoneNumber = mtxtPhoneNumber.Text;
+				MyCustomer.Name = txtName.Text;
+				MyCustomer.Address = txtAddress.Text;
+				MyCustomer.AptLotSte = txtAptBldNum.Text;
+				MyCustomer.ZipCode = txtZipcode.Text != string.Empty ? Convert.ToInt32(txtZipcode.Text) : 0;
+				MyCustomer.City = txtCity.Text;
+				MyCustomer.State = txtState.Text;
+
+				//Insert a new zip code if nessecary
+				if (!string.IsNullOrEmpty(txtZipcode.Text) && !string.IsNullOrEmpty(txtCity.Text) && !string.IsNullOrEmpty(txtState.Text) && txtCity.Enabled)
+				{
+					ZipCode currentZip = new ZipCode(); ;
+
+					currentZip.Code = Convert.ToInt32(txtZipcode.Text);
+					currentZip.City = txtCity.Text;
+					currentZip.Abbreviation = txtState.Text;
+
+					using (ZipcodeController theController = new ZipcodeController())
+					{
+						theController.InsertZipCode(currentZip);
+					}
+				}
+
+				return true;
+
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show(e.Message, MySettings.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				return false;
+			}
+		}
+
+		private bool IsNameValid()
+		{
+			DataTable oTable;
+			bool result = true;
+
+			using (CustomerController theController = new CustomerController())
+			{
+				oTable = theController.GetDuplicateCustomers(txtName.Text, MyCustomer.ID);
+			}
+
+			foreach (DataRow oRow in oTable.Rows)
+			{
+				if (Convert.ToBoolean(oRow["require_unique_name"]))
+					result = false;
+			}
+
+			return result;
+		}
+
+		private void InitializeComponent()
+		{
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomerBoundary));
+			this.mtxtPhoneNumber = new System.Windows.Forms.MaskedTextBox();
+			this.lblPreviousVendors = new System.Windows.Forms.Label();
+			this.txtPreviousVendors = new System.Windows.Forms.TextBox();
+			this.lblZipcode = new System.Windows.Forms.Label();
+			this.txtZipcode = new System.Windows.Forms.TextBox();
+			this.lblState = new System.Windows.Forms.Label();
+			this.txtState = new System.Windows.Forms.TextBox();
+			this.lblCity = new System.Windows.Forms.Label();
+			this.txtCity = new System.Windows.Forms.TextBox();
+			this.lblAptBldNum = new System.Windows.Forms.Label();
+			this.txtAptBldNum = new System.Windows.Forms.TextBox();
+			this.lblAddress = new System.Windows.Forms.Label();
+			this.txtAddress = new System.Windows.Forms.TextBox();
+			this.lblPhoneNumber = new System.Windows.Forms.Label();
+			this.lblCustomerType = new System.Windows.Forms.Label();
+			this.cboCustomerType = new System.Windows.Forms.ComboBox();
+			this.lblName = new System.Windows.Forms.Label();
+			this.txtName = new System.Windows.Forms.TextBox();
+			this.lvwLeadSources = new System.Windows.Forms.ListView();
+			this.chSource = new System.Windows.Forms.ColumnHeader();
+			this.chDepartment = new System.Windows.Forms.ColumnHeader();
+			this.chRange = new System.Windows.Forms.ColumnHeader();
+			this.chAddedBy = new System.Windows.Forms.ColumnHeader();
+			this.gbxLeadSource = new System.Windows.Forms.GroupBox();
+			this.btnAddLeadSource = new System.Windows.Forms.Button();
+			this.leadSourceControls = new rkcrm.Objects.Customer.Lead_Source.LeadSourceBoundary();
+			this.imlLeadSource = new System.Windows.Forms.ImageList(this.components);
+			this.pnlName = new System.Windows.Forms.Panel();
+			this.pnlAddress = new System.Windows.Forms.Panel();
+			this.pnlControls.SuspendLayout();
+			this.gbxLeadSource.SuspendLayout();
+			this.pnlName.SuspendLayout();
+			this.pnlAddress.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// pnlControls
+			// 
+			this.pnlControls.Controls.Add(this.pnlAddress);
+			this.pnlControls.Controls.Add(this.gbxLeadSource);
+			this.pnlControls.Controls.Add(this.pnlName);
+			this.pnlControls.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+			this.pnlControls.Size = new System.Drawing.Size(591, 380);
+			// 
+			// mtxtPhoneNumber
+			// 
+			this.mtxtPhoneNumber.Location = new System.Drawing.Point(469, 23);
+			this.mtxtPhoneNumber.Mask = "(000) 000-0000";
+			this.mtxtPhoneNumber.Name = "mtxtPhoneNumber";
+			this.mtxtPhoneNumber.Size = new System.Drawing.Size(104, 20);
+			this.mtxtPhoneNumber.TabIndex = 30;
+			this.mtxtPhoneNumber.TextMaskFormat = System.Windows.Forms.MaskFormat.ExcludePromptAndLiterals;
+			this.mtxtPhoneNumber.TextChanged += new System.EventHandler(this.mtxtPhoneNumber_TextChanged);
+			// 
+			// lblPreviousVendors
+			// 
+			this.lblPreviousVendors.AutoSize = true;
+			this.lblPreviousVendors.Location = new System.Drawing.Point(-1, 102);
+			this.lblPreviousVendors.Name = "lblPreviousVendors";
+			this.lblPreviousVendors.Size = new System.Drawing.Size(121, 13);
+			this.lblPreviousVendors.TabIndex = 49;
+			this.lblPreviousVendors.Text = "Other/Previous Vendors";
+			// 
+			// txtPreviousVendors
+			// 
+			this.txtPreviousVendors.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+			this.txtPreviousVendors.Location = new System.Drawing.Point(2, 118);
+			this.txtPreviousVendors.Name = "txtPreviousVendors";
+			this.txtPreviousVendors.Size = new System.Drawing.Size(572, 20);
+			this.txtPreviousVendors.TabIndex = 42;
+			this.txtPreviousVendors.TextChanged += new System.EventHandler(this.control_Changed);
+			// 
+			// lblZipcode
+			// 
+			this.lblZipcode.AutoSize = true;
+			this.lblZipcode.Location = new System.Drawing.Point(169, 53);
+			this.lblZipcode.Name = "lblZipcode";
+			this.lblZipcode.Size = new System.Drawing.Size(50, 13);
+			this.lblZipcode.TabIndex = 48;
+			this.lblZipcode.Text = "Zip Code";
+			// 
+			// txtZipcode
+			// 
+			this.txtZipcode.Location = new System.Drawing.Point(172, 69);
+			this.txtZipcode.MaxLength = 5;
+			this.txtZipcode.Name = "txtZipcode";
+			this.txtZipcode.Size = new System.Drawing.Size(100, 20);
+			this.txtZipcode.TabIndex = 40;
+			this.txtZipcode.TextChanged += new System.EventHandler(this.txtZipcode_TextChanged);
+			// 
+			// lblState
+			// 
+			this.lblState.AutoSize = true;
+			this.lblState.Location = new System.Drawing.Point(131, 53);
+			this.lblState.Name = "lblState";
+			this.lblState.Size = new System.Drawing.Size(32, 13);
+			this.lblState.TabIndex = 47;
+			this.lblState.Text = "State";
+			// 
+			// txtState
+			// 
+			this.txtState.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+			this.txtState.Location = new System.Drawing.Point(134, 69);
+			this.txtState.MaxLength = 2;
+			this.txtState.Name = "txtState";
+			this.txtState.Size = new System.Drawing.Size(32, 20);
+			this.txtState.TabIndex = 39;
+			this.txtState.TextChanged += new System.EventHandler(this.control_Changed);
+			// 
+			// lblCity
+			// 
+			this.lblCity.AutoSize = true;
+			this.lblCity.Location = new System.Drawing.Point(0, 53);
+			this.lblCity.Name = "lblCity";
+			this.lblCity.Size = new System.Drawing.Size(24, 13);
+			this.lblCity.TabIndex = 46;
+			this.lblCity.Text = "City";
+			// 
+			// txtCity
+			// 
+			this.txtCity.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+			this.txtCity.Location = new System.Drawing.Point(3, 69);
+			this.txtCity.Name = "txtCity";
+			this.txtCity.Size = new System.Drawing.Size(125, 20);
+			this.txtCity.TabIndex = 37;
+			this.txtCity.TextChanged += new System.EventHandler(this.control_Changed);
+			// 
+			// lblAptBldNum
+			// 
+			this.lblAptBldNum.AutoSize = true;
+			this.lblAptBldNum.Location = new System.Drawing.Point(275, 10);
+			this.lblAptBldNum.Name = "lblAptBldNum";
+			this.lblAptBldNum.Size = new System.Drawing.Size(53, 13);
+			this.lblAptBldNum.TabIndex = 44;
+			this.lblAptBldNum.Text = "Apt/Bld #";
+			// 
+			// txtAptBldNum
+			// 
+			this.txtAptBldNum.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+			this.txtAptBldNum.Location = new System.Drawing.Point(278, 26);
+			this.txtAptBldNum.Name = "txtAptBldNum";
+			this.txtAptBldNum.Size = new System.Drawing.Size(56, 20);
+			this.txtAptBldNum.TabIndex = 36;
+			this.txtAptBldNum.TextChanged += new System.EventHandler(this.control_Changed);
+			// 
+			// lblAddress
+			// 
+			this.lblAddress.AutoSize = true;
+			this.lblAddress.Location = new System.Drawing.Point(0, 10);
+			this.lblAddress.Name = "lblAddress";
+			this.lblAddress.Size = new System.Drawing.Size(76, 13);
+			this.lblAddress.TabIndex = 43;
+			this.lblAddress.Text = "Street Address";
+			// 
+			// txtAddress
+			// 
+			this.txtAddress.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+			this.txtAddress.Location = new System.Drawing.Point(3, 26);
+			this.txtAddress.Name = "txtAddress";
+			this.txtAddress.Size = new System.Drawing.Size(269, 20);
+			this.txtAddress.TabIndex = 35;
+			this.txtAddress.TextChanged += new System.EventHandler(this.control_Changed);
+			// 
+			// lblPhoneNumber
+			// 
+			this.lblPhoneNumber.AutoSize = true;
+			this.lblPhoneNumber.Location = new System.Drawing.Point(466, 7);
+			this.lblPhoneNumber.Name = "lblPhoneNumber";
+			this.lblPhoneNumber.Size = new System.Drawing.Size(95, 13);
+			this.lblPhoneNumber.TabIndex = 34;
+			this.lblPhoneNumber.Text = "Company Number*";
+			// 
+			// lblCustomerType
+			// 
+			this.lblCustomerType.AutoSize = true;
+			this.lblCustomerType.Location = new System.Drawing.Point(-1, 7);
+			this.lblCustomerType.Name = "lblCustomerType";
+			this.lblCustomerType.Size = new System.Drawing.Size(82, 13);
+			this.lblCustomerType.TabIndex = 32;
+			this.lblCustomerType.Text = "Customer Type*";
+			// 
+			// cboCustomerType
+			// 
+			this.cboCustomerType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+			this.cboCustomerType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+			this.cboCustomerType.FormattingEnabled = true;
+			this.cboCustomerType.Location = new System.Drawing.Point(2, 23);
+			this.cboCustomerType.Name = "cboCustomerType";
+			this.cboCustomerType.Size = new System.Drawing.Size(149, 21);
+			this.cboCustomerType.TabIndex = 26;
+			this.cboCustomerType.TextChanged += new System.EventHandler(this.control_Changed);
+			// 
+			// lblName
+			// 
+			this.lblName.AutoSize = true;
+			this.lblName.Location = new System.Drawing.Point(154, 7);
+			this.lblName.Name = "lblName";
+			this.lblName.Size = new System.Drawing.Size(86, 13);
+			this.lblName.TabIndex = 29;
+			this.lblName.Text = "Company Name*";
+			// 
+			// txtName
+			// 
+			this.txtName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+			this.txtName.Location = new System.Drawing.Point(157, 23);
+			this.txtName.Name = "txtName";
+			this.txtName.Size = new System.Drawing.Size(306, 20);
+			this.txtName.TabIndex = 28;
+			this.txtName.TextChanged += new System.EventHandler(this.control_Changed);
+			// 
+			// lvwLeadSources
+			// 
+			this.lvwLeadSources.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chSource,
+            this.chDepartment,
+            this.chRange,
+            this.chAddedBy});
+			this.lvwLeadSources.Dock = System.Windows.Forms.DockStyle.Top;
+			this.lvwLeadSources.FullRowSelect = true;
+			this.lvwLeadSources.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.lvwLeadSources.HoverSelection = true;
+			this.lvwLeadSources.Location = new System.Drawing.Point(6, 16);
+			this.lvwLeadSources.Name = "lvwLeadSources";
+			this.lvwLeadSources.Size = new System.Drawing.Size(563, 92);
+			this.lvwLeadSources.TabIndex = 55;
+			this.lvwLeadSources.UseCompatibleStateImageBehavior = false;
+			this.lvwLeadSources.View = System.Windows.Forms.View.Details;
+			// 
+			// chSource
+			// 
+			this.chSource.Text = "Lead Source";
+			this.chSource.Width = 153;
+			// 
+			// chDepartment
+			// 
+			this.chDepartment.Text = "Department";
+			this.chDepartment.Width = 70;
+			// 
+			// chRange
+			// 
+			this.chRange.Text = "Active Range";
+			this.chRange.Width = 114;
+			// 
+			// chAddedBy
+			// 
+			this.chAddedBy.Text = "Added By";
+			this.chAddedBy.Width = 115;
+			// 
+			// gbxLeadSource
+			// 
+			this.gbxLeadSource.Controls.Add(this.btnAddLeadSource);
+			this.gbxLeadSource.Controls.Add(this.leadSourceControls);
+			this.gbxLeadSource.Controls.Add(this.lvwLeadSources);
+			this.gbxLeadSource.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbxLeadSource.Location = new System.Drawing.Point(8, 51);
+			this.gbxLeadSource.Name = "gbxLeadSource";
+			this.gbxLeadSource.Padding = new System.Windows.Forms.Padding(6, 3, 6, 6);
+<<<<<<< Updated upstream
+			this.gbxLeadSource.Size = new System.Drawing.Size(575, 169);
+=======
+			this.gbxLeadSource.Size = new System.Drawing.Size(575, 275);
+>>>>>>> Stashed changes
+			this.gbxLeadSource.TabIndex = 57;
+			this.gbxLeadSource.TabStop = false;
+			this.gbxLeadSource.Text = "How did they hear about R&&K?";
+			// 
+			// btnAddLeadSource
+			// 
+			this.btnAddLeadSource.BackgroundImage = global::rkcrm.Properties.Resources.New_Icon;
+			this.btnAddLeadSource.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.btnAddLeadSource.FlatAppearance.BorderSize = 0;
+			this.btnAddLeadSource.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+<<<<<<< Updated upstream
+			this.btnAddLeadSource.Location = new System.Drawing.Point(529, 143);
+			this.btnAddLeadSource.Name = "btnAddLeadSource";
+			this.btnAddLeadSource.Size = new System.Drawing.Size(16, 16);
+=======
+			this.btnAddLeadSource.Location = new System.Drawing.Point(529, 142);
+			this.btnAddLeadSource.Name = "btnAddLeadSource";
+			this.btnAddLeadSource.Size = new System.Drawing.Size(18, 18);
+>>>>>>> Stashed changes
+			this.btnAddLeadSource.TabIndex = 57;
+			this.btnAddLeadSource.UseVisualStyleBackColor = true;
+			this.btnAddLeadSource.Click += new System.EventHandler(this.btnAddLeadSource_Click);
+			// 
+			// leadSourceControls
+			// 
+			this.leadSourceControls.BackColor = System.Drawing.Color.White;
+			this.leadSourceControls.ChangeHistoryVisible = false;
+			this.leadSourceControls.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.leadSourceControls.IsBasic = true;
+			this.leadSourceControls.Location = new System.Drawing.Point(6, 108);
+			this.leadSourceControls.MinimumSize = new System.Drawing.Size(0, 162);
+			this.leadSourceControls.MyCustomer = null;
+			this.leadSourceControls.MySource = null;
+			this.leadSourceControls.Name = "leadSourceControls";
+<<<<<<< Updated upstream
+			this.leadSourceControls.Size = new System.Drawing.Size(563, 162);
+=======
+			this.leadSourceControls.Size = new System.Drawing.Size(563, 161);
+>>>>>>> Stashed changes
+			this.leadSourceControls.TabIndex = 56;
+			this.leadSourceControls.Title = "Lead Sources";
+			this.leadSourceControls.TitleBarVisible = false;
+			// 
+			// imlLeadSource
+			// 
+			this.imlLeadSource.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlLeadSource.ImageStream")));
+			this.imlLeadSource.TransparentColor = System.Drawing.Color.Transparent;
+			this.imlLeadSource.Images.SetKeyName(0, "New_Icon.png");
+			// 
+			// pnlName
+			// 
+			this.pnlName.Controls.Add(this.lblCustomerType);
+			this.pnlName.Controls.Add(this.txtName);
+			this.pnlName.Controls.Add(this.lblName);
+			this.pnlName.Controls.Add(this.mtxtPhoneNumber);
+			this.pnlName.Controls.Add(this.cboCustomerType);
+			this.pnlName.Controls.Add(this.lblPhoneNumber);
+			this.pnlName.Dock = System.Windows.Forms.DockStyle.Top;
+			this.pnlName.Location = new System.Drawing.Point(8, 0);
+			this.pnlName.Name = "pnlName";
+			this.pnlName.Size = new System.Drawing.Size(575, 51);
+			this.pnlName.TabIndex = 58;
+			// 
+			// pnlAddress
+			// 
+			this.pnlAddress.Controls.Add(this.lblAddress);
+			this.pnlAddress.Controls.Add(this.txtAddress);
+			this.pnlAddress.Controls.Add(this.txtAptBldNum);
+			this.pnlAddress.Controls.Add(this.lblAptBldNum);
+			this.pnlAddress.Controls.Add(this.lblPreviousVendors);
+			this.pnlAddress.Controls.Add(this.txtCity);
+			this.pnlAddress.Controls.Add(this.txtPreviousVendors);
+			this.pnlAddress.Controls.Add(this.lblCity);
+			this.pnlAddress.Controls.Add(this.lblZipcode);
+			this.pnlAddress.Controls.Add(this.txtState);
+			this.pnlAddress.Controls.Add(this.txtZipcode);
+			this.pnlAddress.Controls.Add(this.lblState);
+			this.pnlAddress.Dock = System.Windows.Forms.DockStyle.Top;
+<<<<<<< Updated upstream
+			this.pnlAddress.Location = new System.Drawing.Point(8, 220);
+=======
+			this.pnlAddress.Location = new System.Drawing.Point(8, 327);
+>>>>>>> Stashed changes
+			this.pnlAddress.Name = "pnlAddress";
+			this.pnlAddress.Size = new System.Drawing.Size(575, 142);
+			this.pnlAddress.TabIndex = 59;
+			// 
+			// CustomerBoundary
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.Name = "CustomerBoundary";
+			this.Size = new System.Drawing.Size(591, 430);
+			this.Title = "General Information";
+			this.Load += new System.EventHandler(this.CustomerBoundary_Load);
+			this.pnlControls.ResumeLayout(false);
+			this.gbxLeadSource.ResumeLayout(false);
+			this.pnlName.ResumeLayout(false);
+			this.pnlName.PerformLayout();
+			this.pnlAddress.ResumeLayout(false);
+			this.pnlAddress.PerformLayout();
+			this.ResumeLayout(false);
+
+		}
+
+		/// <summary>
+		/// Populates the combo boxes with data from the database
+		/// </summary>
+		private void LoadComboBoxes()
+		{
+			using (CustomerTypeController theController = new CustomerTypeController())
+			{
+				cboCustomerType.DataSource = theController.GetCustomerTypes();
+				cboCustomerType.DisplayMember = "name";
+				cboCustomerType.ValueMember = "type_id";
+				cboCustomerType.SelectedItem = null;
+			}
+		}
+
+		public void SetAddingMode()
+		{
+			this.State = BoundaryState.Loading;
+
+			this.Clear();
+
+			gbxLeadSource.Visible = false;
+
+			if (MyLeadSource == null)
+			{
+				MyLeadSource = new Lead_Source.LeadSourceBoundary();
+				pnlControls.Controls.Add(MyLeadSource);
+				MyLeadSource.Location = new System.Drawing.Point(0, 41);
+				MyLeadSource.TitleBarVisible = false;
+				MyLeadSource.MySource = new rkcrm.Objects.Customer.Lead_Source.LeadSource();
+				MyLeadSource.dtpEffective.Visible = false;
+				MyLeadSource.lblEffective.Visible = false;
+
+				if (MyLeadSource.lbxDepartments.SelectedItems.Count > 0)
+				{
+					MyLeadSource.lblDepartments.Visible = false;
+					MyLeadSource.lbxDepartments.Visible = false;
+					MyLeadSource.Height = 65;
+
+					lblAddress.Location = new Point(lblAddress.Location.X, lblAddress.Location.Y - 100);
+					lblAptBldNum.Location = new Point(lblAptBldNum.Location.X, lblAptBldNum.Location.Y - 100);
+					lblCity.Location = new Point(lblCity.Location.X, lblCity.Location.Y - 100);
+					lblState.Location = new Point(lblAddress.Location.X, lblState.Location.Y - 100);
+					lblZipcode.Location = new Point(lblZipcode.Location.X, lblZipcode.Location.Y - 100);
+					lblPreviousVendors.Location = new Point(lblPreviousVendors.Location.X, lblPreviousVendors.Location.Y - 100);
+					txtAddress.Location = new Point(txtAddress.Location.X, txtAddress.Location.Y - 100);
+					txtAptBldNum.Location = new Point(txtAptBldNum.Location.X, txtAptBldNum.Location.Y - 100);
+					txtCity.Location = new Point(txtCity.Location.X, txtCity.Location.Y - 100);
+					txtState.Location = new Point(txtState.Location.X, txtState.Location.Y - 100);
+					txtZipcode.Location = new Point(txtZipcode.Location.X, txtZipcode.Location.Y - 100);
+					txtPreviousVendors.Location = new Point(txtPreviousVendors.Location.X, txtPreviousVendors.Location.Y - 100);
+
+					this.MinimumSize = new Size(0, this.MinimumSize.Height - 100);
+					this.Height = this.Height - 100;
+				}
+
+			}
+			this.Title = "New Customer";
+			this.State = BoundaryState.Adding;
+			this.IsDirty = false;
+		}
+
+		/// <summary>
+		/// Populates controls with the data provided by the MyCustomer property
+		/// </summary>
+		private void SetEditingMode()
+		{
+			this.State = BoundaryState.Loading;
+
+			ZipCode myZip = MyCustomer.GetZipCode();
+
+			cboCustomerType.SelectedValue = MyCustomer.TypeID;
+			txtName.Text = MyCustomer.Name;
+			mtxtPhoneNumber.Text = MyCustomer.PhoneNumber;
+			txtAddress.Text = MyCustomer.Address;
+			txtAptBldNum.Text = MyCustomer.AptLotSte;
+			txtZipcode.Text = (MyCustomer.ZipCode > 0 ? MyCustomer.ZipCode.ToString() : string.Empty);
+			txtCity.Text = (myZip == null ? string.Empty : myZip.City);
+			txtState.Text = (myZip == null ? string.Empty : myZip.Abbreviation);
+			ObjectCreated = MyCustomer.Created.ToString("MM/dd/yyyy HH:mm:ss");
+			ObjectUpdated = MyCustomer.Updated.ToString("MM/dd/yyyy HH:mm:ss");
+			ObjectCreatedBy = MyCustomer.GetCreator().UserName;
+			ObjectUpdatedBy = MyCustomer.GetUpdater().UserName;
+
+			//This enables the boundary to display those types that are no longer available
+			if (cboCustomerType.SelectedItem == null)
+				cboCustomerType.Text = MyCustomer.GetCustomerType().Name;
+			
+			RefreshLeadSources();
+
+			leadSourceControls.MySource = new rkcrm.Objects.Customer.Lead_Source.LeadSource();
+
+			this.Title = "General Information";
+			this.State = BoundaryState.Editing;
+
+			this.IsDirty = false;
+		}
+
+		/// <summary>
+		/// Determines whether the string is a number
+		/// </summary>
+		/// <param name="theText"></param>
+		/// <returns></returns>
+		private bool IsInteger(string theText)
+		{
+			bool result = true;
+
+			foreach (char oChar in theText.ToCharArray())
+				if (!char.IsNumber(oChar))
+					result = false;
+
+			return result;
+		}
+
+		/// <summary>
+		/// Clears all controls of data then uses the MyCustomer to load customer data back into the controls
+		/// </summary>
+		public override void Refresh()
+		{
+			Clear();
+			if (MyCustomer != null)
+				SetEditingMode();
+		}
+
+		public void RefreshLeadSources()
+		{
+			lvwLeadSources.Items.Clear();
+
+			using (Lead_Source.LeadSourceController thecontroller = new Lead_Source.LeadSourceController())
+			{
+				ListViewItem newItem;
+				DataTable oTable = thecontroller.GetLeadSources(MyCustomer.ID);
+				DataRow previousRow = oTable.NewRow(); ;
+
+				foreach (DataRow oRow in oTable.Rows)
+				{
+					if (!Convert.ToBoolean(oRow["is_archived"]))
+					{
+						if (Convert.ToInt32(oRow["source_id"]) != 52 && previousRow["department"].ToString() != oRow["department"].ToString())
+						{
+							newItem = new ListViewItem();
+							newItem.Text = oRow["lead_source"].ToString();
+							newItem.SubItems.Add(oRow["department"].ToString());
+
+							if (previousRow["department"].ToString() == oRow["department"].ToString())
+								newItem.SubItems.Add(Convert.ToDateTime(oRow["activated"]).ToString("M/d/yy") + " - " + Convert.ToDateTime(previousRow["activated"]).ToString("M/d/yy"));
+							else
+								newItem.SubItems.Add(Convert.ToDateTime(oRow["activated"]).ToString("M/d/yy") + " - Current");
+
+							newItem.SubItems.Add(oRow["adder"].ToString());
+
+							lvwLeadSources.Items.Add(newItem);
+						}
+
+						previousRow = oRow;
+
+					}
+				}
+			}
+		}
+
+		#endregion
+
+
+		#region Event Handlers
+
+		private void CustomerBoundary_Load(object sender, EventArgs e)
+		{
+			gbxLeadSource.Size = new Size(gbxLeadSource.Width, lvwLeadSources.Height + leadSourceControls.Height + 20);
+
+			this.btnAddLeadSource.MouseLeave += new System.EventHandler(this.Button_MouseLeave);
+			this.btnAddLeadSource.Leave += new System.EventHandler(this.Button_Leave);
+			this.btnAddLeadSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Button_KeyUp);
+			this.btnAddLeadSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Button_MouseDown);
+			this.btnAddLeadSource.Enter += new System.EventHandler(this.Button_Enter);
+			this.btnAddLeadSource.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Button_MouseUp);
+			this.btnAddLeadSource.MouseEnter += new System.EventHandler(this.Button_MouseEnter);
+			this.btnAddLeadSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Button_KeyDown);
+		}
+
+		private void control_Changed(object sender, EventArgs e)
+		{
+			if (this.State == BoundaryState.Editing || this.State == BoundaryState.Adding)
+				this.IsDirty = true;
+		}
+
+		private void txtZipcode_TextChanged(object sender, EventArgs e)
+		{
+			if (txtZipcode.Text.Length == 5)
+			{
+				if (!IsInteger(txtZipcode.Text))
+					MessageBox.Show("The zip code must be a 5 digit number.", MySettings.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				else
+				{
+					ZipCode currentZip;
+
+					using (ZipcodeController theController = new ZipcodeController())
+					{
+						currentZip = theController.GetZipCode(txtZipcode.Text, true);
+					}
+
+					if (currentZip.Code > 0)
+					{
+						txtState.Text = currentZip.Abbreviation;
+						txtCity.Text = currentZip.City;
+					}
+					else
+					{
+						txtState.Text = string.Empty;
+						txtCity.Text = string.Empty;
+					}
+				}
+			}			
+		}
+
+		private void mtxtPhoneNumber_TextChanged(object sender, EventArgs e)
+		{
+			if (this.State == BoundaryState.Adding || this.State == BoundaryState.Editing)
+			{
+				if (!this.IsDirty)
+					this.IsDirty = true;
+
+				if (((MaskedTextBox)sender).MaskCompleted)
+				{
+					DataTable otherOwners;
+
+					using (PhoneNumberController theController = new PhoneNumberController())
+					{
+						otherOwners = theController.GetOtherOwners(((MaskedTextBox)sender).Text, MyCustomer.ID);
+
+						if (otherOwners.Rows.Count > 0)
+						{
+							DuplicatePhoneNumbers oForm = new DuplicatePhoneNumbers();
+
+							oForm.OwnerList = otherOwners;
+							oForm.PhoneNumber = ((MaskedTextBox)sender).Text;
+							oForm.ShowDialog();
+
+							if (oForm.DialogResult != DialogResult.OK)
+								((MaskedTextBox)sender).Clear();
+						}
+					}
+				}
+			}
+		}
+
+		void CustomerBoundary_StateChanged(object sender, EventArgs e)
+		{
+			if ((this.State == BoundaryState.Searching || this.State == BoundaryState.Editing) && MyLeadSource != null)
+			{
+				MyLeadSource.Dispose();
+				MyLeadSource = null;
+			}
+		}
+
+		private void btnAddLeadSource_Click(object sender, EventArgs e)
+		{
+
+<<<<<<< Updated upstream
+			if (leadSourceControls.CommitChanges())
+			{
+				NewLeadSources.Add(leadSourceControls.MySource);
+				leadSourceControls.MySource = new LeadSource();
+			}
+=======
+>>>>>>> Stashed changes
+		}
+
+		#endregion
+
+
+		#region Constructor
+
+		public CustomerBoundary()
+			: base()
+		{
+			InitializeComponent();
+			txtZipcode.Click += new EventHandler(control_Changed);
+			this.StateChanged += new EventHandler<EventArgs>(CustomerBoundary_StateChanged);
+
+			LoadComboBoxes();
+			NewLeadSources = new List<LeadSource>();
+		}
+
+		#endregion
+
+
+	}
+}

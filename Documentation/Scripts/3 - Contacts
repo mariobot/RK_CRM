@@ -1,0 +1,15 @@
+-- Contacts BEGIN
+-- **************
+
+-- Populate contact titles
+INSERT INTO `ref_contact_titles` SELECT ct.`TitleID`, ct.`Title`, ct.`is_available`, ct.`created`, ct.`created_by`, 
+ct.`updated`, ct.`updated_by` FROM `rkcrm_old`.`ref_contact_titles` ct;
+
+-- Populate contacts
+INSERT INTO `contacts` SELECT c.`ContactID`, c.`CustomerID`, c.`ContactFirstName`, c.`ContactLastName`, 
+IF(c.`EmailAddress` = "", NULL, c.`EmailAddress`) , IF(c.`ContactTitle` = 0, NULL, c.`ContactTitle`), 
+NOT c.`isUnsubscribed`, c.`DateEntered`, c.`CreatorID`, c.`LastUpdated`, c.`UpdaterID` 
+FROM `rkcrm_old`.`contacts` c;
+
+-- ************
+-- Contacts END

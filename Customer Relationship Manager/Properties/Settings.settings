@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="rkcrm.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Server" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">kimball</Value>
+    </Setting>
+    <Setting Name="Database" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">rkcrm</Value>
+    </Setting>
+    <Setting Name="DemoDatabase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">rkcrm_demo</Value>
+    </Setting>
+    <Setting Name="PrototypeDatabase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">rkcrm_prototype</Value>
+    </Setting>
+    <Setting Name="IsPrototype" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ReportsPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\kimball\CRM Reports\</Value>
+    </Setting>
+    <Setting Name="MaxConnectionPool" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

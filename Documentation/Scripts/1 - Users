@@ -1,0 +1,36 @@
+-- Users BEGIN
+-- ***********
+
+-- Populate roles
+INSERT INTO `ref_roles` (`role_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT r.`UserRolesID`, r.`Role`, r.`is_available`, r.`created`, r.`created_by`, r.`updated`, r.`updated_by`
+FROM `rkcrm_old`.`ref_user_roles` r;
+
+-- Populate locations
+INSERT INTO `ref_locations` (`location_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT l.`location_id`, l.`location`, l.`is_available`, l.`created`, l.`created_by`, l.`updated`, l.`updated_by` 
+FROM `rkcrm_old`.`ref_user_loc` l;
+
+-- Populate job titles
+INSERT INTO `ref_job_titles` (`title_id`, `name`, `is_available`, `created`, `creator_id`, `updated`, `updater_id`)
+SELECT j.`title_id`, j.`title`, j.`is_available`, j.`created`, j.`created_by`, j.`updated`, j.`updated_by`
+FROM `rkcrm_old`.`ref_user_job_titles` j;
+
+-- Populate departments
+INSERT INTO `ref_departments` (`department_id`, `name`, `falcon_whs`, `is_profit_center`, `is_available`, `created`, 
+`creator_id`, `updated`, `updater_id`) SELECT d.`UserDepartmentID`, d.`Department`, d.`falcon_whs`, d.`is_Profit_Center`, 
+d.`is_available`, d.`created`, d.`created_by`, d.`updated`, d.`updated_by` FROM `rkcrm_old`.`ref_user_dept` d;
+
+-- Populate users
+INSERT INTO `users` (`user_id`, `user_name`, `first_name`, `last_name`, `email_address`, `job_title_id`, 
+`location_id`, `role_id`, `show_reminders`, `receives_crossleads`, `created`, `creator_id`, `updated`, 
+`updater_id`) SELECT u.`UserID`, u.`UserName`, u.`FirstName`, u.`LastName`, u.`email_address`, 
+u.`job_title`, u.`UserLocation`, u.`UserRole`, u.`ShowFollowUpList`, u.`receives_crossleads`, u.`created`, u.`created_by`, 
+u.`updated`, u.`updated_by` FROM `rkcrm_old`.`users` u;
+
+-- Populate user to department relationships
+INSERT INTO `rel_user_departments` 
+SELECT u.`UserID`, u.`UserDepartment`, 1 FROM `rkcrm_old`.`users` u;
+
+-- ********
+-- User END

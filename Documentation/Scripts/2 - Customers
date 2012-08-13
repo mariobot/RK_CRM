@@ -1,0 +1,87 @@
+-- Customers BEGIN
+-- ***************
+
+-- Populate customer types
+INSERT INTO `ref_customer_types` (`type_id`, `name`, `description`, `require_unique_name`, `default_company_name`, 
+`default_project_name`, `show_general_notes`, `is_available`, `created`, `creator_id`, 
+`updated`, `updater_id`) SELECT ct.`type_id`, ct.`type`, ct.`description`, ct.`require_unique_name`, ct.`default_company_name`, 
+ct.`default_project_name`, ct.`show_general_notes`, ct.`is_available`, ct.`created`, ct.`creator_id`, ct.`updated`, 
+ct.`updater_id` FROM `rkcrm_old`.`ref_customer_types_new` ct;
+
+-- Populate lead sources
+INSERT INTO `ref_lead_sources` (`source_id`, `name`, `details_required`, `is_available`, `created`, `creator_id`, 
+`updated`, `updater_id`) SELECT l.`SourceID`, l.`LeadSource`, l.`details_required`, l.`is_available`, l.`created`, 
+l.`created_by`, l.`updated`, l.`updated_by` FROM `rkcrm_old`.`ref_lead_sources` l;
+
+-- Populate zip codes
+INSERT INTO `ref_zip_codes` SELECT * FROM `rkcrm_old`.`zip_codes`;
+
+-- Fix Existing zip codes
+UPDATE `rkcrm_old`.`customers` c SET c.`ZipcodeAddress` = NULL WHERE c.`ZipcodeAddress` = "";
+UPDATE `rkcrm_old`.`customers` c SET c.`LeadSourceDetail` = NULL WHERE c.`LeadSourceDetail` = "";
+UPDATE `rkcrm_old`.`customers` c SET c.`StreetNameAddress` = NULL WHERE c.`StreetNameAddress` = "";
+
+-- Populate customers
+INSERT INTO `customers` (`customer_id`, `name`, `address`, `city`, `state`, `zip_code`, `apt_lot_ste`, `type_id`,
+`falcon_id`, `terms_code`, `first_sale`, `tax_id_expiration`, `creditcard_expiration`, `cannot_cross_lead`, `created`, 
+`creator_id`, `updated`, `updater_id`) SELECT `CustomerID`, `CompanyName`, `StreetNameAddress`, `CityAddress`, 
+`StateAddress`, `ZipcodeAddress`, `ApartmentAddress`, `CustomerType`, `FalconNumber`, `TermsCode`, `FirstSaleDate`, 
+`TaxIDExpiration`, `CreditCardExpiration`, `cannot_cross_lead`, `DateEntered`, `CreatorID`, `LastUpdated`, `UpdaterID` 
+FROM `rkcrm_old`.`customers`;
+
+UPDATE `customers` c JOIN `customer_lastsale` cl ON c.`customer_id` = cl.`customer_id` SET c.`last_sale` = cl.`last_sale`;
+
+DROP VIEW `customer_lastsale`;
+
+-- Lead Sources
+INSERT INTO `rel_customer_leadsources` (
+    `customer_id`, 
+    `department_id`, 
+    `source_id`, 
+    `activated`, 
+    `details`, 
+    `created`, 
+    `creator_id`, 
+    `updated`, 
+    `updater_id`) 
+SELECT 
+    c.`CustomerID` AS `customer_id`, 
+    d.`UserDepartmentID` AS `department_id`, 
+    52 AS `source_id`, 
+    CURDATE(), 
+    NULL AS `details`, 
+    NOW() AS `created`, 
+    53 AS `creator_id`, 
+    NOW() AS `updated`, 
+    53 AS `updater_id`
+FROM `rkcrm_old`.`customers` c, `rkcrm_old`.`ref_user_dept` d
+WHERE d.`is_profit_center` = 1;
+
+UPDATE `rel_customer_leadsources` cl 
+    JOIN `rkcrm_prototype`.`customer_leadsources` l ON cl.`customer_id` = l.`CustomerID` AND cl.`department_id` = l.`dept_id`
+SET 
+    cl.`source_id` = l.`LeadSource`, 
+    cl.`activated` = DATE(l.`DateEntered`), 
+    cl.`details` = l.`LeadSourceDetail`, 
+    cl.`created` = l.`DateEntered`, 
+    cl.`creator_id` = l.`CreatorID`,
+    cl.`updated` = NOW();
+
+DROP VIEW `customer_leadsources`;
+
+-- Populate lead sort details form
+UPDATE `ref_lead_sources` l SET l.`list_object` = 'rkcrm.Objects.Customer.Lead_Source.Details_Forms.CustomerName'
+    WHERE l.`source_id` = 31;
+UPDATE `ref_lead_sources` l SET l.`list_object` = 'rkcrm.Objects.Customer.Lead_Source.Details_Forms.UserName', l.`details_required` = 1
+    WHERE l.`source_id` = 32;
+UPDATE `ref_lead_sources` l SET l.`list_object` = 'rkcrm.Objects.Customer.Lead_Source.Details_Forms.CompetitorName'
+    WHERE l.`source_id` = 43;
+UPDATE `ref_lead_sources` l SET l.`list_object` = 'rkcrm.Objects.Customer.Lead_Source.Details_Forms.DepartmentAndYear'
+    WHERE l.`source_id` = 44;
+UPDATE `ref_lead_sources` l SET l.`list_object` = 'rkcrm.Objects.Customer.Lead_Source.Details_Forms.CustomerName'
+    WHERE l.`source_id` = 63;
+UPDATE `ref_lead_sources` l SET l.`list_object` = 'rkcrm.Objects.Customer.Lead_Source.Details_Forms.CustomerName'
+    WHERE l.`source_id` = 64;
+    
+-- ************
+-- Customer END

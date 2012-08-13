@@ -1,0 +1,14 @@
+-- Lost Projects BEGIN
+-- *******************
+
+INSERT INTO `ref_lost_reasons` SELECT * FROM `rkcrm_old`.`ref_lost_reasons`;
+
+INSERT INTO `lost_project_reports` SELECT l.`project_id`, l.`dept_id`, l.`scope`, IFNULL(l.`reason_id`, 9), IF(l.`reason_details` = "", NULL, l.`reason_details`), 
+l.`competitor_id`, IF(l.`competitor_name` = "", NULL, l.`competitor_name`), IF(l.`comments` = "", NULL, l.`comments`), 
+IFNULL(l.`created`, q.`updated`), q.`sales_rep_id`, IFNULL(l.`created`, q.`updated`), q.`sales_rep_id`
+FROM `rkcrm_old`.`lost_sale_reports` l
+JOIN `quotes` q ON l.`project_id` = q.`project_id` AND q.`department_id` = l.`dept_id` AND q.`scope` = (l.`scope` + 1)
+GROUP BY l.`project_id`, l.`dept_id`, l.`scope`;
+
+-- *****************
+-- Lost Projects END

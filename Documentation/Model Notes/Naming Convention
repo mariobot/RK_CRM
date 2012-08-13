@@ -1,0 +1,9 @@
+Table name should describe in some way what data they contain
+
+- Core tables contain the core data of the CRM system. These tables are not prefixed.
+- Tables that are referenced to define an attribute of a core table (reference tables) are prefixed by "ref"
+- Tables that are used to solve a many to many relationship between a core table and a reference table (relationship tables) are prefixed by "rel"
+- Tables that are used to solve a many to many relationship between two core tables (link tables) are prefixed by "link"
+- Tables that are used to store statistical values that would be time consuming or impossible to produce otherwise are prefixed by "stats"
+- Tables that are used to store data related to the system state or changes are prefixed by "sys"
+- Tables taht are used to watch/log events of any kind are prefixed by "log"

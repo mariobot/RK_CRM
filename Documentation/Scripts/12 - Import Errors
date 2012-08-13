@@ -1,0 +1,13 @@
+-- Import Errors BEGIN
+-- *******************
+
+INSERT INTO `ref_import_errors` SELECT e.`error_type_id`, e.`error_type`, e.`cause`, e.`created`, e.`created_by`, 
+e.`updated`, e.`updated_by` FROM `rkcrm_old`.`ref_import_error_types` e;
+
+INSERT INTO `rel_invoice_errors` SELECT e.`error_type_id`, e.`invoice_number`, t.`DateImported`
+FROM `rkcrm_old`.`import_error_log` e
+LEFT JOIN `rkcrm_old`.`transactions` t ON t.`InvoiceNumber` = e.`invoice_number`
+GROUP BY e.`error_type_id`, e.`invoice_number`;
+
+-- *****************
+-- Import Errors END

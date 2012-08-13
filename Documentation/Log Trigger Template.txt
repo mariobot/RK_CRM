@@ -1,0 +1,61 @@
+CREATE
+
+DEFINER=`root`@`%`
+
+TRIGGER `rkcrm_prototype_test`.`_insert_log`
+
+AFTER INSERT ON `rkcrm_prototype_test`.``
+
+FOR EACH ROW
+
+BEGIN
+
+
+
+IF NOT NEW.`` IS NULL THEN
+
+    INSERT INTO `sys_change_log` (`table_name`, `record_key`, `column_name`, `old_value`,
+
+    `new_value`, `changer_id`, `changed`)
+
+    VALUES ('', NEW.``, '', NULL, NEW.``,
+
+    NEW.`updater_id`, NOW());
+
+END IF;
+
+
+
+END$$
+
+
+
+CREATE
+
+DEFINER=`root`@`%`
+
+TRIGGER `rkcrm_prototype_test`.`_update_log`
+
+AFTER UPDATE ON `rkcrm_prototype_test`.``
+
+FOR EACH ROW
+
+BEGIN
+
+
+
+IF NOT IFNULL(OLD.``, "") = IFNULL(NEW.``, "") THEN
+
+    INSERT INTO `sys_change_log` (`table_name`, `record_key`, `column_name`, `old_value`,
+
+    `new_value`, `changer_id`, `changed`) 
+
+    VALUES ('', NEW.``, '', OLD.``, NEW.``,
+
+    NEW.`updater_id`, NOW());
+
+END IF;
+
+
+
+END $$

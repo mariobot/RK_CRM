@@ -1,0 +1,1015 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0B90B1B9-1010-42BF-A0C7-CF3C85CCDCF5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>rkcrm</RootNamespace>
+    <AssemblyName>Customer Relationship Manager</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>rkcrm.Program</StartupObject>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationIcon>PuzzlePiece.ico</ApplicationIcon>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Enterprise.Framework, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Enterprise.InfoStore, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Shared, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\assembly\GAC_MSIL\System.Web.Services\2.0.0.0__b03f5f7f11d50a3a\System.Web.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Administration\Competitor\Competitor.cs" />
+    <Compile Include="Administration\Competitor\CompetitorController.cs" />
+    <Compile Include="Administration\Contact Method\ContactMethod.cs" />
+    <Compile Include="Administration\Contact Method\ContactMethodController.cs" />
+    <Compile Include="Administration\Contact Purpose\ContactPurpose.cs" />
+    <Compile Include="Administration\Contact Purpose\ContactPurposeController.cs" />
+    <Compile Include="Administration\Contact Title\ContactTitle.cs" />
+    <Compile Include="Administration\Contact Title\ContactTitleController.cs" />
+    <Compile Include="Administration\Customer Type\CustomerType.cs" />
+    <Compile Include="Administration\Customer Type\CustomerTypeController.cs" />
+    <Compile Include="Administration\Department\DepartmentController.cs" />
+    <Compile Include="Administration\Department\DepartmentSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Administration\Department\DepartmentSelect.Designer.cs">
+      <DependentUpon>DepartmentSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Job Title\JobTitle.cs" />
+    <Compile Include="Administration\Job Title\JobTitleController.cs" />
+    <Compile Include="Administration\Lead Source\LeadSource.cs" />
+    <Compile Include="Administration\Lead Source\LeadSourceController.cs" />
+    <Compile Include="Administration\Location\Location.cs" />
+    <Compile Include="Administration\Location\LocationController.cs" />
+    <Compile Include="Administration\Lost Reason\Reason.cs" />
+    <Compile Include="Administration\Lost Reason\ReasonController.cs" />
+    <Compile Include="Administration\Phone Type\PhoneType.cs" />
+    <Compile Include="Administration\Phone Type\PhoneTypeController.cs" />
+    <Compile Include="Administration\Project Type\ProjectType.cs" />
+    <Compile Include="Administration\Project Type\ProjectTypeController.cs" />
+    <Compile Include="Administration\Role\Role.cs" />
+    <Compile Include="Administration\Role\RoleController.cs" />
+    <Compile Include="Administration\Department\DepartmentCollection.cs" />
+    <Compile Include="Administration\User\UserBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Administration\Zipcode\ZipCode.cs" />
+    <Compile Include="Administration\Zipcode\ZipCodeController.cs" />
+    <Compile Include="Base Classes\BoundaryBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base Classes\BoundaryBase.Designer.cs">
+      <DependentUpon>BoundaryBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Base Classes\DetailListBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Classes\EntityBase.cs" />
+    <Compile Include="Base Classes\ObjectBase.cs" />
+    <Compile Include="Base Classes\ObjectListBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Classes\ObjectListBase.Designer.cs">
+      <DependentUpon>ObjectListBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Base Classes\ObjectScreenBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base Classes\ParameterBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Classes\ParameterBase.Designer.cs">
+      <DependentUpon>ParameterBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Base Classes\ScreenBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base Classes\ScreenBase.Designer.cs">
+      <DependentUpon>ScreenBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\User\UserController.cs" />
+    <Compile Include="Base Classes\SearchScreenBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base Classes\UpdateDateBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Classes\UpdateDateBase.Designer.cs">
+      <DependentUpon>UpdateDateBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Controls\DataGridViewMaskedTextBoxColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Event Arguments\ActivityStatusChangedEventArgs.cs" />
+    <Compile Include="Objects\Contact\AddContact.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Contact\AddContact.Designer.cs">
+      <DependentUpon>AddContact.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Contact\Contact.cs" />
+    <Compile Include="Objects\Contact\ContactBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Contact\ContactController.cs" />
+    <Compile Include="Objects\Contact\Phone_Number\PhoneNumber.cs" />
+    <Compile Include="Objects\Contact\ContactScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Contact\Phone_Number\PhoneNumberController.cs" />
+    <Compile Include="Objects\Contact\Phone_Number\SharedPhoneNumberDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Contact\Phone_Number\SharedPhoneNumberDialog.Designer.cs">
+      <DependentUpon>SharedPhoneNumberDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\Assigment\Assignment.cs" />
+    <Compile Include="Objects\Cross Lead\Assigment\AssignmentController.cs" />
+    <Compile Include="Objects\Cross Lead\CrossLead.cs" />
+    <Compile Include="Objects\Cross Lead\CrossLeadBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\CrossLeadController.cs" />
+    <Compile Include="Objects\Cross Lead\CrossLeadAssignments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\CrossLeadAssignments.Designer.cs">
+      <DependentUpon>CrossLeadAssignments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Controls\DataGridViewCalendarColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\Preview Controls\CrossLeadPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\Preview Controls\CustomerPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\Preview Controls\NotePreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base Classes\PreviewBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base Classes\PreviewBase.Designer.cs">
+      <DependentUpon>PreviewBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\Preview Controls\ProjectPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Lead\Preview Controls\QuotePreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Sale\CrossSaleBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Sale\CrossSaleController.cs" />
+    <Compile Include="Objects\Cross Sale\CrossSale.cs" />
+    <Compile Include="Objects\Cross Sale\CrossSaleManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Cross Sale\CrossSaleManagement.Designer.cs">
+      <DependentUpon>CrossSaleManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Cross Sale\CrossSaleScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Customer.cs" />
+    <Compile Include="Objects\Customer\CustomerBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\CustomerController.cs" />
+    <Compile Include="Objects\Customer\CustomerScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\DuplicateCustomerList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Classes\DetailFormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Classes\DetailFormBase.Designer.cs">
+      <DependentUpon>DetailFormBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\AddLeadSource.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\AddLeadSource.Designer.cs">
+      <DependentUpon>AddLeadSource.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\Details Forms\CompetitorName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\Details Forms\CustomerName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\Details Forms\DepartmentAndYear.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\Details Forms\UserName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\LeadSourceAdministration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\LeadSourceAdministration.Designer.cs">
+      <DependentUpon>LeadSourceAdministration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\LeadSourceBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Lead Source\LeadSourceScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Preview Controls\AddressPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\Preview Controls\RelatedCustomersPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\UpdateCreditExpiration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\UpdateTaxExpiration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Customer\ViewInvoices.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Demonstration\DemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Demonstration\DemoForm.Designer.cs">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Error Handling\ErrorController.cs" />
+    <Compile Include="Error Handling\ErrorHandler.cs" />
+    <Compile Include="ListViewItemComparer.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MySettings.cs" />
+    <Compile Include="Administration\Department\Department.cs" />
+    <Compile Include="Administration\User\User.cs" />
+    <Compile Include="Base Classes\NavigationButtonBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base Classes\NavigationButtonBase.Designer.cs">
+      <DependentUpon>NavigationButtonBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Navigation\AdministrationButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Navigation\CustomerButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Navigation\NavigationScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Navigation\NavigationScreen.Designer.cs">
+      <DependentUpon>NavigationScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Navigation\ReportsButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Navigation\SearchButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ObjectFactory.cs" />
+    <Compile Include="Objects\Customer\Lead Source\LeadSource.cs" />
+    <Compile Include="Objects\Customer\Lead Source\LeadSourceController.cs" />
+    <Compile Include="Objects\NewCustomerWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\NewCustomerWizard.Designer.cs">
+      <DependentUpon>NewCustomerWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Note\AddNote.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Note\AddNote.Designer.cs">
+      <DependentUpon>AddNote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Note\Note.cs" />
+    <Compile Include="Objects\Note\NoteBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Note\NoteController.cs" />
+    <Compile Include="Objects\Note\NoteScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Note\ViewOtherProjects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Phone Number\DuplicatePhoneNumbers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Phone Number\DuplicatePhoneNumbers.Designer.cs">
+      <DependentUpon>DuplicatePhoneNumbers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Phone Number\PhoneNumber.cs" />
+    <Compile Include="Objects\Phone Number\PhoneNumberController.cs" />
+    <Compile Include="Objects\Project\Department\Department.cs" />
+    <Compile Include="Objects\Project\Department\DepartmentController.cs" />
+    <Compile Include="Objects\Project\DuplicateProjects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Project\DuplicateProjects.Designer.cs">
+      <DependentUpon>DuplicateProjects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Project\Lost Report\LostProjectBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Project\Lost Report\LostProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Project\Lost Report\LostProjectForm.Designer.cs">
+      <DependentUpon>LostProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Project\Lost Report\LostProjectController.cs" />
+    <Compile Include="Objects\Project\Lost Report\LostProjectReport.cs" />
+    <Compile Include="Objects\Project\Project.cs" />
+    <Compile Include="Objects\Project\ProjectBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Project\ProjectScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Project\ProjectSearchList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Project\SendCrossLead.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Project\SendCrossLead.Designer.cs">
+      <DependentUpon>SendCrossLead.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\PropertiesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\PropertiesWindow.Designer.cs">
+      <DependentUpon>PropertiesWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Objects\Quote\Quote.cs" />
+    <Compile Include="Objects\Quote\QuoteBoundary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Quote\QuoteScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Objects\Quote\QuoteSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Objects\Quote\QuoteSelect.Designer.cs">
+      <DependentUpon>QuoteSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Objects\Project\ProjectController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Administration\Department\DepartmentSelect.resx">
+      <DependentUpon>DepartmentSelect.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Administration\User\UserBoundary.resx">
+      <DependentUpon>UserBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\BoundaryBase.resx">
+      <DependentUpon>BoundaryBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\DetailFormBase.resx">
+      <DependentUpon>DetailFormBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\DetailListBase.resx">
+      <DependentUpon>DetailListBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\ObjectListBase.resx">
+      <DependentUpon>ObjectListBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\ObjectScreenBase.resx">
+      <DependentUpon>ObjectScreenBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\ParameterBase.resx">
+      <DependentUpon>ParameterBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\ScreenBase.resx">
+      <DependentUpon>ScreenBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\SearchScreenBase.resx">
+      <DependentUpon>SearchScreenBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\UpdateDateBase.resx">
+      <DependentUpon>UpdateDateBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Contact\AddContact.resx">
+      <DependentUpon>AddContact.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Contact\ContactBoundary.resx">
+      <DependentUpon>ContactBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Contact\ContactScreen.resx">
+      <DependentUpon>ContactScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Contact\Phone_Number\SharedPhoneNumberDialog.resx">
+      <DependentUpon>SharedPhoneNumberDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Lead\CrossLeadBoundary.resx">
+      <DependentUpon>CrossLeadBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Lead\CrossLeadAssignments.resx">
+      <DependentUpon>CrossLeadAssignments.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Lead\Preview Controls\CrossLeadPreview.resx">
+      <DependentUpon>CrossLeadPreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Lead\Preview Controls\CustomerPreview.resx">
+      <DependentUpon>CustomerPreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Lead\Preview Controls\NotePreview.resx">
+      <DependentUpon>NotePreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\PreviewBase.resx">
+      <DependentUpon>PreviewBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Lead\Preview Controls\ProjectPreview.resx">
+      <DependentUpon>ProjectPreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Lead\Preview Controls\QuotePreview.resx">
+      <DependentUpon>QuotePreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Sale\CrossSaleBoundary.resx">
+      <DependentUpon>CrossSaleBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Sale\CrossSaleManagement.resx">
+      <DependentUpon>CrossSaleManagement.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Cross Sale\CrossSaleScreen.resx">
+      <DependentUpon>CrossSaleScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\CustomerBoundary.resx">
+      <DependentUpon>CustomerBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\CustomerScreen.resx">
+      <DependentUpon>CustomerScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\DuplicateCustomerList.resx">
+      <DependentUpon>DuplicateCustomerList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\AddLeadSource.resx">
+      <DependentUpon>AddLeadSource.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\Details Forms\CompetitorName.resx">
+      <DependentUpon>CompetitorName.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\Details Forms\CustomerName.resx">
+      <DependentUpon>CustomerName.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\Details Forms\DepartmentAndYear.resx">
+      <DependentUpon>DepartmentAndYear.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\Details Forms\UserName.resx">
+      <DependentUpon>UserName.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\LeadSourceAdministration.resx">
+      <DependentUpon>LeadSourceAdministration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\LeadSourceBoundary.resx">
+      <DependentUpon>LeadSourceBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Lead Source\LeadSourceScreen.resx">
+      <DependentUpon>LeadSourceScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Preview Controls\AddressPreview.resx">
+      <DependentUpon>AddressPreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Preview Controls\RelatedCustomersPreview.resx">
+      <DependentUpon>RelatedCustomersPreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\UpdateCreditExpiration.resx">
+      <DependentUpon>UpdateCreditExpiration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\UpdateTaxExpiration.resx">
+      <DependentUpon>UpdateTaxExpiration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\ViewInvoices.resx">
+      <DependentUpon>ViewInvoices.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Demonstration\DemoForm.resx">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Classes\NavigationButtonBase.resx">
+      <DependentUpon>NavigationButtonBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Navigation\AdministrationButton.resx">
+      <DependentUpon>AdministrationButton.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Navigation\CustomerButton.resx">
+      <DependentUpon>CustomerButton.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Navigation\NavigationScreen.resx">
+      <DependentUpon>NavigationScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Navigation\ReportsButton.resx">
+      <DependentUpon>ReportsButton.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Navigation\SearchButton.resx">
+      <DependentUpon>SearchButton.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\NewCustomerWizard.resx">
+      <DependentUpon>NewCustomerWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Note\AddNote.resx">
+      <DependentUpon>AddNote.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Note\NoteBoundary.resx">
+      <DependentUpon>NoteBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Note\NoteScreen.resx">
+      <DependentUpon>NoteScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Note\ViewOtherProjects.resx">
+      <DependentUpon>ViewOtherProjects.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Phone Number\DuplicatePhoneNumbers.resx">
+      <DependentUpon>DuplicatePhoneNumbers.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Project\DuplicateProjects.resx">
+      <DependentUpon>DuplicateProjects.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Project\Lost Report\LostProjectBoundary.resx">
+      <DependentUpon>LostProjectBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Project\Lost Report\LostProjectForm.resx">
+      <DependentUpon>LostProjectForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Project\ProjectBoundary.resx">
+      <DependentUpon>ProjectBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Project\ProjectScreen.resx">
+      <DependentUpon>ProjectScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Project\ProjectSearchList.resx">
+      <DependentUpon>ProjectSearchList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Project\SendCrossLead.resx">
+      <DependentUpon>SendCrossLead.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\PropertiesWindow.resx">
+      <DependentUpon>PropertiesWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Quote\QuoteBoundary.resx">
+      <DependentUpon>QuoteBoundary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Quote\QuoteScreen.resx">
+      <DependentUpon>QuoteScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Quote\QuoteSelect.resx">
+      <DependentUpon>QuoteSelect.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reminder\AssignmentReminders.resx">
+      <DependentUpon>AssignmentReminders.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reminder\FollowUpReminders.resx">
+      <DependentUpon>FollowUpReminders.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reminder\RemindersForm.resx">
+      <DependentUpon>RemindersForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Parameter Forms\User\MyCrossLeadAnalysis.resx">
+      <DependentUpon>MyCrossLeadAnalysis.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportsScreen.resx">
+      <DependentUpon>ReportsScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportTabPage.resx">
+      <DependentUpon>ReportTabPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportViewer.resx">
+      <DependentUpon>ReportViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\DropDowns\ContactDropDown.resx">
+      <DependentUpon>ContactDropDown.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\DropDowns\NoteDropDown.resx">
+      <DependentUpon>NoteDropDown.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\DropDowns\QuoteDropDown.resx">
+      <DependentUpon>QuoteDropDown.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\DropDowns\CustomerDropDown.resx">
+      <DependentUpon>CustomerDropDown.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\CustomerSearchScreen.resx">
+      <DependentUpon>CustomerSearchScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\DropDowns\ProjectDropDown.resx">
+      <DependentUpon>ProjectDropDown.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\ProjectSearchScreen.resx">
+      <DependentUpon>ProjectSearchScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Searching\QuoteSearchScreen.resx">
+      <DependentUpon>QuoteSearchScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Objects\Quote\QuoteController.cs" />
+    <Compile Include="Reminder\AssignmentReminders.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Reminder\AssignmentReminders.Designer.cs">
+      <DependentUpon>AssignmentReminders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reminder\FollowUpReminders.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Reminder\FollowUpReminders.Designer.cs">
+      <DependentUpon>FollowUpReminders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reminder\RemindersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reminder\RemindersForm.Designer.cs">
+      <DependentUpon>RemindersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Parameter Forms\User\MyCrossLeadAnalysis.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportController.cs" />
+    <Compile Include="Reports\ReportsScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportViewer.Designer.cs">
+      <DependentUpon>ReportViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Searching\DropDowns\ContactDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Searching\DropDowns\NoteDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Searching\DropDowns\QuoteDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Searching\DropDowns\CustomerDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Searching\CustomerSearchScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Searching\DropDowns\ProjectDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Searching\ProjectSearchScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Searching\QuoteSearchScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Security\HEXtoBinary.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="thisUser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_Icon_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Resources\Play_Icon_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_and_Close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_New.png" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Edit_Note_28x28.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_Note_Icon16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_Quote_icon16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Projects16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Check_icon_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Follow_Up16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Note16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Notify_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Splash_Screen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PuzzlePiece.ico" />
+    <None Include="Resources\PreviewBackground.png" />
+    <None Include="Resources\Properties_28x28.png" />
+    <None Include="Resources\SearchTitleBar.png" />
+    <None Include="Resources\BoundaryTitleBar.png" />
+    <None Include="Resources\Expand_Icon.png" />
+    <None Include="Resources\Collapse_Icon.png" />
+    <None Include="Resources\Unassigned_Icon.png" />
+    <None Include="Resources\Completed_Icon.png" />
+    <None Include="Resources\Assigned_Icon.png" />
+    <None Include="Resources\pencil_icon.png" />
+    <None Include="Resources\Delete_Quote_icon.png" />
+    <None Include="Resources\Delete_icon.png" />
+    <None Include="Resources\remove_link.png" />
+    <None Include="Resources\create_link_28x28.png" />
+    <None Include="Resources\Delete_Project_Icon.png" />
+    <None Include="Resources\Close_Customer.png" />
+    <None Include="Resources\View_Cross_Sales.png" />
+    <None Include="Resources\Delete_Note_Icon.png" />
+    <None Include="Resources\Follow_Up_Icon.png" />
+    <None Include="Resources\Delete_Contact_Icon.png" />
+    <None Include="Resources\Restore_Icon.png" />
+    <None Include="Resources\Project_Icon_28x28.png" />
+    <None Include="Resources\Edit_Quote_28x28.png" />
+    <None Include="Resources\Reopen28x28.png" />
+    <None Include="Resources\Lost_Icon.png" />
+    <None Include="Resources\Sold_Icon.png" />
+    <None Include="Resources\New_Note_Icon.png" />
+    <None Include="Resources\New_Quote_icon.png" />
+    <None Include="Resources\invoice_icon_28x28.png" />
+    <None Include="Resources\Edit_Contact_28x28.png" />
+    <None Include="Resources\Administrator.png" />
+    <None Include="Resources\Reports.png" />
+    <None Include="Resources\Customer.png" />
+    <None Include="Resources\Navigation_0.png" />
+    <None Include="Resources\ExpandNavigation2.png" />
+    <None Include="Resources\ExpandNavigation1.png" />
+    <None Include="Resources\MaximizeNavigation.png" />
+    <None Include="Resources\MinimizedPressed.png" />
+    <None Include="Resources\MinimizedHighlight.png" />
+    <None Include="Resources\CollapseNavigation.png" />
+    <None Include="Resources\MinimizeNavigation.png" />
+    <None Include="Resources\Search.png" />
+    <None Include="Resources\Selection Bar Unselected.bmp" />
+    <None Include="Resources\Selection Bar Selected.bmp" />
+    <None Include="Resources\Selection Bar Highlighted.bmp" />
+    <None Include="Resources\Deactivate_Customer.png" />
+    <None Include="Resources\Credit_Card_Icon.png" />
+    <None Include="Resources\Calendar_Icon.png" />
+    <None Include="Resources\Edit_Project_28x28.png" />
+    <None Include="Resources\New_Project28x28.png" />
+    <None Include="Resources\New_Contact_Icon.png" />
+    <None Include="Resources\Edit_Customer_28x28.png" />
+    <None Include="Resources\New_Customer_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reports\Parameter Forms\Accounts Receivable\" />
+    <Folder Include="Reports\Parameter Forms\Administration\" />
+    <Folder Include="Reports\Parameter Forms\Manager\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
