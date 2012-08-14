@@ -271,6 +271,101 @@ namespace rkcrm.Administration.User
 			return oTable;
 		}
 
+		internal bool UpdateUser(User theUser)
+		{
+			try
+			{
+				User orig = GetUser(theUser.ID);
+
+				SQL = "UPDATE `users` u SET ";
+
+				if (orig.FirstName != theUser.UserName)
+					SQL += string.IsNullOrEmpty(theUser.UserName) ? "u.`user_name` = NULL, " : "u.`user_name` = '" + BuildSafeString(theUser.UserName) + "', ";
+
+				if (orig.FirstName != theUser.FirstName)
+					SQL += string.IsNullOrEmpty(theUser.FirstName) ? "u.`first_name` = NULL, " : "u.`first_name` = '" + BuildSafeString(theUser.FirstName) + "', ";
+
+				if (orig.LastName != theUser.LastName)
+					SQL += string.IsNullOrEmpty(theUser.LastName) ? "u.`last_name` = NULL, " : "u.`last_name` = '" + BuildSafeString(theUser.LastName) + "', ";
+
+				if (orig.EmailAddress != theUser.EmailAddress)
+					SQL += string.IsNullOrEmpty(theUser.EmailAddress) ? "u.`email_address` = NULL, " : " u.`email_address` = '" + BuildSafeString(theUser.EmailAddress) + "', ";
+
+				if (orig.JobTitleID != theUser.JobTitleID)
+					SQL += (theUser.JobTitleID == 0 ? "u.`job_title_id` = NULL, " : "u.`job_title_id` = " + theUser.JobTitleID + ", ");
+
+				if (orig.LocationID != theUser.LocationID)
+					SQL += (theUser.LocationID == 0 ? "u.`location_id` = NULL, " : "u.`location_id` = " + theUser.LocationID + ", ");
+
+				if (orig.RoleID != theUser.RoleID)
+					SQL += (theUser.RoleID == 0 ? "u.`role_id` = NULL, " : "u.`role_id` = " + theUser.RoleID + ", ");
+
+				if (orig.ReceiveCrossLeads != theUser.ReceiveCrossLeads)
+					SQL += "u.`receives_crossleads` = " + theUser.ReceiveCrossLeads + ", ";
+
+				if (orig.ShowReminders != theUser.ShowReminders)
+					SQL += "u.`show_reminders` = " + theUser.ShowReminders + ", ";
+
+				//Finish off the SQL statement
+				SQL += "u.`updated` = NOW(), u.`updater_id` = " + thisUser.ID + " WHERE u.`user_id` = " + theUser.ID + ";";
+
+				InitializeCommand();
+				OpenConnection();
+
+				if (ExecuteStoredProcedure() == 0)
+					throw new Exception("The user with ID, " + theUser.ID + ", was not updated.");
+				else
+					return true;
+			}
+			catch (Exception e)
+			{
+				ErrorHandler.ProcessException(e, false);
+				return false;
+			}
+		}
+
+		internal User InsertUser(User newUser)
+		{
+			try
+			{
+				SQL = "INSERT INTO `users` SET " +
+					"`user_name` = '" + BuildSafeString(newUser.UserName) + "', " +
+					"`first_name` = '" + BuildSafeString(newUser.FirstName) + "', " +
+					"`last_name` = '" + BuildSafeString(newUser.LastName) + "', " +
+					"`email_address` = '" + BuildSafeString(newUser.EmailAddress) + "', " +
+					"`job_title_id` = " + (newUser.JobTitleID == 0 ? "NULL" : newUser.JobTitleID.ToString()) + ", " +
+					"`location_id` = " + (newUser.LocationID == 0 ? "NULL" : newUser.LocationID.ToString()) + ", " +
+					"`role_id` = " + (newUser.RoleID == 0 ? "NULL" : newUser.RoleID.ToString()) + ", " +
+					"`show_reminders` = " + newUser.ShowReminders + ", " +
+					"`receives_crossleads` = " + newUser.ReceiveCrossLeads + ", " +
+					"`created` = NOW(), " +
+					"`creator_id` = " + thisUser.ID + ", " +
+					"`updated` = NOW(), " +
+					"`updater_id` = " + thisUser.ID + ";";
+				InitializeCommand();
+				OpenConnection();
+
+				if (ExecuteStoredProcedure() == 0)
+					throw new Exception("Unable to save the new user.");
+				else
+				{
+					int newID;
+
+					SQL = "SELECT MAX(u.`user_id`) FROM `users` u;";
+					InitializeCommand();
+
+					newID = Convert.ToInt32(Command.ExecuteScalar());
+
+					return GetUser(newID);
+				}
+			}
+			catch (Exception e)
+			{
+				ErrorHandler.ProcessException(e, false);
+				return newUser;
+			}
+		}
+
 		#endregion
 
 	}
