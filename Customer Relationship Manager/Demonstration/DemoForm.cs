@@ -36,39 +36,6 @@ namespace rkcrm.Demonstration
 
         #region Methods
 
-        private void LoadUserData()
-        {
-            myBoundary.txtFirstName.Text = thisUser.FirstName;
-            myBoundary.txtLastName.Text = thisUser.LastName;
-            myBoundary.txtUserName.Text = thisUser.Name;
-            myBoundary.cboRole.SelectedValue = thisUser.RoleID;
-            myBoundary.cboLocation.SelectedValue = thisUser.LocationID;
-            myBoundary.cboJobTitle.SelectedValue = thisUser.JobTitleID;
-            myBoundary.txtEmail.Text = thisUser.EmailAddress;
-            myBoundary.chkShowReminders.Checked = thisUser.ShowReminders;
-            myBoundary.chkReceivesLeads.Checked = thisUser.ReceivesCrossLeads;
-
-            //For each department the user is assigned too, search for and mark as selected in the available department list
-            try
-            {
-                foreach (Department oDept in thisUser.Departments)
-                {
-                    int i = 0;
-                    while (i < myBoundary.lstDepartment.Items.Count)
-                    {
-                        if (Convert.ToInt32(((DataRowView)myBoundary.lstDepartment.Items[i])[0]) == oDept.ID)
-                            myBoundary.lstDepartment.SelectedItems.Add(myBoundary.lstDepartment.Items[i]);
-                        i++;
-                    }
-                }
-
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message + ", " + e.StackTrace);
-            }
-        }
-
         #endregion
 
 
@@ -79,7 +46,7 @@ namespace rkcrm.Demonstration
             IsLoading = true;
 
             thisUser.Refresh();
-            LoadUserData();
+			myBoundary.MyUser = thisUser.MyUser;
 
             IsLoading = false;
         }
@@ -108,12 +75,7 @@ namespace rkcrm.Demonstration
             IsLoading = true;
 
             thisUser.Refresh();
-            LoadUserData();
-
-            myBoundary.txtFirstName.Enabled = false;
-            myBoundary.txtLastName.Enabled = false;
-            myBoundary.txtUserName.Enabled = false;
-            myBoundary.txtEmail.Enabled = false;
+			myBoundary.MyUser = thisUser.MyUser;
 
             IsLoading = false;
         }
@@ -156,6 +118,15 @@ namespace rkcrm.Demonstration
                     thisUser.Departments.Add(Convert.ToInt32(oRow[0]));
             }
         }
+
+		private void myBoundary_MyUserChanged(object sender, EventArgs e)
+		{
+			myBoundary.Title = "Demonstration User Security";
+            myBoundary.txtFirstName.Enabled = false;
+            myBoundary.txtLastName.Enabled = false;
+            myBoundary.txtUserName.Enabled = false;
+            myBoundary.txtEmail.Enabled = false;
+		}
 
         #endregion        
     }
