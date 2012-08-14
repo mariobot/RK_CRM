@@ -46,6 +46,7 @@ namespace rkcrm.Objects.Quote
 		private ToolStripMenuItem tsmCancel;
 
 		private const int FOLLOW_UP_ON_QUOTES = 5;
+		private const int ADMINISTRATOR = 1;
 
 		#endregion
 
@@ -477,7 +478,7 @@ namespace rkcrm.Objects.Quote
 				{
 					ListViewItem newItem;
 
-					foreach(DataRow oRow in theController.GetQuotes(MyProject.ID, thisUser.Role.ID == 1).Rows)
+					foreach (DataRow oRow in theController.GetQuotes(MyProject.ID, thisUser.RoleID == ADMINISTRATOR).Rows)
 					{
 						newItem = new ListViewItem();
 						newItem.Text = oRow["quote_id"].ToString();

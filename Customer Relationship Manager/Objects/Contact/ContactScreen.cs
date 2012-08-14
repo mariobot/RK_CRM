@@ -112,7 +112,7 @@ namespace rkcrm.Objects.Contact
 
 				using (ContactController theController = new ContactController())
 				{
-					contacts = theController.GetContacts(MyCustomer.ID, (thisUser.Role.ID == ADMINISTRATOR));
+					contacts = theController.GetContacts(MyCustomer.ID, (thisUser.RoleID == ADMINISTRATOR));
 				}
 
 				if (contacts.Rows.Count > 0)
@@ -437,7 +437,7 @@ namespace rkcrm.Objects.Contact
 			tsbDelete.Enabled = !MyContact.IsArchived;
 			tsbRestore.Enabled = MyContact.IsArchived;
 
-			if (thisUser.Role.ID == ADMINISTRATOR)
+			if (thisUser.RoleID == ADMINISTRATOR)
 			{
 				tsbDelete.Visible = !MyContact.IsArchived;
 				tsbRestore.Visible = !tsbDelete.Visible;

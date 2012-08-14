@@ -122,7 +122,7 @@ namespace rkcrm.Objects.Cross_Lead.Preview_Controls
 
 			using (QuoteController theController = new QuoteController())
 			{
-				quotes = theController.GetQuotes(ProjectID, (thisUser.Role.ID == ADMINISTRATOR));
+				quotes = theController.GetQuotes(ProjectID, (thisUser.RoleID == ADMINISTRATOR));
 			}
 
 			Title = "Quotes - Count: " + quotes.Rows.Count;

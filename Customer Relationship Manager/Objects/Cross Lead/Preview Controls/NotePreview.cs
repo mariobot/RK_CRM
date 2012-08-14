@@ -134,7 +134,7 @@ namespace rkcrm.Objects.Cross_Lead.Preview_Controls
 
 			using (NoteController theController = new NoteController())
 			{
-				notes = theController.GetNotes(ProjectID, (thisUser.Role.ID == ADMINISTRATOR));
+				notes = theController.GetNotes(ProjectID, (thisUser.RoleID == ADMINISTRATOR));
 			}
 
 			Title = "Notes - Count: " + notes.Rows.Count;

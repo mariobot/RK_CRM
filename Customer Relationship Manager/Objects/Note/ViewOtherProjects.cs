@@ -15,7 +15,7 @@ namespace rkcrm.Objects.Note
 	class ViewOtherProjects : ObjectListBase
 	{
 
-		#region MyRegion
+		#region Variables
 
 		private System.Windows.Forms.ColumnHeader chNoteID;
 		private System.Windows.Forms.ColumnHeader chProjectName;
@@ -30,6 +30,7 @@ namespace rkcrm.Objects.Note
 		private ColumnHeader chProjectID;
 		private ColumnHeader chCustomerID;
 		private Note clsMyNote;
+		private const int ADMINISTRATOR = 1;
 
 		#endregion
 
@@ -333,7 +334,7 @@ namespace rkcrm.Objects.Note
 					MyNote = theController.GetNote(Convert.ToInt32(e.Item.SubItems[0].Text));
 				}
 
-			btnOK.Enabled = e.IsSelected && (MyNote.SalesRepID == thisUser.ID || thisUser.Role.ID == 1);
+			btnOK.Enabled = e.IsSelected && (MyNote.SalesRepID == thisUser.ID || thisUser.RoleID == ADMINISTRATOR);
 		}
 
 		private void btnOK_Click(object sender, EventArgs e)

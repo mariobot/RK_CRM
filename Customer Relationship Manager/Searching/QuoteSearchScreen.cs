@@ -27,6 +27,7 @@ namespace rkcrm.Searching
 		private ColumnHeader chProjectID;
 		private ColumnHeader chDepartmentID;
 		private System.Windows.Forms.ColumnHeader chProjectName;
+		private const int ADMINISTRATOR = 1;
 
 		#endregion
 
@@ -196,7 +197,7 @@ namespace rkcrm.Searching
 
 				foreach (DataRow oRow in dtResults.Rows)
 				{
-					if (thisUser.Role.ID == 1 || !Convert.ToBoolean(oRow["is_archived"]))
+					if (thisUser.RoleID == ADMINISTRATOR || !Convert.ToBoolean(oRow["is_archived"]))
 					{
 						newItem = new ListViewItem();
 						newItem.Text = oRow["quote_id"].ToString();

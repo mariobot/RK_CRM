@@ -45,6 +45,7 @@ namespace rkcrm.Searching.DropDowns
 		private ToolStripSeparator tss_3;
 		private ToolStripButton tsbProperties;
 		private const int COMPLETED_INDEX = 3;
+		private const int ADMINISTRATOR = 1;
 
 		#endregion
 
@@ -334,7 +335,7 @@ namespace rkcrm.Searching.DropDowns
 			tsmCustomer.Enabled = true;
 			tsmDelete.Enabled = true;
 			tsmEdit.Enabled = true;
-			tsmFollowUp.Enabled = (Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems["sales_rep_id"]) == thisUser.ID || thisUser.Role.ID == 1);
+			tsmFollowUp.Enabled = (Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems["sales_rep_id"]) == thisUser.ID || thisUser.RoleID == ADMINISTRATOR);
 			tsmProject.Enabled = true;
 			tsmRestore.Enabled = true;
 			tsmProperties.Enabled = true;

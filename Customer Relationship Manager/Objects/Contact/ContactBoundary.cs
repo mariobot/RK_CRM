@@ -35,6 +35,7 @@ namespace rkcrm.Objects.Contact
 		private const int PHONE_NUMBER_INDEX = 3;
 		private const int EXTENSION_INDEX = 4;
 		private const int DELETE_INDEX = 5;
+		private const int ADMINISTRATOR = 1;
 
 		private const string DIRTY_FONT_FAMILY = "Arial Rounded MT Bold";
 		private const string CLEAN_FONT_FAMILY = "Microsoft Sans Serif";
@@ -399,7 +400,7 @@ namespace rkcrm.Objects.Contact
 			dgvPhoneNumbers.Enabled = true;
 
 			//Only available to administrators
-			chkSubscribed.Enabled = (thisUser.Role.ID == 1);
+			chkSubscribed.Enabled = (thisUser.RoleID == ADMINISTRATOR);
 
 			this.IsDirty = false;
 			this.State = BoundaryState.Adding;
@@ -431,7 +432,7 @@ namespace rkcrm.Objects.Contact
 				dgvPhoneNumbers.Enabled = true;
 			}
 			//Only available to administrators
-			chkSubscribed.Enabled = (thisUser.Role.ID == 1);
+			chkSubscribed.Enabled = (thisUser.RoleID == ADMINISTRATOR);
 
 			cboContactTitle.SelectedValue = MyContact.TitleID;
 			txtFirstName.Text = MyContact.FirstName;

@@ -46,6 +46,7 @@ namespace rkcrm.Searching
 		private ColumnHeader chQuoteProjectID;
 		private ColumnHeader chQuoteDepartmentID;
 		private System.Windows.Forms.ColumnHeader chContact;
+		private const int ADMINISTRATOR = 1;
 
 		#endregion
 
@@ -443,7 +444,7 @@ namespace rkcrm.Searching
 
 					foreach (DataRow oRow in dtResults.Rows)
 					{
-						if (thisUser.Role.ID == 1 || !Convert.ToBoolean(oRow["is_archived"]))
+						if (thisUser.RoleID == ADMINISTRATOR || !Convert.ToBoolean(oRow["is_archived"]))
 						{
 							newItem = new ListViewItem();
 							newItem.Text = oRow["project_id"].ToString();
@@ -476,7 +477,7 @@ namespace rkcrm.Searching
 
 			using (ProjectController theController = new ProjectController())
 			{
-				dsPreview = theController.GetSearchPreview(Convert.ToInt32(selectedItem.SubItems[0].Text), thisUser.Role.ID == 1);
+				dsPreview = theController.GetSearchPreview(Convert.ToInt32(selectedItem.SubItems[0].Text), thisUser.RoleID == ADMINISTRATOR);
 			}
 
 			if (dsPreview.Tables.Count > 1)

@@ -369,7 +369,7 @@ namespace rkcrm.Objects.Cross_Sale
 
 				using (CrossSaleController theController = new CrossSaleController())
 				{
-					oTable = theController.GetCrossSales(MyCustomer.ID, (thisUser.Role.ID == ADMINISTRATOR));
+					oTable = theController.GetCrossSales(MyCustomer.ID, (thisUser.RoleID == ADMINISTRATOR));
 				}
 
 				foreach (DataRow oRow in oTable.Rows)
@@ -425,7 +425,7 @@ namespace rkcrm.Objects.Cross_Sale
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
 
-			if (thisUser.Role.ID == ADMINISTRATOR)
+			if (thisUser.RoleID == ADMINISTRATOR)
 			{
 				tsbDelete.Visible = !MyCrossSale.IsArchived;
 				tsbRestore.Visible = !tsbDelete.Visible;

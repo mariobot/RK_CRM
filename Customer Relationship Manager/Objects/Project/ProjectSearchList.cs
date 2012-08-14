@@ -7,10 +7,19 @@ namespace rkcrm.Objects.Project
 {
 	class ProjectSearchList : DetailListBase
 	{
+
+		#region Variables
+
 		private ColumnHeader chID;
 		private ColumnHeader chName;
 		private ColumnHeader chAddress;
 		private ColumnHeader chCity;
+		private const int ADMINISTRATOR = 1;
+
+		#endregion
+
+
+		#region Methods
 
 		private void InitializeComponent()
 		{
@@ -84,7 +93,7 @@ namespace rkcrm.Objects.Project
 
 					foreach (DataRow oRow in dtResults.Rows)
 					{
-						if (thisUser.Role.ID == 1 || !Convert.ToBoolean(oRow["is_archived"]))
+						if (thisUser.RoleID == ADMINISTRATOR || !Convert.ToBoolean(oRow["is_archived"]))
 						{
 							newItem = new ListViewItem();
 							newItem.Text = oRow["project_id"].ToString();
@@ -106,6 +115,11 @@ namespace rkcrm.Objects.Project
 			else
 				ShowResultsMessage("No projects were found with a " + cboSearchIn.Text + " of \"" + txtLookFor.Text + "\".");
 		}
+
+		#endregion
+
+
+		#region Event Handlers
 
 		private void btnSearch_Click(object sender, EventArgs e)
 		{
@@ -132,6 +146,11 @@ namespace rkcrm.Objects.Project
 				MessageBox.Show("Please select a project from the list.", MySettings.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
+		#endregion
+
+
+		#region Constructor
+
 		public ProjectSearchList()
 			: base()
 		{
@@ -152,5 +171,8 @@ namespace rkcrm.Objects.Project
 			cboSearchIn.DisplayMember = "Description";
 			cboSearchIn.ValueMember = "Column_Name";
 		}
+
+		#endregion
+
 	}
 }

@@ -144,7 +144,7 @@ namespace rkcrm.Objects.Customer
 			SQL = "SELECT p.`project_id`, p.`customer_id`, p.`name`, p.`address`, p.`city`, pt.`name` AS `type`, p.`is_archived` " + 
 				  "FROM `projects` p LEFT JOIN `ref_project_types` pt ON p.`type_id` = pt.`type_id` ";
 
-			if (thisUser.Role.ID == 1)
+			if (thisUser.RoleID == 1)
 				SQL += "WHERE p.`customer_id` = " + CustomerID + "; ";
 			else
 				SQL += "WHERE p.`is_archived` = 0 AND p.`customer_id` = " + CustomerID + "; ";

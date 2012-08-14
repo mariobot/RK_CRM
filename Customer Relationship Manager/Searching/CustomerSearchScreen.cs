@@ -55,6 +55,7 @@ namespace rkcrm.Searching
 
 		private const int CUSTOMER_INDEX = 2;
 		private const int CONTACT_ID_INDEX = 1;
+		private const int ADMINISTRATOR = 1;
 
 		#endregion
 
@@ -808,12 +809,12 @@ namespace rkcrm.Searching
 						if (Convert.ToDateTime(theRow["creditcard_expiration"]) > DateTime.Today)
 						{
 							DlblCCExpiration.BackColor = Color.LimeGreen;
-							DlblCCExpiration.Text = thisUser.Role.ID == 1 || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Yes";
+							DlblCCExpiration.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Yes";
 						}
 						else
 						{
 							DlblCCExpiration.BackColor = Color.IndianRed;
-							DlblCCExpiration.Text = thisUser.Role.ID == 1 || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Expired";
+							DlblCCExpiration.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Expired";
 						}
 					}
 
@@ -824,12 +825,12 @@ namespace rkcrm.Searching
 						if (Convert.ToDateTime(theRow["tax_id_expiration"]) > DateTime.Today)
 						{
 							DlblTaxExempt.BackColor = Color.LimeGreen;
-							DlblTaxExempt.Text = thisUser.Role.ID == 1 || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Yes";
+							DlblTaxExempt.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Yes";
 						}
 						else
 						{
 							DlblTaxExempt.BackColor = Color.IndianRed;
-							DlblTaxExempt.Text = thisUser.Role.ID == 1 || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Expired";
+							DlblTaxExempt.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Expired";
 						}
 					}
 				}

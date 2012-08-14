@@ -11,12 +11,19 @@ namespace rkcrm.Reports.Parameter_Forms.User
 {
 	class MyCrossLeadAnalysis : ParameterBase
 	{
+
+		#region Variables
+
 		internal System.Windows.Forms.DateTimePicker dtpEnd;
 		internal System.Windows.Forms.DateTimePicker dtpStart;
 		internal System.Windows.Forms.Label lblEnd;
 		internal System.Windows.Forms.Label lblStart;
 		internal System.Windows.Forms.Label lblSalesRep;
 		internal System.Windows.Forms.ComboBox cboSalesRep;
+		private const int MANAGER = 3;
+		private const int ADMINISTRATOR = 1;
+
+		#endregion
 
 
 		#region Methods
@@ -155,7 +162,7 @@ namespace rkcrm.Reports.Parameter_Forms.User
 		{
 			using (UserController theController = new UserController())
 			{
-				if (thisUser.Role.ID == 3)
+				if (thisUser.RoleID == MANAGER)
 					cboSalesRep.DataSource = theController.GetDepartmentReps(thisUser.HomeDepartment.ID);
 				else
 					cboSalesRep.DataSource = theController.GetSalesReps();
@@ -164,7 +171,7 @@ namespace rkcrm.Reports.Parameter_Forms.User
 				cboSalesRep.ValueMember = "user_id";
 				cboSalesRep.SelectedValue = thisUser.ID;
 
-				if (thisUser.Role.ID != 1 && thisUser.Role.ID != 3)
+				if (thisUser.RoleID != 1 && thisUser.RoleID != MANAGER)
 				{
 					this.Height -= (dtpStart.Location.Y - cboSalesRep.Location.Y);
 					dtpStart.Location = new System.Drawing.Point(dtpStart.Location.X, cboSalesRep.Location.Y);

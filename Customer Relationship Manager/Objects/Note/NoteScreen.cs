@@ -42,6 +42,7 @@ namespace rkcrm.Objects.Note
 		private ToolStripSeparator mss_2;
 		private ToolStripMenuItem tsmCancel;
 		private const int FINAL_NOTE = 11;
+		private const int ADMINISTRATOR = 1;
 
 		#endregion
 
@@ -427,7 +428,7 @@ namespace rkcrm.Objects.Note
 				{
 					ListViewItem newItem;
 
-					foreach (DataRow oRow in theController.GetNotes(MyProject.ID, (thisUser.Role.ID == 1)).Rows)
+					foreach (DataRow oRow in theController.GetNotes(MyProject.ID, (thisUser.RoleID == ADMINISTRATOR)).Rows)
 					{
 						newItem = new ListViewItem();
 						newItem.Text = oRow["note_id"].ToString();

@@ -41,9 +41,9 @@ namespace rkcrm.Demonstration
             myBoundary.txtFirstName.Text = thisUser.FirstName;
             myBoundary.txtLastName.Text = thisUser.LastName;
             myBoundary.txtUserName.Text = thisUser.Name;
-            myBoundary.cboRole.SelectedValue = thisUser.Role.ID;
-            myBoundary.cboLocation.SelectedValue = thisUser.Location.ID;
-            myBoundary.cboJobTitle.SelectedValue = thisUser.JobTitle.ID;
+            myBoundary.cboRole.SelectedValue = thisUser.RoleID;
+            myBoundary.cboLocation.SelectedValue = thisUser.LocationID;
+            myBoundary.cboJobTitle.SelectedValue = thisUser.JobTitleID;
             myBoundary.txtEmail.Text = thisUser.EmailAddress;
             myBoundary.chkShowReminders.Checked = thisUser.ShowReminders;
             myBoundary.chkReceivesLeads.Checked = thisUser.ReceivesCrossLeads;
