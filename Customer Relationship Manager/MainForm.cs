@@ -169,6 +169,14 @@ namespace rkcrm
 			oForm.Show();
 		}
 
+		private void tsmUserProperties_Click(object sender, EventArgs e)
+		{
+			Objects.PropertiesWindow oForm = new rkcrm.Objects.PropertiesWindow();
+			oForm.SelectedObject = thisUser.MyUser;
+			oForm.Text = "Current User Properties";
+			oForm.Show();
+		}
+
 		#endregion
 
 

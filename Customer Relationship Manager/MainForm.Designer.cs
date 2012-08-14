@@ -46,6 +46,8 @@
 			this.tslStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tslCurrentUser = new System.Windows.Forms.ToolStripStatusLabel();
 			this.theNavigationScreen = new rkcrm.Navigation.NavigationScreen();
+			this.tss_1 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmUserProperties = new System.Windows.Forms.ToolStripMenuItem();
 			this.msMain.SuspendLayout();
 			this.mainStatusStrip.SuspendLayout();
 			this.SuspendLayout();
@@ -81,7 +83,9 @@
 			// tsmView
 			// 
 			this.tsmView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmReminders});
+            this.tsmReminders,
+            this.tss_1,
+            this.tsmUserProperties});
 			this.tsmView.Name = "tsmView";
 			this.tsmView.Size = new System.Drawing.Size(44, 20);
 			this.tsmView.Text = "&View";
@@ -89,7 +93,7 @@
 			// tsmReminders
 			// 
 			this.tsmReminders.Name = "tsmReminders";
-			this.tsmReminders.Size = new System.Drawing.Size(130, 22);
+			this.tsmReminders.Size = new System.Drawing.Size(153, 22);
 			this.tsmReminders.Text = "Reminders";
 			this.tsmReminders.Click += new System.EventHandler(this.tsmReminders_Click);
 			// 
@@ -185,6 +189,19 @@
 			this.theNavigationScreen.Size = new System.Drawing.Size(784, 516);
 			this.theNavigationScreen.TabIndex = 2;
 			// 
+			// tss_1
+			// 
+			this.tss_1.Name = "tss_1";
+			this.tss_1.Size = new System.Drawing.Size(150, 6);
+			// 
+			// tsmUserProperties
+			// 
+			this.tsmUserProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsmUserProperties.Name = "tsmUserProperties";
+			this.tsmUserProperties.Size = new System.Drawing.Size(153, 22);
+			this.tsmUserProperties.Text = "User Properties";
+			this.tsmUserProperties.Click += new System.EventHandler(this.tsmUserProperties_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -229,6 +246,8 @@
 		public System.Windows.Forms.ToolStripMenuItem tsmDemoMode;
         public System.Windows.Forms.MenuStrip msMain;
 		internal rkcrm.Navigation.NavigationScreen theNavigationScreen;
+		private System.Windows.Forms.ToolStripSeparator tss_1;
+		private System.Windows.Forms.ToolStripMenuItem tsmUserProperties;
     }
 }
 
