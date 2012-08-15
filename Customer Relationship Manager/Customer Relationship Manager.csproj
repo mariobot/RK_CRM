@@ -131,6 +131,9 @@
     <Compile Include="Administration\Role\Role.cs" />
     <Compile Include="Administration\Role\RoleController.cs" />
     <Compile Include="Administration\Department\DepartmentCollection.cs" />
+    <Compile Include="Administration\User\Preview Controls\UserTasks.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Administration\User\UserBoundary.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -452,6 +455,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Administration\Department\DepartmentSelect.resx">
       <DependentUpon>DepartmentSelect.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Administration\User\Preview Controls\UserTasks.resx">
+      <DependentUpon>UserTasks.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Administration\User\UserBoundary.resx">
@@ -860,8 +867,6 @@
     <Compile Include="Searching\QuoteSearchScreen.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Security\HEXtoBinary.cs" />
-    <Compile Include="Security\SecurityController.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SplashScreen.cs">
       <SubType>Form</SubType>
