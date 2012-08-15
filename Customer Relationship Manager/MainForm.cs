@@ -16,6 +16,16 @@ namespace rkcrm
         #endregion
 
 
+		#region Security Variables
+
+		private bool CrossLeadsIsVisible;
+		private bool DemoFormIsVisible;
+		private bool PropertiesIsVisible;
+		private bool RemindersIsVisible;
+
+		#endregion
+
+
         #region Properties
 
         public FormModes Mode
@@ -38,6 +48,38 @@ namespace rkcrm
 
 
         #region Methods
+
+		private void DetermineAccess()
+		{
+			CrossLeadsIsVisible = false;
+			DemoFormIsVisible = false;
+			PropertiesIsVisible = false;
+			RemindersIsVisible = false;
+			
+			foreach (int task in thisUser.MyTasks)
+				switch (task)
+				{
+					case (int)Tasks.AssignCrossLeads :
+						CrossLeadsIsVisible = true;
+						break;
+					case (int)Tasks.DemonstrationForm:
+						DemoFormIsVisible = true;
+						break;
+					case (int)Tasks.ViewProperties:
+						PropertiesIsVisible = true;
+						break;
+					case (int)Tasks.ViewReminders:
+						RemindersIsVisible = true;
+						break;
+				}
+
+			tsmCrossLeads.Visible = CrossLeadsIsVisible;
+			tsmDemoMode.Visible = DemoFormIsVisible;
+			tsmUserProperties.Visible = PropertiesIsVisible;
+			tsmReminders.Visible = RemindersIsVisible;
+			tssView_0.Visible = (RemindersIsVisible && PropertiesIsVisible);
+			tssTool_0.Visible = (DemoFormIsVisible && CrossLeadsIsVisible);
+		}
 
 		#endregion
 
@@ -94,16 +136,11 @@ namespace rkcrm
             //minimum time to show splash screen
             Thread.Sleep(2000);
 
-			try
-			{
-				//This populates the static user class that represents the user curently logged in
-				tslCurrentUser.Text += thisUser.FullName;
+			//This populates the static user class that represents the user curently logged in
+			tslCurrentUser.Text += thisUser.FullName;
 
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
+			DetermineAccess();
+
 			//Set Form title
 			this.Text = MySettings.AppTitle;
 
@@ -183,9 +220,9 @@ namespace rkcrm
 		#region Constructors
 
 		public MainForm()
-			{
-				InitializeComponent();
-			}
+		{
+			InitializeComponent();
+		}
 
 		#endregion
 
@@ -193,6 +230,14 @@ namespace rkcrm
         #region Enumerations
 
         public enum FormModes { Live, Demonstration };
+
+		private enum Tasks
+		{
+			DemonstrationForm = 46,
+			ViewReminders = 45,
+			ViewProperties = 20,
+			AssignCrossLeads = 30
+		};
 
         #endregion
 

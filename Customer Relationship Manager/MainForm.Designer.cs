@@ -34,6 +34,8 @@
 			this.tsmExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmView = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmReminders = new System.Windows.Forms.ToolStripMenuItem();
+			this.tssView_0 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmUserProperties = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmTools = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmDemoMode = new System.Windows.Forms.ToolStripMenuItem();
 			this.tssTool_0 = new System.Windows.Forms.ToolStripSeparator();
@@ -46,8 +48,6 @@
 			this.tslStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tslCurrentUser = new System.Windows.Forms.ToolStripStatusLabel();
 			this.theNavigationScreen = new rkcrm.Navigation.NavigationScreen();
-			this.tss_1 = new System.Windows.Forms.ToolStripSeparator();
-			this.tsmUserProperties = new System.Windows.Forms.ToolStripMenuItem();
 			this.msMain.SuspendLayout();
 			this.mainStatusStrip.SuspendLayout();
 			this.SuspendLayout();
@@ -84,7 +84,7 @@
 			// 
 			this.tsmView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmReminders,
-            this.tss_1,
+            this.tssView_0,
             this.tsmUserProperties});
 			this.tsmView.Name = "tsmView";
 			this.tsmView.Size = new System.Drawing.Size(44, 20);
@@ -96,6 +96,19 @@
 			this.tsmReminders.Size = new System.Drawing.Size(153, 22);
 			this.tsmReminders.Text = "Reminders";
 			this.tsmReminders.Click += new System.EventHandler(this.tsmReminders_Click);
+			// 
+			// tssView_0
+			// 
+			this.tssView_0.Name = "tssView_0";
+			this.tssView_0.Size = new System.Drawing.Size(150, 6);
+			// 
+			// tsmUserProperties
+			// 
+			this.tsmUserProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsmUserProperties.Name = "tsmUserProperties";
+			this.tsmUserProperties.Size = new System.Drawing.Size(153, 22);
+			this.tsmUserProperties.Text = "User Properties";
+			this.tsmUserProperties.Click += new System.EventHandler(this.tsmUserProperties_Click);
 			// 
 			// tsmTools
 			// 
@@ -189,19 +202,6 @@
 			this.theNavigationScreen.Size = new System.Drawing.Size(784, 516);
 			this.theNavigationScreen.TabIndex = 2;
 			// 
-			// tss_1
-			// 
-			this.tss_1.Name = "tss_1";
-			this.tss_1.Size = new System.Drawing.Size(150, 6);
-			// 
-			// tsmUserProperties
-			// 
-			this.tsmUserProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
-			this.tsmUserProperties.Name = "tsmUserProperties";
-			this.tsmUserProperties.Size = new System.Drawing.Size(153, 22);
-			this.tsmUserProperties.Text = "User Properties";
-			this.tsmUserProperties.Click += new System.EventHandler(this.tsmUserProperties_Click);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -246,7 +246,7 @@
 		public System.Windows.Forms.ToolStripMenuItem tsmDemoMode;
         public System.Windows.Forms.MenuStrip msMain;
 		internal rkcrm.Navigation.NavigationScreen theNavigationScreen;
-		private System.Windows.Forms.ToolStripSeparator tss_1;
+		private System.Windows.Forms.ToolStripSeparator tssView_0;
 		private System.Windows.Forms.ToolStripMenuItem tsmUserProperties;
     }
 }
