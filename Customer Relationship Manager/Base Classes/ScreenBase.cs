@@ -133,6 +133,10 @@ namespace rkcrm.Base_Classes
 		{
 		}
 
+		public virtual void DetermineAccess()
+		{
+		}
+
 		public void RefreshReminders()
 		{
 			RemindersForm theForm = null;
