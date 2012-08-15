@@ -161,7 +161,7 @@ namespace rkcrm
 		}
 
 
-		static public List<int> MyTasks
+		static public HashSet<int> MyTasks
 		{
 			get { return theUser.MyTasks; }
 		}

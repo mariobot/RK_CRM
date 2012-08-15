@@ -366,9 +366,9 @@ namespace rkcrm.Administration.User
 			}
 		}
 		
-		public List<int> GetUserTasks(int UserID)
+		public HashSet<int> GetUserTasks(int UserID)
 		{
-			List<int> theList = new List<int>();
+			HashSet<int> theList = new HashSet<int>();
 			MySql.Data.MySqlClient.MySqlDataReader oReader;
 
 			try

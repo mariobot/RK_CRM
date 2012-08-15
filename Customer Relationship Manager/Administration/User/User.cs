@@ -24,7 +24,7 @@ namespace rkcrm.Administration.User
         private int intRoleID;
         private bool bolShowReminders;
         private bool bolReceiveCrossLeads;
-		private List<int> Tasks;
+		private HashSet<int> Tasks;
 		private Department.Department clsHome;
         private Job_Title.JobTitle clsJobTitle;
         private Location.Location clsLocation;
@@ -217,7 +217,7 @@ namespace rkcrm.Administration.User
 			set { clsHome = value; }
 		}
 
-		public List<int> MyTasks
+		public HashSet<int> MyTasks
 		{
 			get
 			{
@@ -255,7 +255,7 @@ namespace rkcrm.Administration.User
 					Tasks = theController.GetUserTasks(intID);
 				}
 			else
-				Tasks = new List<int>();
+				Tasks = new HashSet<int>();
 		}
 
 		#endregion
