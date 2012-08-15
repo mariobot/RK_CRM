@@ -137,7 +137,7 @@
 			// 
 			this.tsmCrossLeads.Name = "tsmCrossLeads";
 			this.tsmCrossLeads.Size = new System.Drawing.Size(214, 22);
-			this.tsmCrossLeads.Text = "Cross Lead Management";
+			this.tsmCrossLeads.Text = "Cross Lead Assignments";
 			this.tsmCrossLeads.Click += new System.EventHandler(this.tsmCrossLeads_Click);
 			// 
 			// tsmHelp
