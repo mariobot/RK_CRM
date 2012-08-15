@@ -2,6 +2,7 @@
 using System.Data;
 using rkcrm.Administration.Department;
 using rkcrm.Base_Classes;
+using System.Collections.Generic;
 
 namespace rkcrm.Administration.User
 {
@@ -23,7 +24,7 @@ namespace rkcrm.Administration.User
         private int intRoleID;
         private bool bolShowReminders;
         private bool bolReceiveCrossLeads;
-
+		private List<int> Tasks;
 		private Department.Department clsHome;
         private Job_Title.JobTitle clsJobTitle;
         private Location.Location clsLocation;
@@ -216,21 +217,49 @@ namespace rkcrm.Administration.User
 			set { clsHome = value; }
 		}
 
+		public List<int> MyTasks
+		{
+			get
+			{
+				if (Tasks == null)
+					GetTasks();
+
+				return Tasks;
+			}
+		}
+
 		#endregion
 
-        public new string ToString()
-        {
-            string what = FullName + "; " + UserName + "; " + EmailAddress + "; " + JobTitle.ID + ", " + JobTitle.Name +
-                "; " + Location.ID + ", " + Location.Name + "; " + Role.ID + ", " + Role.Name + "; Show Reminders: " + bolShowReminders +
-                "; Receives Leads: " + ReceiveCrossLeads + ";\n\rDepartments: ";
 
-            foreach (Department.Department oDept in Departments)
-                what += oDept.ID + ", " + oDept.Name + "\n\r";
+		#region Methods
+
+		public new string ToString()
+		{
+			string what = FullName + "; " + UserName + "; " + EmailAddress + "; " + JobTitle.ID + ", " + JobTitle.Name +
+				"; " + Location.ID + ", " + Location.Name + "; " + Role.ID + ", " + Role.Name + "; Show Reminders: " + bolShowReminders +
+				"; Receives Leads: " + ReceiveCrossLeads + ";\n\rDepartments: ";
+
+			foreach (Department.Department oDept in Departments)
+				what += oDept.ID + ", " + oDept.Name + "\n\r";
 
 			what += base.ToString();
 
-            return what;
-        }
+			return what;
+		}
+
+		private void GetTasks()
+		{
+			if (intID > 0)
+				using (UserController theController = new UserController())
+				{
+					Tasks = theController.GetUserTasks(intID);
+				}
+			else
+				Tasks = new List<int>();
+		}
+
+		#endregion
+
 
 		#region Constructors/Destructors
 

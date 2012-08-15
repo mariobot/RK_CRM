@@ -3,6 +3,7 @@ using rkcrm.Administration.Job_Title;
 using rkcrm.Administration.Location;
 using rkcrm.Administration.Role;
 using rkcrm.Administration.User;
+using System.Collections.Generic;
 
 namespace rkcrm
 {
@@ -157,6 +158,12 @@ namespace rkcrm
 		static public User MyUser
 		{
 			get { return theUser; }
+		}
+
+
+		static public List<int> MyTasks
+		{
+			get { return theUser.MyTasks; }
 		}
 
 		#endregion
