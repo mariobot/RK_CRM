@@ -72,6 +72,10 @@ namespace rkcrm.Objects.Customer
 		private ToolStripMenuItem tsmClose;
 
 		private const int ACTIVATION = 13;
+		private ToolStripSeparator tss_5;
+		private ToolStripButton tsbProperties;
+		private ToolStripSeparator mss_6;
+		private ToolStripMenuItem tsmProperties;
 		private const int DEACTIVATION = 12;
 
 		#endregion
@@ -125,6 +129,8 @@ namespace rkcrm.Objects.Customer
 			this.tss_4 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsbCrossSales = new System.Windows.Forms.ToolStripButton();
 			this.tsbSources = new System.Windows.Forms.ToolStripButton();
+			this.tss_5 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsbProperties = new System.Windows.Forms.ToolStripButton();
 			this.pnlControls = new System.Windows.Forms.Panel();
 			this.customerControls = new rkcrm.Objects.Customer.CustomerBoundary();
 			this.gbxSalesHistory = new System.Windows.Forms.GroupBox();
@@ -163,6 +169,8 @@ namespace rkcrm.Objects.Customer
 			this.tsmSources = new System.Windows.Forms.ToolStripMenuItem();
 			this.mss_5 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsmClose = new System.Windows.Forms.ToolStripMenuItem();
+			this.mss_6 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmProperties = new System.Windows.Forms.ToolStripMenuItem();
 			this.scMain.Panel1.SuspendLayout();
 			this.scMain.Panel2.SuspendLayout();
 			this.scMain.SuspendLayout();
@@ -208,7 +216,9 @@ namespace rkcrm.Objects.Customer
             this.tsbInvoices,
             this.tss_4,
             this.tsbCrossSales,
-            this.tsbSources});
+            this.tsbSources,
+            this.tss_5,
+            this.tsbProperties});
 			this.tsMain.Location = new System.Drawing.Point(0, 0);
 			this.tsMain.Name = "tsMain";
 			this.tsMain.Size = new System.Drawing.Size(600, 35);
@@ -377,6 +387,23 @@ namespace rkcrm.Objects.Customer
 			this.tsbSources.EnabledChanged += new System.EventHandler(this.tsbSources_EnabledChanged);
 			this.tsbSources.VisibleChanged += new System.EventHandler(this.tsbSources_VisibleChanged);
 			this.tsbSources.Click += new System.EventHandler(this.tsbSources_Click);
+			// 
+			// tss_5
+			// 
+			this.tss_5.Name = "tss_5";
+			this.tss_5.Size = new System.Drawing.Size(6, 35);
+			// 
+			// tsbProperties
+			// 
+			this.tsbProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.tsbProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsbProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsbProperties.Name = "tsbProperties";
+			this.tsbProperties.Size = new System.Drawing.Size(32, 32);
+			this.tsbProperties.Text = "Properties";
+			this.tsbProperties.EnabledChanged += new System.EventHandler(this.tsbProperties_EnabledChanged);
+			this.tsbProperties.VisibleChanged += new System.EventHandler(this.tsbProperties_VisibleChanged);
+			this.tsbProperties.Click += new System.EventHandler(this.tsbProperties_Click);
 			// 
 			// pnlControls
 			// 
@@ -648,18 +675,18 @@ namespace rkcrm.Objects.Customer
 			this.mss_2.Name = "mss_2";
 			this.mss_2.Size = new System.Drawing.Size(215, 6);
 			// 
-			// tsmEditTax
+			// tsmTaxExpiration
 			// 
 			this.tsmTaxExpiration.Image = global::rkcrm.Properties.Resources.Calendar_Icon;
-			this.tsmTaxExpiration.Name = "tsmEditTax";
+			this.tsmTaxExpiration.Name = "tsmTaxExpiration";
 			this.tsmTaxExpiration.Size = new System.Drawing.Size(218, 22);
 			this.tsmTaxExpiration.Text = "Edit Tax Excempt Expiration";
 			this.tsmTaxExpiration.Click += new System.EventHandler(this.tsbTaxExpiration_Click);
 			// 
-			// tsmEditCredit
+			// tsmCardExpiration
 			// 
 			this.tsmCardExpiration.Image = global::rkcrm.Properties.Resources.Credit_Card_Icon;
-			this.tsmCardExpiration.Name = "tsmEditCredit";
+			this.tsmCardExpiration.Name = "tsmCardExpiration";
 			this.tsmCardExpiration.Size = new System.Drawing.Size(218, 22);
 			this.tsmCardExpiration.Text = "Edit Credit Card Expiration";
 			this.tsmCardExpiration.Click += new System.EventHandler(this.tsbCardExpiration_Click);
@@ -669,10 +696,10 @@ namespace rkcrm.Objects.Customer
 			this.mss_3.Name = "mss_3";
 			this.mss_3.Size = new System.Drawing.Size(215, 6);
 			// 
-			// tsmViewInvoices
+			// tsmInvoices
 			// 
 			this.tsmInvoices.Image = global::rkcrm.Properties.Resources.invoice_icon_28x28;
-			this.tsmInvoices.Name = "tsmViewInvoices";
+			this.tsmInvoices.Name = "tsmInvoices";
 			this.tsmInvoices.Size = new System.Drawing.Size(218, 22);
 			this.tsmInvoices.Text = "View Invoices";
 			this.tsmInvoices.Click += new System.EventHandler(this.tsbInvoices_Click);
@@ -690,9 +717,9 @@ namespace rkcrm.Objects.Customer
 			this.tsmCrossSales.Text = "Manage Cross Sales";
 			this.tsmCrossSales.Click += new System.EventHandler(this.tsbCrossSales_Click);
 			// 
-			// tsmLeadSources
+			// tsmSources
 			// 
-			this.tsmSources.Name = "tsmLeadSources";
+			this.tsmSources.Name = "tsmSources";
 			this.tsmSources.Size = new System.Drawing.Size(218, 22);
 			this.tsmSources.Text = "Manage Lead Sources";
 			this.tsmSources.Click += new System.EventHandler(this.tsbSources_Click);
@@ -709,6 +736,19 @@ namespace rkcrm.Objects.Customer
 			this.tsmClose.Size = new System.Drawing.Size(218, 22);
 			this.tsmClose.Text = "Close Customer";
 			this.tsmClose.Click += new System.EventHandler(this.tsbClose_Click);
+			// 
+			// mss_6
+			// 
+			this.mss_6.Name = "mss_6";
+			this.mss_6.Size = new System.Drawing.Size(149, 6);
+			// 
+			// tsmProperties
+			// 
+			this.tsmProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsmProperties.Name = "tsmProperties";
+			this.tsmProperties.Size = new System.Drawing.Size(152, 22);
+			this.tsmProperties.Text = "Properties";
+			this.tsmProperties.Click += new System.EventHandler(this.tsbProperties_Click);
 			// 
 			// CustomerScreen
 			// 
@@ -747,7 +787,9 @@ namespace rkcrm.Objects.Customer
 			this.tsmCrossSales,
 			this.tsmSources,
 			this.mss_5,
-			this.tsmClose});
+			this.tsmClose,
+			this.mss_6,
+			this.tsmProperties});
 		}
 
 		/// <summary>
@@ -1137,6 +1179,17 @@ namespace rkcrm.Objects.Customer
 			tsbSaveClose.Enabled = this.IsDirty;
 		}
 
+		private void tsbProperties_Click(object sender, EventArgs e)
+		{
+			if (MyCustomer != null && MyCustomer.ID > 0)
+			{
+				Objects.PropertiesWindow oForm = new rkcrm.Objects.PropertiesWindow();
+				oForm.SelectedObject = MyCustomer;
+				oForm.Text = "Customer Properties";
+				oForm.Show();
+			}
+		}
+
 		#endregion
 
 
@@ -1253,6 +1306,16 @@ namespace rkcrm.Objects.Customer
 		private void tsbSources_VisibleChanged(object sender, EventArgs e)
 		{
 			tsmSources.Visible = tsbSources.Visible;
+		}
+
+		private void tsbProperties_EnabledChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Enabled = tsbProperties.Enabled;
+		}
+
+		private void tsbProperties_VisibleChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Visible = tsbProperties.Visible;
 		}
 
 		#endregion

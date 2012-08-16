@@ -61,6 +61,10 @@ namespace rkcrm.Objects.Project
 		private ToolStripMenuItem tsmRestore;
 		private ToolStripSeparator mss_5;
 		private ToolStripMenuItem tsmCancel;
+		private ToolStripSeparator tss_6;
+		private ToolStripButton tsbProperties;
+		private ToolStripSeparator mss_6;
+		private ToolStripMenuItem tsmProperties;
         private const int LOST = 3;
 
         #endregion
@@ -171,6 +175,10 @@ namespace rkcrm.Objects.Project
 			this.tsmRestore = new System.Windows.Forms.ToolStripMenuItem();
 			this.mss_5 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsmCancel = new System.Windows.Forms.ToolStripMenuItem();
+			this.tss_6 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsbProperties = new System.Windows.Forms.ToolStripButton();
+			this.mss_6 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmProperties = new System.Windows.Forms.ToolStripMenuItem();
 			this.scMain.Panel1.SuspendLayout();
 			this.scMain.Panel2.SuspendLayout();
 			this.scMain.SuspendLayout();
@@ -220,7 +228,9 @@ namespace rkcrm.Objects.Project
             this.tsbSell,
             this.tsbLose,
             this.tss_5,
-            this.tsbCrossLead});
+            this.tsbCrossLead,
+            this.tss_6,
+            this.tsbProperties});
 			this.tsMain.Location = new System.Drawing.Point(0, 0);
 			this.tsMain.Name = "tsMain";
 			this.tsMain.Size = new System.Drawing.Size(600, 35);
@@ -585,6 +595,36 @@ namespace rkcrm.Objects.Project
 			this.tsmCancel.Text = "Cancel";
 			this.tsmCancel.Click += new System.EventHandler(this.tsbCancel_Click);
 			// 
+			// tss_6
+			// 
+			this.tss_6.Name = "tss_6";
+			this.tss_6.Size = new System.Drawing.Size(6, 35);
+			// 
+			// tsbProperties
+			// 
+			this.tsbProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.tsbProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsbProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsbProperties.Name = "tsbProperties";
+			this.tsbProperties.Size = new System.Drawing.Size(32, 32);
+			this.tsbProperties.Text = "Properties";
+			this.tsbProperties.EnabledChanged += new System.EventHandler(this.tsbProperties_EnabledChanged);
+			this.tsbProperties.VisibleChanged += new System.EventHandler(this.tsbProperties_VisibleChanged);
+			this.tsbProperties.Click += new System.EventHandler(this.tsbProperties_Click);
+			// 
+			// mss_6
+			// 
+			this.mss_6.Name = "mss_6";
+			this.mss_6.Size = new System.Drawing.Size(149, 6);
+			// 
+			// tsmProperties
+			// 
+			this.tsmProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsmProperties.Name = "tsmProperties";
+			this.tsmProperties.Size = new System.Drawing.Size(152, 22);
+			this.tsmProperties.Text = "Properties";
+			this.tsmProperties.Click += new System.EventHandler(this.tsbProperties_Click);
+			// 
 			// ProjectScreen
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -619,7 +659,9 @@ namespace rkcrm.Objects.Project
 				this.tsmDelete,
 				this.tsmRestore,
 				this.mss_5,
-				this.tsmCancel});
+				this.tsmCancel,
+				this.mss_6,
+				this.tsmProperties});
 		}
 
 		public void LoadList()
@@ -678,6 +720,7 @@ namespace rkcrm.Objects.Project
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
 			tsbSell.Enabled = false;
+			tsbProperties.Enabled = false;
 
 			tsbLink.Visible = true;
 			tsbRemoveLink.Visible = false;
@@ -722,6 +765,7 @@ namespace rkcrm.Objects.Project
 				tsbLink.Enabled = false;
 			}
 
+			tsbProperties.Enabled = true;
 			tsbAddProject.Enabled = true;
 			tsbRestore.Enabled = true;
 
@@ -752,6 +796,7 @@ namespace rkcrm.Objects.Project
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
 			tsbSell.Enabled = false;
+			tsbProperties.Enabled = false;
 
 			tsbLink.Visible = false;
 			tsbRemoveLink.Visible = true;
@@ -1274,6 +1319,17 @@ namespace rkcrm.Objects.Project
 			tsbSaveNew.Enabled = !IsGeneralNotes && IsDirty;
 		}
 
+		private void tsbProperties_Click(object sender, EventArgs e)
+		{
+			if (MyProject != null && MyProject.ID > 0)
+			{
+				Objects.PropertiesWindow oForm = new rkcrm.Objects.PropertiesWindow();
+				oForm.SelectedObject = MyProject;
+				oForm.Text = "Project Properties";
+				oForm.Show();
+			}
+		}
+
 		#endregion
 
 
@@ -1389,6 +1445,16 @@ namespace rkcrm.Objects.Project
 		private void tsbCrossLead_VisibleChanged(object sender, EventArgs e)
 		{
 			tsmCrossLead.Visible = tsbCrossLead.Visible;
+		}
+
+		private void tsbProperties_EnabledChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Enabled = tsbProperties.Enabled;
+		}
+
+		private void tsbProperties_VisibleChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Visible = tsbProperties.Visible;
 		}
 
 		#endregion
