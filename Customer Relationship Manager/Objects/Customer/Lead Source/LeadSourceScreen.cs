@@ -42,11 +42,13 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			get { return clsMyCustomer; }
 			set
 			{
-				if (clsMyCustomer != value)
-					SetSearchingMode();
+				bool HasChanged = (clsMyCustomer != value);
 
 				clsMyCustomer = value;
 
+				if (HasChanged)
+					MySource = new LeadSource(); ;
+				
 				if (value != null)
 					LoadList();
 			}
@@ -77,6 +79,10 @@ namespace rkcrm.Objects.Customer.Lead_Source
 		public new void Clear()
 		{
 			base.Clear();
+
+			lvwList.ListViewItemSorter = null;
+			lvwList.Sorting = SortOrder.None;
+			lvwList.SelectedItems.Clear();
 		}
 
 		private void InitializeComponent()
@@ -361,10 +367,6 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			
 			Clear();
 
-			MySource = new LeadSource();
-			MySource.CustomerID = MyCustomer.ID;
-			leadSourceControls.MySource = MySource;
-
 			IsDisposable = true;
 		}
 
@@ -382,8 +384,6 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			tsbRestore.Visible = MySource.IsArchived;
 			tsbDelete.Visible = !MySource.IsArchived;
 
-			Clear();
-			leadSourceControls.MySource = MySource;
 			IsDisposable = false;
 		}
 
@@ -399,11 +399,6 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			tsbProperties.Enabled = false;
 
 			Clear();
-			leadSourceControls.SetSearchingMode();
-
-			lvwList.ListViewItemSorter = null;
-			lvwList.Sorting = SortOrder.None;
-			lvwList.SelectedItems.Clear();
 
 			if(MyCustomer != null)
 				LoadList();
