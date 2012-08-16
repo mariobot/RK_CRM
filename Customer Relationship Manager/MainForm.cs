@@ -51,27 +51,10 @@ namespace rkcrm
 
 		private void DetermineAccess()
 		{
-			CrossLeadsIsVisible = false;
-			DemoFormIsVisible = false;
-			PropertiesIsVisible = false;
-			RemindersIsVisible = false;
-			
-			foreach (int task in thisUser.MyTasks)
-				switch (task)
-				{
-					case (int)Tasks.AssignCrossLeads :
-						CrossLeadsIsVisible = true;
-						break;
-					case (int)Tasks.DemonstrationForm:
-						DemoFormIsVisible = true;
-						break;
-					case (int)Tasks.ViewProperties:
-						PropertiesIsVisible = true;
-						break;
-					case (int)Tasks.ViewReminders:
-						RemindersIsVisible = true;
-						break;
-				}
+			CrossLeadsIsVisible = thisUser.MyTasks.Contains((int)Tasks.AssignCrossLeads);
+            DemoFormIsVisible = thisUser.MyTasks.Contains((int)Tasks.DemonstrationForm);
+            PropertiesIsVisible = thisUser.MyTasks.Contains((int)Tasks.ViewProperties);
+            RemindersIsVisible = thisUser.MyTasks.Contains((int)Tasks.ViewReminders);
 
 			tsmCrossLeads.Visible = CrossLeadsIsVisible;
 			tsmDemoMode.Visible = DemoFormIsVisible;
