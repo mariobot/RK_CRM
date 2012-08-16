@@ -578,12 +578,22 @@ namespace rkcrm.Searching
 							switch (((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex].Name)
 							{
 								case "tsmEdit":
-									cmsResults.Items.Insert(4, ((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex]);
-									cmsResults.Items.Insert(5, new ToolStripSeparator());
+									if (myItems.GotoContactIsAccessible)
+									{
+										cmsResults.Items.Insert(4, ((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex]);
+										cmsResults.Items.Insert(5, new ToolStripSeparator());
+									}
+									else
+										internalIndex++;
 									break;
 								case "tsmProperties":
-									((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex].Visible = false;
-									cmsResults.Items.Insert(cmsResults.Items.Count - 1, ((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex]);
+									if (myItems.PropertiesIsAccessible)
+									{
+										((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex].Visible = false;
+										cmsResults.Items.Insert(cmsResults.Items.Count - 1, ((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex]);
+									}
+									else
+										internalIndex++;
 									break;
 								default:
 									internalIndex++;
@@ -596,12 +606,22 @@ namespace rkcrm.Searching
 						switch (myItems.Items[index].Name)
 						{
 							case "tsbEdit":
-								tsMain.Items.Insert(4, myItems.Items[index]);
-								tsMain.Items.Insert(5, new ToolStripSeparator());
+								if (myItems.GotoContactIsAccessible)
+								{
+									tsMain.Items.Insert(4, myItems.Items[index]);
+									tsMain.Items.Insert(5, new ToolStripSeparator());
+								}
+								else
+									index++;
 								break;
 							case "tsbProperties":
-								myItems.Items[index].Visible = false;
-								tsMain.Items.Insert(tsMain.Items.Count - 1, myItems.Items[index]);
+								if (myItems.PropertiesIsAccessible)
+								{
+									myItems.Items[index].Visible = false;
+									tsMain.Items.Insert(tsMain.Items.Count - 1, myItems.Items[index]);
+								}
+								else
+									index++;
 								break;
 							default:
 								index++;
@@ -620,12 +640,22 @@ namespace rkcrm.Searching
 							switch (((ToolStripDropDownButton)oItem).DropDownItems[index].Name)
 							{
 								case "tsmEdit":
-									tsmActions.DropDownItems.Insert(4, ((ToolStripDropDownButton)oItem).DropDownItems[index]);
-									tsmActions.DropDownItems.Insert(5, new ToolStripSeparator());
+									if (myItems.GotoContactIsAccessible)
+									{
+										tsmActions.DropDownItems.Insert(4, ((ToolStripDropDownButton)oItem).DropDownItems[index]);
+										tsmActions.DropDownItems.Insert(5, new ToolStripSeparator());
+									}
+									else
+										index++;
 									break;
 								case "tsmProperties":
-									((ToolStripDropDownButton)oItem).DropDownItems[index].Visible = false;
-									tsmActions.DropDownItems.Insert(tsmActions.DropDownItems.Count - 1, ((ToolStripDropDownButton)oItem).DropDownItems[index]);
+									if (myItems.PropertiesIsAccessible)
+									{
+										((ToolStripDropDownButton)oItem).DropDownItems[index].Visible = false;
+										tsmActions.DropDownItems.Insert(tsmActions.DropDownItems.Count - 1, ((ToolStripDropDownButton)oItem).DropDownItems[index]);
+									}
+									else
+										index++;
 									break;
 								default:
 									index++;

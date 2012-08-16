@@ -31,6 +31,41 @@ namespace rkcrm.Searching.DropDowns
 		#endregion
 
 
+		#region Security Variables
+
+		private bool bolDeleteIsAccessible;
+		private bool bolRestoreIsAccessible;
+		private bool bolGotoContactIsAccessible;
+		private bool bolPropertiesIsAccessible;
+
+		#endregion
+
+
+		#region Properties
+
+		public bool DeleteIsAccessible
+		{
+			get { return bolDeleteIsAccessible; }
+		}
+
+		public bool RestoreIsAccessible
+		{
+			get { return bolRestoreIsAccessible; }
+		}
+
+		public bool GotoContactIsAccessible
+		{
+			get { return bolGotoContactIsAccessible; }
+		}
+
+		public bool PropertiesIsAccessible
+		{
+			get { return bolPropertiesIsAccessible; }
+		}
+
+		#endregion
+
+
 		#region Method
 
 		private void InitializeComponent()
@@ -208,6 +243,21 @@ namespace rkcrm.Searching.DropDowns
 				return null;
 		}
 
+		private void DetermineAccess()
+		{
+			bolDeleteIsAccessible = thisUser.MyTasks.Contains((int)Tasks.Delete);
+			bolRestoreIsAccessible = thisUser.MyTasks.Contains((int)Tasks.Restore);
+			bolGotoContactIsAccessible = thisUser.MyTasks.Contains((int)Tasks.GotoContact);
+			bolPropertiesIsAccessible = thisUser.MyTasks.Contains((int)Tasks.ViewProperties);
+
+			tsmDelete.Visible = tsbDelete.Visible = bolDeleteIsAccessible;
+			tsmRestore.Visible = tsbRestore.Visible = bolRestoreIsAccessible;
+			tsmEdit.Visible = tsbEdit.Visible = bolGotoContactIsAccessible;
+			tsmProperties.Visible = tsbProperties.Visible = bolPropertiesIsAccessible;
+			tss_0.Visible = mss_0.Visible = (bolGotoContactIsAccessible && (bolDeleteIsAccessible || bolRestoreIsAccessible));
+			tss_1.Visible = mss_1.Visible = (bolPropertiesIsAccessible && (bolDeleteIsAccessible || bolRestoreIsAccessible));
+		}
+
 		#endregion
 
 
@@ -272,6 +322,19 @@ namespace rkcrm.Searching.DropDowns
 		#endregion
 
 
+		#region Enumerations
+
+		private enum Tasks
+		{
+			Delete = 32,
+			Restore = 33,
+			GotoContact = 5,
+			ViewProperties = 20
+		};
+
+		#endregion
+
+
 		#region Constructor
 
 		public ContactDropDown(ListView ReferencedListView, int IdColumn)
@@ -282,7 +345,7 @@ namespace rkcrm.Searching.DropDowns
 			theReferencedList.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(theReferencedList_ItemSelectionChanged);
 
 			InitializeComponent();
-
+			DetermineAccess();
 			Disable();
 		}
 
