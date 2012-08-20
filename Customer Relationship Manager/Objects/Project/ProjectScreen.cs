@@ -1018,10 +1018,8 @@ namespace rkcrm.Objects.Project
 						{
 							myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[1].Nodes[0];
 
-							myNavigation.btnCustomer.MyProject = MyProject;
 							myNavigation.btnCustomer.PerformClick();
 
-							((NoteScreen)myNavigation.CurrentScreen).MyProject = MyProject;
 							((NoteScreen)myNavigation.CurrentScreen).MyNote = new Note.Note();
 						}
 						break;
@@ -1030,10 +1028,8 @@ namespace rkcrm.Objects.Project
 					default:
 						myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[1].Nodes[0];
 
-						myNavigation.btnCustomer.MyProject = MyProject;
 						myNavigation.btnCustomer.PerformClick();
 
-						((NoteScreen)myNavigation.CurrentScreen).MyProject = MyProject;
 						((NoteScreen)myNavigation.CurrentScreen).MyNote = new Note.Note();
 						break;
 				}
@@ -1041,10 +1037,8 @@ namespace rkcrm.Objects.Project
 			{
 				myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[1].Nodes[0];
 
-				myNavigation.btnCustomer.MyProject = MyProject;
 				myNavigation.btnCustomer.PerformClick();
 
-				((NoteScreen)myNavigation.CurrentScreen).MyProject = MyProject;
 				((NoteScreen)myNavigation.CurrentScreen).MyNote = new Note.Note();
 			}
 		}
@@ -1054,12 +1048,8 @@ namespace rkcrm.Objects.Project
 			NavigationScreen myNavigation = GetNavigationScreen();
 			myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[1].Nodes[1];
 
-			myNavigation.btnCustomer.MyProject = MyProject;
-			myNavigation.btnCustomer.MyCustomer = MyCustomer;
-
 			myNavigation.btnCustomer.PerformClick();
 
-			((QuoteScreen)myNavigation.CurrentScreen).MyProject = MyProject;
 			((QuoteScreen)myNavigation.CurrentScreen).MyQuote = new rkcrm.Objects.Quote.Quote();
 		}
 
