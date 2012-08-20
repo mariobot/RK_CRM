@@ -305,6 +305,9 @@
     <Compile Include="Objects\Customer\Preview Controls\AddressPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Objects\Customer\Preview Controls\LeadSourceList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Objects\Customer\Preview Controls\RelatedCustomersPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -600,6 +603,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Objects\Customer\Preview Controls\AddressPreview.resx">
       <DependentUpon>AddressPreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Objects\Customer\Preview Controls\LeadSourceList.resx">
+      <DependentUpon>LeadSourceList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Objects\Customer\Preview Controls\RelatedCustomersPreview.resx">

@@ -22,11 +22,6 @@ namespace rkcrm.Objects.Customer
 		internal System.Windows.Forms.ComboBox cboCustomerType;
 		internal System.Windows.Forms.Label lblName;
 		internal System.Windows.Forms.TextBox txtName;
-		internal ListView lvwLeadSources;
-		internal ColumnHeader chSource;
-		internal ColumnHeader chDepartment;
-		internal ColumnHeader chRange;
-		private ColumnHeader chAddedBy;
 		private GroupBox gbxLeadSource;
 		private ImageList imlLeadSource;
 		private System.ComponentModel.IContainer components;
@@ -38,6 +33,7 @@ namespace rkcrm.Objects.Customer
 		private Customer clsMyCustomer;
 		private rkcrm.Objects.Customer.Preview_Controls.AddressPreview AddressControls;
 		private rkcrm.Objects.Customer.Preview_Controls.RelatedCustomersPreview relatedCustomerControls;
+		private rkcrm.Objects.Customer.Preview_Controls.LeadSourceList leadSourceListControls;
 		private List<LeadSource> NewLeadSources;
 
 		#endregion
@@ -98,7 +94,7 @@ namespace rkcrm.Objects.Customer
 			txtName.Clear();
 			AddressControls.txtState.Clear();
 			AddressControls.txtZipcode.Clear();
-			lvwLeadSources.Items.Clear();
+			leadSourceListControls.lvwLeadSources.Items.Clear();
 			mtxtPhoneNumber.Clear();
 		}
 
@@ -124,7 +120,7 @@ namespace rkcrm.Objects.Customer
 					throw new Exception("The \"Phone Number\" is not complete.");
 				if (!IsInteger(AddressControls.txtZipcode.Text))
 					throw new Exception("The \"Zip Code\" must be a 5 digit number.");
-				if (lvwLeadSources.Items.Count == 0 && this.State == BoundaryState.Editing)
+				if (leadSourceListControls.lvwLeadSources.Items.Count == 0 && this.State == BoundaryState.Editing)
 					throw new Exception("There must be at least one \"Lead Source\".");
 
 				if (cboCustomerType.SelectedItem != null)
@@ -192,11 +188,6 @@ namespace rkcrm.Objects.Customer
 			this.cboCustomerType = new System.Windows.Forms.ComboBox();
 			this.lblName = new System.Windows.Forms.Label();
 			this.txtName = new System.Windows.Forms.TextBox();
-			this.lvwLeadSources = new System.Windows.Forms.ListView();
-			this.chSource = new System.Windows.Forms.ColumnHeader();
-			this.chDepartment = new System.Windows.Forms.ColumnHeader();
-			this.chRange = new System.Windows.Forms.ColumnHeader();
-			this.chAddedBy = new System.Windows.Forms.ColumnHeader();
 			this.gbxLeadSource = new System.Windows.Forms.GroupBox();
 			this.btnAddLeadSource = new System.Windows.Forms.Button();
 			this.leadSourceControls = new rkcrm.Objects.Customer.Lead_Source.LeadSourceBoundary();
@@ -205,6 +196,7 @@ namespace rkcrm.Objects.Customer
 			this.pnlSpacer0 = new System.Windows.Forms.Panel();
 			this.AddressControls = new rkcrm.Objects.Customer.Preview_Controls.AddressPreview();
 			this.relatedCustomerControls = new rkcrm.Objects.Customer.Preview_Controls.RelatedCustomersPreview();
+			this.leadSourceListControls = new rkcrm.Objects.Customer.Preview_Controls.LeadSourceList();
 			this.pnlControls.SuspendLayout();
 			this.gbxLeadSource.SuspendLayout();
 			this.pnlName.SuspendLayout();
@@ -214,6 +206,7 @@ namespace rkcrm.Objects.Customer
 			// 
 			this.pnlControls.Controls.Add(this.relatedCustomerControls);
 			this.pnlControls.Controls.Add(this.AddressControls);
+			this.pnlControls.Controls.Add(this.leadSourceListControls);
 			this.pnlControls.Controls.Add(this.pnlSpacer0);
 			this.pnlControls.Controls.Add(this.gbxLeadSource);
 			this.pnlControls.Controls.Add(this.pnlName);
@@ -277,54 +270,15 @@ namespace rkcrm.Objects.Customer
 			this.txtName.TabIndex = 28;
 			this.txtName.TextChanged += new System.EventHandler(this.control_Changed);
 			// 
-			// lvwLeadSources
-			// 
-			this.lvwLeadSources.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chSource,
-            this.chDepartment,
-            this.chRange,
-            this.chAddedBy});
-			this.lvwLeadSources.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.lvwLeadSources.FullRowSelect = true;
-			this.lvwLeadSources.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.lvwLeadSources.HoverSelection = true;
-			this.lvwLeadSources.Location = new System.Drawing.Point(6, 76);
-			this.lvwLeadSources.Name = "lvwLeadSources";
-			this.lvwLeadSources.Size = new System.Drawing.Size(603, 104);
-			this.lvwLeadSources.TabIndex = 55;
-			this.lvwLeadSources.UseCompatibleStateImageBehavior = false;
-			this.lvwLeadSources.View = System.Windows.Forms.View.Details;
-			// 
-			// chSource
-			// 
-			this.chSource.Text = "Lead Source";
-			this.chSource.Width = 153;
-			// 
-			// chDepartment
-			// 
-			this.chDepartment.Text = "Department";
-			this.chDepartment.Width = 70;
-			// 
-			// chRange
-			// 
-			this.chRange.Text = "Active Range";
-			this.chRange.Width = 114;
-			// 
-			// chAddedBy
-			// 
-			this.chAddedBy.Text = "Added By";
-			this.chAddedBy.Width = 115;
-			// 
 			// gbxLeadSource
 			// 
 			this.gbxLeadSource.Controls.Add(this.btnAddLeadSource);
-			this.gbxLeadSource.Controls.Add(this.lvwLeadSources);
 			this.gbxLeadSource.Controls.Add(this.leadSourceControls);
 			this.gbxLeadSource.Dock = System.Windows.Forms.DockStyle.Top;
 			this.gbxLeadSource.Location = new System.Drawing.Point(8, 53);
 			this.gbxLeadSource.Name = "gbxLeadSource";
 			this.gbxLeadSource.Padding = new System.Windows.Forms.Padding(6, 3, 6, 6);
-			this.gbxLeadSource.Size = new System.Drawing.Size(615, 186);
+			this.gbxLeadSource.Size = new System.Drawing.Size(615, 85);
 			this.gbxLeadSource.TabIndex = 57;
 			this.gbxLeadSource.TabStop = false;
 			this.gbxLeadSource.Text = "How did they hear about R&&K?";
@@ -381,7 +335,7 @@ namespace rkcrm.Objects.Customer
 			// pnlSpacer0
 			// 
 			this.pnlSpacer0.Dock = System.Windows.Forms.DockStyle.Top;
-			this.pnlSpacer0.Location = new System.Drawing.Point(8, 239);
+			this.pnlSpacer0.Location = new System.Drawing.Point(8, 138);
 			this.pnlSpacer0.Name = "pnlSpacer0";
 			this.pnlSpacer0.Size = new System.Drawing.Size(615, 5);
 			this.pnlSpacer0.TabIndex = 59;
@@ -392,7 +346,7 @@ namespace rkcrm.Objects.Customer
 			this.AddressControls.ExpandedHeight = 125;
 			this.AddressControls.IsDirty = false;
 			this.AddressControls.IsExpanded = false;
-			this.AddressControls.Location = new System.Drawing.Point(8, 244);
+			this.AddressControls.Location = new System.Drawing.Point(8, 170);
 			this.AddressControls.Name = "AddressControls";
 			this.AddressControls.Size = new System.Drawing.Size(615, 27);
 			this.AddressControls.TabIndex = 60;
@@ -404,11 +358,22 @@ namespace rkcrm.Objects.Customer
 			this.relatedCustomerControls.Dock = System.Windows.Forms.DockStyle.Top;
 			this.relatedCustomerControls.ExpandedHeight = 150;
 			this.relatedCustomerControls.IsExpanded = false;
-			this.relatedCustomerControls.Location = new System.Drawing.Point(8, 271);
+			this.relatedCustomerControls.Location = new System.Drawing.Point(8, 197);
 			this.relatedCustomerControls.Name = "relatedCustomerControls";
 			this.relatedCustomerControls.Size = new System.Drawing.Size(615, 27);
 			this.relatedCustomerControls.TabIndex = 62;
 			this.relatedCustomerControls.Title = "Related Customers";
+			// 
+			// leadSourceListControls
+			// 
+			this.leadSourceListControls.Dock = System.Windows.Forms.DockStyle.Top;
+			this.leadSourceListControls.ExpandedHeight = 150;
+			this.leadSourceListControls.IsExpanded = false;
+			this.leadSourceListControls.Location = new System.Drawing.Point(8, 143);
+			this.leadSourceListControls.Name = "leadSourceListControls";
+			this.leadSourceListControls.Size = new System.Drawing.Size(615, 27);
+			this.leadSourceListControls.TabIndex = 63;
+			this.leadSourceListControls.Title = "Lead Sources";
 			// 
 			// CustomerBoundary
 			// 
@@ -445,11 +410,9 @@ namespace rkcrm.Objects.Customer
 			this.State = BoundaryState.Loading;
 
 			leadSourceControls.MySource = new rkcrm.Objects.Customer.Lead_Source.LeadSource();
-			
-			gbxLeadSource.Size = new Size(gbxLeadSource.Width, gbxLeadSource.Height - lvwLeadSources.Height);
+
 			relatedCustomerControls.Visible = false;
 			AddressControls.IsExpanded = true;
-			lvwLeadSources.Visible = false;
 			btnAddLeadSource.Visible = false;
 
 			this.Clear();
@@ -510,7 +473,7 @@ namespace rkcrm.Objects.Customer
 
 		public void RefreshLeadSources()
 		{
-			lvwLeadSources.Items.Clear();
+			leadSourceListControls.lvwLeadSources.Items.Clear();
 
 			using (Lead_Source.LeadSourceController thecontroller = new Lead_Source.LeadSourceController())
 			{
@@ -533,7 +496,7 @@ namespace rkcrm.Objects.Customer
 							index++;
 
 					index = 0;
-					lvwLeadSources.Items.Add(newItem);
+					leadSourceListControls.lvwLeadSources.Items.Add(newItem);
 				}
 
 				foreach (DataRow oRow in oTable.Rows)
@@ -544,7 +507,7 @@ namespace rkcrm.Objects.Customer
 					newItem.SubItems.Add(Convert.ToDateTime(oRow["activated"]).ToString("M/d/yy") + " - Current");
 					newItem.SubItems.Add(oRow["adder"].ToString());
 
-					lvwLeadSources.Items.Add(newItem);
+					leadSourceListControls.lvwLeadSources.Items.Add(newItem);
 				}
 			}
 		}
@@ -654,8 +617,6 @@ namespace rkcrm.Objects.Customer
 
 		private void CustomerBoundary_Load(object sender, EventArgs e)
 		{
-			gbxLeadSource.Size = new Size(gbxLeadSource.Width, lvwLeadSources.Height + leadSourceControls.Height + 20);
-
 			this.btnAddLeadSource.MouseLeave += new System.EventHandler(this.Button_MouseLeave);
 			this.btnAddLeadSource.Leave += new System.EventHandler(this.Button_Leave);
 			this.btnAddLeadSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Button_KeyUp);
