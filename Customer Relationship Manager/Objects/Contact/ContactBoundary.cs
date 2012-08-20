@@ -831,16 +831,22 @@ namespace rkcrm.Objects.Contact
 					switch (e.ColumnIndex)
 					{
 						case DELETE_INDEX:
-							if (Convert.ToBoolean(dgvPhoneNumbers.CurrentRow.Cells[PREFERRED_INDEX].Value))
-								dgvPhoneNumbers[PREFERRED_INDEX, 0].Value = true;
+							if (PhoneNumberCount() > 1)
+							{
+								if (Convert.ToBoolean(dgvPhoneNumbers.CurrentRow.Cells[PREFERRED_INDEX].Value))
+									dgvPhoneNumbers[PREFERRED_INDEX, 0].Value = true;
 
-							if (dgvPhoneNumbers.CurrentRow.Cells[PHONE_NUMBER_ID_INDEX].Value == null)
-								dgvPhoneNumbers.Rows.RemoveAt(e.RowIndex);
+								if (dgvPhoneNumbers.CurrentRow.Cells[PHONE_NUMBER_ID_INDEX].Value == null)
+									dgvPhoneNumbers.Rows.RemoveAt(e.RowIndex);
+								else
+									dgvPhoneNumbers.CurrentRow.Visible = false;
+
+								if (!IsDirty)
+									IsDirty = true;
+							}
 							else
-								dgvPhoneNumbers.CurrentRow.Visible = false;
-
-							if (!IsDirty)
-								IsDirty = true;
+								MessageBox.Show("A contact must have at least one phone number.", MySettings.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+								
 							break;
 						default:
 							break;
