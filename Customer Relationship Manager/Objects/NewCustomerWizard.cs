@@ -626,6 +626,13 @@ namespace rkcrm.Objects
 			if (selectedItem != null)
 				if (Convert.ToBoolean(selectedItem["default_company_name"]))
 				{
+					customerControls.txtName.Text = contactName.Trim();
+
+					if (!customerControls.mtxtPhoneNumber.MaskFull)
+						customerControls.mtxtPhoneNumber.Text = contactControls.dgvPhoneNumbers.Rows[0].Cells[PHONE_NUMBER_INDEX].Value.ToString();
+				}
+				else
+				{
 					int index = 0;
 					DataGridView dvgPhones = contactControls.dgvPhoneNumbers;
 
@@ -634,8 +641,6 @@ namespace rkcrm.Objects
 
 					if (index == dvgPhones.RowCount)
 						index = 0;
-
-					customerControls.txtName.Text = contactName.Trim();
 
 					if (!customerControls.mtxtPhoneNumber.MaskFull)
 						customerControls.mtxtPhoneNumber.Text = contactControls.dgvPhoneNumbers.Rows[index].Cells[PHONE_NUMBER_INDEX].Value.ToString();
