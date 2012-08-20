@@ -845,8 +845,6 @@ namespace rkcrm.Objects.Project
 
                 if (duplicates.Rows.Count > 0)
                 {
-					NotfiyAdmins(duplicates);
-
                     DuplicateProjects oForm = new DuplicateProjects();
                     oForm.Title = MyProject.GetCustomer().Name + " has the following project(s) with a similar name to the project you are adding/editng. " +
 						"Please determine if one of these projects is a match to the one you are adding/editng.\n" +
@@ -856,13 +854,16 @@ namespace rkcrm.Objects.Project
 
                     oForm.ShowDialog();
 
-                    if (oForm.DialogResult == DialogResult.OK)
-                    {
-                        MyProject = theController.GetProject(oForm.SelectedProjectID);
-                        return true;
-                    }
-                    else
-                        return false;
+					if (oForm.DialogResult == DialogResult.OK)
+					{
+						MyProject = theController.GetProject(oForm.SelectedProjectID);
+						return true;
+					}
+					else
+					{
+						NotfiyAdmins(duplicates);
+						return false;
+					}
                 }
                 else
                     return false;
