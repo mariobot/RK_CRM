@@ -1056,10 +1056,8 @@ namespace rkcrm.Objects.Customer
 		{
 			NavigationScreen myNavigation = GetNavigationScreen();
 			myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[0];
-			myNavigation.btnCustomer.MyCustomer = this.MyCustomer;
 			myNavigation.btnCustomer.PerformClick();
 
-			((Contact.ContactScreen)myNavigation.CurrentScreen).MyCustomer = this.MyCustomer;
 			((Contact.ContactScreen)myNavigation.CurrentScreen).MyContact = new Contact.Contact();
 		}
 
@@ -1081,10 +1079,8 @@ namespace rkcrm.Objects.Customer
 		{
 			NavigationScreen myNavigation = GetNavigationScreen();
 			myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[1];
-			myNavigation.btnCustomer.MyProject = null;
 			myNavigation.btnCustomer.PerformClick();
 
-			((Project.ProjectScreen)myNavigation.CurrentScreen).MyCustomer = myNavigation.btnCustomer.MyCustomer;
 			((Project.ProjectScreen)myNavigation.CurrentScreen).MyProject = new Project.Project();
 		}
 
