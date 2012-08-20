@@ -366,6 +366,7 @@ namespace rkcrm.Objects.Quote
 			this.cboSupport.TabIndex = 93;
 			this.cboSupport.SelectionChangeCommitted += new System.EventHandler(this.cboSupport_SelectionChangeCommitted);
 			this.cboSupport.SelectedIndexChanged += new System.EventHandler(this.control_Changed);
+			this.cboSupport.SelectedValueChanged += new System.EventHandler(this.cboSupport_SelectionChangeCommitted);
 			// 
 			// lblSupport
 			// 
