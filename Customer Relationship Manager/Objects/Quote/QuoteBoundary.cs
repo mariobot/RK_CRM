@@ -1001,6 +1001,9 @@ namespace rkcrm.Objects.Quote
 
 				if (!(cboDepartment.SelectedValue is DataRowView))
 					TruncateSalesSupport();
+
+				if (this.State == BoundaryState.Adding)
+					MyQuote.Scope = MyProjectDepartment.Scope;
 			}
 			else
 				RestoreSalesSupport();
@@ -1012,11 +1015,11 @@ namespace rkcrm.Objects.Quote
 			{
 				if ((this.State == BoundaryState.Editing || this.State == BoundaryState.Adding) && cboDepartment.Enabled)
 				{
-					BoundaryState current = this.State;
-					this.State = BoundaryState.Loading;
-
 					DataRowView salesSupport = (DataRowView)cboSupport.SelectedItem;
 					cboDepartment.SelectedValue = Convert.ToInt32(salesSupport["department_id"]);
+
+					BoundaryState current = this.State;
+					this.State = BoundaryState.Loading;
 
 					TruncateSalesSupport();
 
