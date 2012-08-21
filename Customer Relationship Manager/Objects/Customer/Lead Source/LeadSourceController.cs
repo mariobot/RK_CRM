@@ -206,5 +206,31 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			return result;
 		}
 
+		public LeadSource GetLatestLeadSource(int CustomerID, int DepartmentID)
+		{
+			try
+			{
+				DataTable oTable = new DataTable();
+
+				SQL = "SELECT * FROM `rel_customer_leadsources` l " +
+					"WHERE l.`customer_id` = " + CustomerID + " AND l.`department_id` = " + DepartmentID + " " +
+					"ORDER BY l.`activated` DESC LIMIT 1;";
+				InitializeCommand();
+				OpenConnection();
+
+				FillDataTable(oTable);
+
+				if (oTable.Rows.Count > 0)
+					return new LeadSource(oTable.Rows[0]);
+				else
+					return new LeadSource();
+			}
+			catch (Exception e)
+			{
+				ErrorHandler.ProcessException(e, false);
+				return new LeadSource();
+			}
+		}
+
 	}
 }
