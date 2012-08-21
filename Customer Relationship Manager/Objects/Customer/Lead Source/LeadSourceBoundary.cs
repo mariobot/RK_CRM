@@ -10,7 +10,7 @@ namespace rkcrm.Objects.Customer.Lead_Source
 	{
 		private System.Windows.Forms.Label lblDetails;
 		public Label lblDepartments;
-		private System.Windows.Forms.Label lblSource;
+		internal Label lblSource;
 		private System.Windows.Forms.TextBox txtDetails;
 		public ListBox lbxDepartments;
 		public DateTimePicker dtpEffective;
@@ -131,7 +131,7 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			this.cboSource.FormattingEnabled = true;
 			this.cboSource.Location = new System.Drawing.Point(9, 26);
 			this.cboSource.Name = "cboSource";
-			this.cboSource.Size = new System.Drawing.Size(186, 21);
+			this.cboSource.Size = new System.Drawing.Size(227, 21);
 			this.cboSource.TabIndex = 0;
 			this.cboSource.SelectionChangeCommitted += new System.EventHandler(this.cboSource_SelectionChangeCommitted);
 			this.cboSource.TextChanged += new System.EventHandler(this.control_TextChanged);
@@ -147,7 +147,7 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			// 
 			// txtDetails
 			// 
-			this.txtDetails.Location = new System.Drawing.Point(201, 26);
+			this.txtDetails.Location = new System.Drawing.Point(242, 26);
 			this.txtDetails.Name = "txtDetails";
 			this.txtDetails.Size = new System.Drawing.Size(317, 20);
 			this.txtDetails.TabIndex = 2;
@@ -175,7 +175,7 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			// lblDetails
 			// 
 			this.lblDetails.AutoSize = true;
-			this.lblDetails.Location = new System.Drawing.Point(198, 10);
+			this.lblDetails.Location = new System.Drawing.Point(239, 10);
 			this.lblDetails.Name = "lblDetails";
 			this.lblDetails.Size = new System.Drawing.Size(39, 13);
 			this.lblDetails.TabIndex = 5;

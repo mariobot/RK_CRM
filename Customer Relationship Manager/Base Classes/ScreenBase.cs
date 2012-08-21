@@ -42,6 +42,7 @@ namespace rkcrm.Base_Classes
         public new void Dispose()
         {
             base.Dispose();
+			tsmActions.Dispose();
         }
 
         /// <summary>

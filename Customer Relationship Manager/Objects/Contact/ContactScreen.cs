@@ -35,6 +35,10 @@ namespace rkcrm.Objects.Contact
 		private ToolStripMenuItem tsmRestore;
 		private ToolStripSeparator mss_1;
 		private ToolStripMenuItem tsmCancel;
+		private ToolStripSeparator mss_2;
+		private ToolStripMenuItem tsmProperties;
+		private ToolStripSeparator tss_3;
+		private ToolStripButton tsbProperties;
 		private const int NAME_INDEX = 1;
 		#endregion
 
@@ -165,6 +169,8 @@ namespace rkcrm.Objects.Contact
 			this.tss_2 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsbDelete = new System.Windows.Forms.ToolStripButton();
 			this.tsbRestore = new System.Windows.Forms.ToolStripButton();
+			this.tss_3 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsbProperties = new System.Windows.Forms.ToolStripButton();
 			this.contactControls = new rkcrm.Objects.Contact.ContactBoundary();
 			this.chContactID = new System.Windows.Forms.ColumnHeader();
 			this.chName = new System.Windows.Forms.ColumnHeader();
@@ -174,6 +180,8 @@ namespace rkcrm.Objects.Contact
 			this.tsmRestore = new System.Windows.Forms.ToolStripMenuItem();
 			this.mss_1 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsmCancel = new System.Windows.Forms.ToolStripMenuItem();
+			this.mss_2 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmProperties = new System.Windows.Forms.ToolStripMenuItem();
 			this.scMain.Panel1.SuspendLayout();
 			this.scMain.Panel2.SuspendLayout();
 			this.scMain.SuspendLayout();
@@ -213,7 +221,9 @@ namespace rkcrm.Objects.Contact
             this.tsbCancel,
             this.tss_2,
             this.tsbDelete,
-            this.tsbRestore});
+            this.tsbRestore,
+            this.tss_3,
+            this.tsbProperties});
 			this.tsMain.Location = new System.Drawing.Point(0, 0);
 			this.tsMain.Name = "tsMain";
 			this.tsMain.Size = new System.Drawing.Size(600, 35);
@@ -313,6 +323,23 @@ namespace rkcrm.Objects.Contact
 			this.tsbRestore.VisibleChanged += new System.EventHandler(this.tsbRestore_VisibleChanged);
 			this.tsbRestore.Click += new System.EventHandler(this.tsbRestore_Click);
 			// 
+			// tss_3
+			// 
+			this.tss_3.Name = "tss_3";
+			this.tss_3.Size = new System.Drawing.Size(6, 35);
+			// 
+			// tsbProperties
+			// 
+			this.tsbProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.tsbProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsbProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsbProperties.Name = "tsbProperties";
+			this.tsbProperties.Size = new System.Drawing.Size(32, 32);
+			this.tsbProperties.Text = "Properties";
+			this.tsbProperties.EnabledChanged += new System.EventHandler(this.tsbProperties_EnabledChanged);
+			this.tsbProperties.VisibleChanged += new System.EventHandler(this.tsbProperties_VisibleChanged);
+			this.tsbProperties.Click += new System.EventHandler(this.tsbProperties_Click);
+			// 
 			// contactControls
 			// 
 			this.contactControls.AutoScroll = true;
@@ -379,6 +406,19 @@ namespace rkcrm.Objects.Contact
 			this.tsmCancel.Text = "Cancel";
 			this.tsmCancel.Click += new System.EventHandler(this.tsbCancel_Click);
 			// 
+			// mss_2
+			// 
+			this.mss_2.Name = "mss_2";
+			this.mss_2.Size = new System.Drawing.Size(149, 6);
+			// 
+			// tsmProperties
+			// 
+			this.tsmProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsmProperties.Name = "tsmProperties";
+			this.tsmProperties.Size = new System.Drawing.Size(152, 22);
+			this.tsmProperties.Text = "Properties";
+			this.tsmProperties.Click += new System.EventHandler(this.tsbProperties_Click);
+			// 
 			// ContactScreen
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -401,7 +441,9 @@ namespace rkcrm.Objects.Contact
 				this.tsmDelete,
 				this.tsmRestore,
 				this.mss_1,
-				this.tsmCancel});
+				this.tsmCancel,
+				this.mss_2,
+				this.tsmProperties});
 		}
 
 		private void SetAddingMode()
@@ -412,6 +454,7 @@ namespace rkcrm.Objects.Contact
 			tsbSave.Enabled = false;
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
+			tsbProperties.Enabled = false;
 
 			tsbRestore.Visible = false;
 			tsbDelete.Visible = true;
@@ -436,6 +479,7 @@ namespace rkcrm.Objects.Contact
 			tsbSaveNew.Enabled = false;
 			tsbDelete.Enabled = !MyContact.IsArchived;
 			tsbRestore.Enabled = MyContact.IsArchived;
+			tsbProperties.Enabled = true;
 
 			if (thisUser.RoleID == ADMINISTRATOR)
 			{
@@ -460,6 +504,7 @@ namespace rkcrm.Objects.Contact
 			tsbSave.Enabled = false;
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
+			tsbProperties.Enabled = false;
 
 			Clear();
 
@@ -704,6 +749,17 @@ namespace rkcrm.Objects.Contact
 			tsbSaveNew.Enabled = this.IsDirty;
 		}
 
+		private void tsbProperties_Click(object sender, EventArgs e)
+		{
+			if (MyContact != null && MyContact.ID > 0)
+			{
+				Objects.PropertiesWindow oForm =  new rkcrm.Objects.PropertiesWindow();
+				oForm.SelectedObject = MyContact;
+				oForm.Text = "Contact Properties";
+				oForm.Show();
+			}
+		}
+
 		#endregion
 
 
@@ -741,9 +797,17 @@ namespace rkcrm.Objects.Contact
 			tsmRestore.Visible = tsbRestore.Visible;
 		}
 
+		private void tsbProperties_EnabledChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Enabled = tsbProperties.Enabled;
+		}
+
+		private void tsbProperties_VisibleChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Visible = tsbProperties.Visible;
+		}
+
 		#endregion
-
-
 
 	}
 }

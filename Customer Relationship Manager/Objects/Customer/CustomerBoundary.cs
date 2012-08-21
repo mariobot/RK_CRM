@@ -22,22 +22,15 @@ namespace rkcrm.Objects.Customer
 		internal System.Windows.Forms.ComboBox cboCustomerType;
 		internal System.Windows.Forms.Label lblName;
 		internal System.Windows.Forms.TextBox txtName;
-		internal ListView lvwLeadSources;
-		internal ColumnHeader chSource;
-		internal ColumnHeader chDepartment;
-		internal ColumnHeader chRange;
-		private ColumnHeader chAddedBy;
-		private GroupBox gbxLeadSource;
 		private ImageList imlLeadSource;
 		private System.ComponentModel.IContainer components;
 		private Panel pnlName;
-		private Panel pnlSpacer0;
 		private rkcrm.Objects.Customer.Lead_Source.LeadSourceBoundary leadSourceControls;
-		private Button btnAddLeadSource;
 
 		private Customer clsMyCustomer;
 		private rkcrm.Objects.Customer.Preview_Controls.AddressPreview AddressControls;
 		private rkcrm.Objects.Customer.Preview_Controls.RelatedCustomersPreview relatedCustomerControls;
+		private rkcrm.Objects.Customer.Preview_Controls.LeadSourceList leadSourceListControls;
 		private List<LeadSource> NewLeadSources;
 
 		#endregion
@@ -98,7 +91,7 @@ namespace rkcrm.Objects.Customer
 			txtName.Clear();
 			AddressControls.txtState.Clear();
 			AddressControls.txtZipcode.Clear();
-			lvwLeadSources.Items.Clear();
+			leadSourceListControls.lvwLeadSources.Items.Clear();
 			mtxtPhoneNumber.Clear();
 		}
 
@@ -124,7 +117,7 @@ namespace rkcrm.Objects.Customer
 					throw new Exception("The \"Phone Number\" is not complete.");
 				if (!IsInteger(AddressControls.txtZipcode.Text))
 					throw new Exception("The \"Zip Code\" must be a 5 digit number.");
-				if (lvwLeadSources.Items.Count == 0 && this.State == BoundaryState.Editing)
+				if (leadSourceListControls.lvwLeadSources.Items.Count == 0 && this.State == BoundaryState.Editing)
 					throw new Exception("There must be at least one \"Lead Source\".");
 
 				if (cboCustomerType.SelectedItem != null)
@@ -192,21 +185,13 @@ namespace rkcrm.Objects.Customer
 			this.cboCustomerType = new System.Windows.Forms.ComboBox();
 			this.lblName = new System.Windows.Forms.Label();
 			this.txtName = new System.Windows.Forms.TextBox();
-			this.lvwLeadSources = new System.Windows.Forms.ListView();
-			this.chSource = new System.Windows.Forms.ColumnHeader();
-			this.chDepartment = new System.Windows.Forms.ColumnHeader();
-			this.chRange = new System.Windows.Forms.ColumnHeader();
-			this.chAddedBy = new System.Windows.Forms.ColumnHeader();
-			this.gbxLeadSource = new System.Windows.Forms.GroupBox();
-			this.btnAddLeadSource = new System.Windows.Forms.Button();
 			this.leadSourceControls = new rkcrm.Objects.Customer.Lead_Source.LeadSourceBoundary();
 			this.imlLeadSource = new System.Windows.Forms.ImageList(this.components);
 			this.pnlName = new System.Windows.Forms.Panel();
-			this.pnlSpacer0 = new System.Windows.Forms.Panel();
 			this.AddressControls = new rkcrm.Objects.Customer.Preview_Controls.AddressPreview();
 			this.relatedCustomerControls = new rkcrm.Objects.Customer.Preview_Controls.RelatedCustomersPreview();
+			this.leadSourceListControls = new rkcrm.Objects.Customer.Preview_Controls.LeadSourceList();
 			this.pnlControls.SuspendLayout();
-			this.gbxLeadSource.SuspendLayout();
 			this.pnlName.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -214,15 +199,15 @@ namespace rkcrm.Objects.Customer
 			// 
 			this.pnlControls.Controls.Add(this.relatedCustomerControls);
 			this.pnlControls.Controls.Add(this.AddressControls);
-			this.pnlControls.Controls.Add(this.pnlSpacer0);
-			this.pnlControls.Controls.Add(this.gbxLeadSource);
+			this.pnlControls.Controls.Add(this.leadSourceListControls);
+			this.pnlControls.Controls.Add(this.leadSourceControls);
 			this.pnlControls.Controls.Add(this.pnlName);
 			this.pnlControls.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
 			this.pnlControls.Size = new System.Drawing.Size(631, 377);
 			// 
 			// mtxtPhoneNumber
 			// 
-			this.mtxtPhoneNumber.Location = new System.Drawing.Point(469, 23);
+			this.mtxtPhoneNumber.Location = new System.Drawing.Point(475, 26);
 			this.mtxtPhoneNumber.Mask = "(000) 000-0000";
 			this.mtxtPhoneNumber.Name = "mtxtPhoneNumber";
 			this.mtxtPhoneNumber.Size = new System.Drawing.Size(104, 20);
@@ -233,7 +218,7 @@ namespace rkcrm.Objects.Customer
 			// lblPhoneNumber
 			// 
 			this.lblPhoneNumber.AutoSize = true;
-			this.lblPhoneNumber.Location = new System.Drawing.Point(466, 7);
+			this.lblPhoneNumber.Location = new System.Drawing.Point(472, 10);
 			this.lblPhoneNumber.Name = "lblPhoneNumber";
 			this.lblPhoneNumber.Size = new System.Drawing.Size(95, 13);
 			this.lblPhoneNumber.TabIndex = 34;
@@ -242,7 +227,7 @@ namespace rkcrm.Objects.Customer
 			// lblCustomerType
 			// 
 			this.lblCustomerType.AutoSize = true;
-			this.lblCustomerType.Location = new System.Drawing.Point(-1, 7);
+			this.lblCustomerType.Location = new System.Drawing.Point(5, 10);
 			this.lblCustomerType.Name = "lblCustomerType";
 			this.lblCustomerType.Size = new System.Drawing.Size(82, 13);
 			this.lblCustomerType.TabIndex = 32;
@@ -253,7 +238,7 @@ namespace rkcrm.Objects.Customer
 			this.cboCustomerType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
 			this.cboCustomerType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
 			this.cboCustomerType.FormattingEnabled = true;
-			this.cboCustomerType.Location = new System.Drawing.Point(2, 23);
+			this.cboCustomerType.Location = new System.Drawing.Point(8, 26);
 			this.cboCustomerType.Name = "cboCustomerType";
 			this.cboCustomerType.Size = new System.Drawing.Size(149, 21);
 			this.cboCustomerType.TabIndex = 26;
@@ -262,7 +247,7 @@ namespace rkcrm.Objects.Customer
 			// lblName
 			// 
 			this.lblName.AutoSize = true;
-			this.lblName.Location = new System.Drawing.Point(154, 7);
+			this.lblName.Location = new System.Drawing.Point(160, 10);
 			this.lblName.Name = "lblName";
 			this.lblName.Size = new System.Drawing.Size(86, 13);
 			this.lblName.TabIndex = 29;
@@ -271,76 +256,11 @@ namespace rkcrm.Objects.Customer
 			// txtName
 			// 
 			this.txtName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-			this.txtName.Location = new System.Drawing.Point(157, 23);
+			this.txtName.Location = new System.Drawing.Point(163, 26);
 			this.txtName.Name = "txtName";
 			this.txtName.Size = new System.Drawing.Size(306, 20);
 			this.txtName.TabIndex = 28;
 			this.txtName.TextChanged += new System.EventHandler(this.control_Changed);
-			// 
-			// lvwLeadSources
-			// 
-			this.lvwLeadSources.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chSource,
-            this.chDepartment,
-            this.chRange,
-            this.chAddedBy});
-			this.lvwLeadSources.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.lvwLeadSources.FullRowSelect = true;
-			this.lvwLeadSources.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.lvwLeadSources.HoverSelection = true;
-			this.lvwLeadSources.Location = new System.Drawing.Point(6, 76);
-			this.lvwLeadSources.Name = "lvwLeadSources";
-			this.lvwLeadSources.Size = new System.Drawing.Size(603, 104);
-			this.lvwLeadSources.TabIndex = 55;
-			this.lvwLeadSources.UseCompatibleStateImageBehavior = false;
-			this.lvwLeadSources.View = System.Windows.Forms.View.Details;
-			// 
-			// chSource
-			// 
-			this.chSource.Text = "Lead Source";
-			this.chSource.Width = 153;
-			// 
-			// chDepartment
-			// 
-			this.chDepartment.Text = "Department";
-			this.chDepartment.Width = 70;
-			// 
-			// chRange
-			// 
-			this.chRange.Text = "Active Range";
-			this.chRange.Width = 114;
-			// 
-			// chAddedBy
-			// 
-			this.chAddedBy.Text = "Added By";
-			this.chAddedBy.Width = 115;
-			// 
-			// gbxLeadSource
-			// 
-			this.gbxLeadSource.Controls.Add(this.btnAddLeadSource);
-			this.gbxLeadSource.Controls.Add(this.lvwLeadSources);
-			this.gbxLeadSource.Controls.Add(this.leadSourceControls);
-			this.gbxLeadSource.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbxLeadSource.Location = new System.Drawing.Point(8, 53);
-			this.gbxLeadSource.Name = "gbxLeadSource";
-			this.gbxLeadSource.Padding = new System.Windows.Forms.Padding(6, 3, 6, 6);
-			this.gbxLeadSource.Size = new System.Drawing.Size(615, 186);
-			this.gbxLeadSource.TabIndex = 57;
-			this.gbxLeadSource.TabStop = false;
-			this.gbxLeadSource.Text = "How did they hear about R&&K?";
-			// 
-			// btnAddLeadSource
-			// 
-			this.btnAddLeadSource.BackgroundImage = global::rkcrm.Properties.Resources.New_Icon;
-			this.btnAddLeadSource.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.btnAddLeadSource.FlatAppearance.BorderSize = 0;
-			this.btnAddLeadSource.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnAddLeadSource.Location = new System.Drawing.Point(530, 44);
-			this.btnAddLeadSource.Name = "btnAddLeadSource";
-			this.btnAddLeadSource.Size = new System.Drawing.Size(16, 16);
-			this.btnAddLeadSource.TabIndex = 57;
-			this.btnAddLeadSource.UseVisualStyleBackColor = true;
-			this.btnAddLeadSource.Click += new System.EventHandler(this.btnAddLeadSource_Click);
 			// 
 			// leadSourceControls
 			// 
@@ -348,15 +268,16 @@ namespace rkcrm.Objects.Customer
 			this.leadSourceControls.ChangeHistoryVisible = false;
 			this.leadSourceControls.Dock = System.Windows.Forms.DockStyle.Top;
 			this.leadSourceControls.IsBasic = true;
-			this.leadSourceControls.Location = new System.Drawing.Point(6, 16);
+			this.leadSourceControls.Location = new System.Drawing.Point(8, 53);
 			this.leadSourceControls.MinimumSize = new System.Drawing.Size(0, 60);
 			this.leadSourceControls.MySource = null;
 			this.leadSourceControls.Name = "leadSourceControls";
 			this.leadSourceControls.ShowDepartments = false;
-			this.leadSourceControls.Size = new System.Drawing.Size(603, 60);
+			this.leadSourceControls.Size = new System.Drawing.Size(615, 60);
 			this.leadSourceControls.TabIndex = 56;
 			this.leadSourceControls.Title = "Lead Sources";
 			this.leadSourceControls.TitleBarVisible = false;
+			this.leadSourceControls.IsDirtyChanged += new System.EventHandler<System.EventArgs>(this.control_Changed);
 			// 
 			// imlLeadSource
 			// 
@@ -378,21 +299,13 @@ namespace rkcrm.Objects.Customer
 			this.pnlName.Size = new System.Drawing.Size(615, 53);
 			this.pnlName.TabIndex = 58;
 			// 
-			// pnlSpacer0
-			// 
-			this.pnlSpacer0.Dock = System.Windows.Forms.DockStyle.Top;
-			this.pnlSpacer0.Location = new System.Drawing.Point(8, 239);
-			this.pnlSpacer0.Name = "pnlSpacer0";
-			this.pnlSpacer0.Size = new System.Drawing.Size(615, 5);
-			this.pnlSpacer0.TabIndex = 59;
-			// 
 			// AddressControls
 			// 
 			this.AddressControls.Dock = System.Windows.Forms.DockStyle.Top;
 			this.AddressControls.ExpandedHeight = 125;
 			this.AddressControls.IsDirty = false;
 			this.AddressControls.IsExpanded = false;
-			this.AddressControls.Location = new System.Drawing.Point(8, 244);
+			this.AddressControls.Location = new System.Drawing.Point(8, 140);
 			this.AddressControls.Name = "AddressControls";
 			this.AddressControls.Size = new System.Drawing.Size(615, 27);
 			this.AddressControls.TabIndex = 60;
@@ -404,11 +317,22 @@ namespace rkcrm.Objects.Customer
 			this.relatedCustomerControls.Dock = System.Windows.Forms.DockStyle.Top;
 			this.relatedCustomerControls.ExpandedHeight = 150;
 			this.relatedCustomerControls.IsExpanded = false;
-			this.relatedCustomerControls.Location = new System.Drawing.Point(8, 271);
+			this.relatedCustomerControls.Location = new System.Drawing.Point(8, 167);
 			this.relatedCustomerControls.Name = "relatedCustomerControls";
 			this.relatedCustomerControls.Size = new System.Drawing.Size(615, 27);
 			this.relatedCustomerControls.TabIndex = 62;
 			this.relatedCustomerControls.Title = "Related Customers";
+			// 
+			// leadSourceListControls
+			// 
+			this.leadSourceListControls.Dock = System.Windows.Forms.DockStyle.Top;
+			this.leadSourceListControls.ExpandedHeight = 150;
+			this.leadSourceListControls.IsExpanded = false;
+			this.leadSourceListControls.Location = new System.Drawing.Point(8, 113);
+			this.leadSourceListControls.Name = "leadSourceListControls";
+			this.leadSourceListControls.Size = new System.Drawing.Size(615, 27);
+			this.leadSourceListControls.TabIndex = 63;
+			this.leadSourceListControls.Title = "Lead Sources";
 			// 
 			// CustomerBoundary
 			// 
@@ -417,9 +341,7 @@ namespace rkcrm.Objects.Customer
 			this.Name = "CustomerBoundary";
 			this.Size = new System.Drawing.Size(631, 427);
 			this.Title = "General Information";
-			this.Load += new System.EventHandler(this.CustomerBoundary_Load);
 			this.pnlControls.ResumeLayout(false);
-			this.gbxLeadSource.ResumeLayout(false);
 			this.pnlName.ResumeLayout(false);
 			this.pnlName.PerformLayout();
 			this.ResumeLayout(false);
@@ -446,11 +368,12 @@ namespace rkcrm.Objects.Customer
 
 			leadSourceControls.MySource = new rkcrm.Objects.Customer.Lead_Source.LeadSource();
 			
-			gbxLeadSource.Size = new Size(gbxLeadSource.Width, gbxLeadSource.Height - lvwLeadSources.Height);
+			if (thisUser.HomeDepartment.IsProfitCenter)
+				MyLeadSource.lbxDepartments.SelectedValue = thisUser.HomeDepartment.ID;
+
 			relatedCustomerControls.Visible = false;
+			leadSourceListControls.Visible = false;
 			AddressControls.IsExpanded = true;
-			lvwLeadSources.Visible = false;
-			btnAddLeadSource.Visible = false;
 
 			this.Clear();
 
@@ -489,7 +412,14 @@ namespace rkcrm.Objects.Customer
 			RefreshLeadSources();
 			RefreshRelatedCustomers();
 
-			leadSourceControls.MySource = new rkcrm.Objects.Customer.Lead_Source.LeadSource();
+			if (thisUser.HomeDepartment.IsProfitCenter)
+				using (LeadSourceController theController = new LeadSourceController())
+				{
+					leadSourceControls.MySource = theController.GetLatestLeadSource(MyCustomer.ID, thisUser.HomeDepartment.ID);
+				}
+			else
+				leadSourceControls.MySource = new rkcrm.Objects.Customer.Lead_Source.LeadSource();
+
 			AddressControls.IsDirty = false;
 
 			this.Title = "General Information";
@@ -510,7 +440,7 @@ namespace rkcrm.Objects.Customer
 
 		public void RefreshLeadSources()
 		{
-			lvwLeadSources.Items.Clear();
+			leadSourceListControls.lvwLeadSources.Items.Clear();
 
 			using (Lead_Source.LeadSourceController thecontroller = new Lead_Source.LeadSourceController())
 			{
@@ -533,7 +463,7 @@ namespace rkcrm.Objects.Customer
 							index++;
 
 					index = 0;
-					lvwLeadSources.Items.Add(newItem);
+					leadSourceListControls.lvwLeadSources.Items.Add(newItem);
 				}
 
 				foreach (DataRow oRow in oTable.Rows)
@@ -544,7 +474,7 @@ namespace rkcrm.Objects.Customer
 					newItem.SubItems.Add(Convert.ToDateTime(oRow["activated"]).ToString("M/d/yy") + " - Current");
 					newItem.SubItems.Add(oRow["adder"].ToString());
 
-					lvwLeadSources.Items.Add(newItem);
+					leadSourceListControls.lvwLeadSources.Items.Add(newItem);
 				}
 			}
 		}
@@ -590,7 +520,9 @@ namespace rkcrm.Objects.Customer
 
 				if (result)
 				{
-					result = SaveLeadSources();
+					if (MyLeadSource.IsDirty)
+						result = SaveLeadSources();
+
 					ProcessGeneralNotesProject();
 				}
 			}
@@ -604,17 +536,65 @@ namespace rkcrm.Objects.Customer
 		private bool SaveLeadSources()
 		{
 			bool result = true;
-			LeadSource container;
 
-			using (LeadSourceController theController = new LeadSourceController())
+			MyLeadSource.MySource.CustomerID = MyCustomer.ID;
+
+			if (leadSourceControls.lbxDepartments.SelectedItems.Count == 0)
 			{
-				foreach (LeadSource theSource in NewLeadSources)
-				{
-					container = theController.InsertLeadSource(theSource);
+				Administration.Department.DepartmentSelect oForm = new Administration.Department.DepartmentSelect();
+				oForm.SelectionMode = SelectionMode.MultiSimple;
 
-					if (container.ID == 0)
-						result = false;
+				using (Administration.Department.DepartmentController theController = new rkcrm.Administration.Department.DepartmentController())
+				{
+					oForm.DataSource = theController.GetProfitCenters();
+					oForm.DisplayMember = "name";
+					oForm.ValueMember = "department_id";
+					oForm.SelectedItems.Clear();
 				}
+
+				oForm.ShowDialog();
+
+				if (oForm.DialogResult == DialogResult.OK)
+					foreach (object theSelected in oForm.SelectedItems)
+					{
+						MyLeadSource.lbxDepartments.SelectedValue = Convert.ToInt32(((DataRowView)theSelected)["department_id"]);
+
+						if (MyLeadSource.CommitChanges())
+							NewLeadSources.Add(MyLeadSource.MySource.Copy());
+					}
+				else
+					result = false;
+			}
+			else
+				if (leadSourceControls.CommitChanges())
+				{
+					LeadSource newSource = new LeadSource();
+					newSource.SourceID = MyLeadSource.MySource.SourceID;
+					newSource.Details = MyLeadSource.MySource.Details;
+					newSource.DepartmentID = MyLeadSource.MySource.DepartmentID;
+					newSource.CustomerID = MyLeadSource.MySource.CustomerID;
+
+					NewLeadSources.Add(newSource);
+				}
+				else
+					result = false;
+
+			if (result && NewLeadSources.Count > 0)
+			{
+				LeadSource container;
+
+				using (LeadSourceController theController = new LeadSourceController())
+				{
+					foreach (LeadSource theSource in NewLeadSources)
+					{
+						container = theController.InsertLeadSource(theSource);
+
+						if (container.ID == 0)
+							result = false;
+					}
+				}
+
+				RefreshLeadSources();
 			}
 
 			return result;
@@ -652,20 +632,6 @@ namespace rkcrm.Objects.Customer
 
 		#region Event Handlers
 
-		private void CustomerBoundary_Load(object sender, EventArgs e)
-		{
-			gbxLeadSource.Size = new Size(gbxLeadSource.Width, lvwLeadSources.Height + leadSourceControls.Height + 20);
-
-			this.btnAddLeadSource.MouseLeave += new System.EventHandler(this.Button_MouseLeave);
-			this.btnAddLeadSource.Leave += new System.EventHandler(this.Button_Leave);
-			this.btnAddLeadSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Button_KeyUp);
-			this.btnAddLeadSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Button_MouseDown);
-			this.btnAddLeadSource.Enter += new System.EventHandler(this.Button_Enter);
-			this.btnAddLeadSource.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Button_MouseUp);
-			this.btnAddLeadSource.MouseEnter += new System.EventHandler(this.Button_MouseEnter);
-			this.btnAddLeadSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Button_KeyDown);
-		}
-
 		private void control_Changed(object sender, EventArgs e)
 		{
 			if (this.State == BoundaryState.Editing || this.State == BoundaryState.Adding)
@@ -701,65 +667,6 @@ namespace rkcrm.Objects.Customer
 					}
 				}
 			}
-		}
-
-		private void btnAddLeadSource_Click(object sender, EventArgs e)
-		{
-			if (leadSourceControls.lbxDepartments.SelectedItems.Count == 0)
-			{
-				int SelectedDepartmentID;
-				int index = 0;
-				Administration.Department.DepartmentSelect oForm = new Administration.Department.DepartmentSelect();
-				oForm.SelectionMode = SelectionMode.MultiSimple;
-				
-				using (Administration.Department.DepartmentController theController = new rkcrm.Administration.Department.DepartmentController())
-				{
-					oForm.DataSource = theController.GetProfitCenters();
-					oForm.DisplayMember = "name";
-					oForm.ValueMember = "department_id";
-					oForm.SelectedItems.Clear();
-				}
-
-				oForm.ShowDialog();
-
-				if (oForm.DialogResult == DialogResult.OK)
-				{
-					foreach (object theSelected in oForm.SelectedItems)
-					{
-						SelectedDepartmentID = Convert.ToInt32(((DataRowView)theSelected)["department_id"]);
-
-						while (index < NewLeadSources.Count)
-							if (NewLeadSources[index].DepartmentID == SelectedDepartmentID)
-								NewLeadSources.RemoveAt(index);
-							else
-								index++;
-
-						index = 0;
-
-						MyLeadSource.lbxDepartments.SelectedValue = SelectedDepartmentID;
-
-						if (MyLeadSource.CommitChanges())
-							NewLeadSources.Add(MyLeadSource.MySource.Copy());
-					}
-
-					MyLeadSource.MySource = new LeadSource();
-					MyLeadSource.MySource.CustomerID = MyCustomer.ID;
-				}
-			}
-			else
-			{
-				if (leadSourceControls.CommitChanges())
-				{
-					NewLeadSources.Add(leadSourceControls.MySource);
-					leadSourceControls.MySource = new LeadSource();
-					MyLeadSource.MySource.CustomerID = MyCustomer.ID;
-				}
-			}
-
-			RefreshLeadSources();
-
-			if (!IsDirty)
-				IsDirty = true;
 		}
 
 		void lvwList_DoubleClick(object sender, EventArgs e)
@@ -802,7 +709,9 @@ namespace rkcrm.Objects.Customer
 			LoadComboBoxes();
 			NewLeadSources = new List<LeadSource>();
 			if (thisUser.HomeDepartment.IsProfitCenter)
-				gbxLeadSource.Text = "How did they hear about the " + thisUser.HomeDepartment.Name + " department?";
+				leadSourceControls.lblSource.Text = "How did they hear about R&&K " + thisUser.HomeDepartment.Name + "?";
+			else
+				leadSourceControls.lblSource.Text = "How did they hear about R&&K?";
 		}
 
 		#endregion

@@ -27,6 +27,8 @@ namespace rkcrm.Objects.Customer.Lead_Source
 		private System.Windows.Forms.ColumnHeader chAdder;
 		private System.Windows.Forms.ColumnHeader chDepartment;
 		private System.Windows.Forms.ToolStrip tsMain;
+		private ToolStripSeparator tss_3;
+		private ToolStripButton tsbProperties;
 
 		private Customer clsMyCustomer;
 
@@ -40,11 +42,13 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			get { return clsMyCustomer; }
 			set
 			{
-				if (clsMyCustomer != value)
-					SetSearchingMode();
+				bool HasChanged = (clsMyCustomer != value);
 
 				clsMyCustomer = value;
 
+				if (HasChanged)
+					MySource = new LeadSource(); ;
+				
 				if (value != null)
 					LoadList();
 			}
@@ -75,6 +79,10 @@ namespace rkcrm.Objects.Customer.Lead_Source
 		public new void Clear()
 		{
 			base.Clear();
+
+			lvwList.ListViewItemSorter = null;
+			lvwList.Sorting = SortOrder.None;
+			lvwList.SelectedItems.Clear();
 		}
 
 		private void InitializeComponent()
@@ -96,6 +104,8 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			this.chRange = new System.Windows.Forms.ColumnHeader();
 			this.chAdder = new System.Windows.Forms.ColumnHeader();
 			this.chDepartment = new System.Windows.Forms.ColumnHeader();
+			this.tsbProperties = new System.Windows.Forms.ToolStripButton();
+			this.tss_3 = new System.Windows.Forms.ToolStripSeparator();
 			this.scMain.Panel1.SuspendLayout();
 			this.scMain.Panel2.SuspendLayout();
 			this.scMain.SuspendLayout();
@@ -110,7 +120,7 @@ namespace rkcrm.Objects.Customer.Lead_Source
             this.chDepartment,
             this.chRange,
             this.chAdder});
-			this.lvwList.Size = new System.Drawing.Size(600, 222);
+			this.lvwList.Size = new System.Drawing.Size(600, 223);
 			this.lvwList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvwList_ItemSelectionChanged);
 			// 
 			// scMain
@@ -134,7 +144,9 @@ namespace rkcrm.Objects.Customer.Lead_Source
             this.tsbCancel,
             this.tss_2,
             this.tsbDelete,
-            this.tsbRestore});
+            this.tsbRestore,
+            this.tss_3,
+            this.tsbProperties});
 			this.tsMain.Location = new System.Drawing.Point(0, 0);
 			this.tsMain.Name = "tsMain";
 			this.tsMain.Size = new System.Drawing.Size(600, 35);
@@ -238,7 +250,7 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			this.leadSourceControls.MySource = null;
 			this.leadSourceControls.Name = "leadSourceControls";
 			this.leadSourceControls.ShowDepartments = true;
-			this.leadSourceControls.Size = new System.Drawing.Size(600, 207);
+			this.leadSourceControls.Size = new System.Drawing.Size(600, 206);
 			this.leadSourceControls.TabIndex = 1;
 			this.leadSourceControls.Title = "Search Lead Sources";
 			this.leadSourceControls.TitleBarVisible = true;
@@ -269,11 +281,27 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			this.chDepartment.Text = "Department";
 			this.chDepartment.Width = 75;
 			// 
+			// tsbProperties
+			// 
+			this.tsbProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.tsbProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsbProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsbProperties.Name = "tsbProperties";
+			this.tsbProperties.Size = new System.Drawing.Size(32, 32);
+			this.tsbProperties.Text = "Properties";
+			this.tsbProperties.Click += new System.EventHandler(this.tsbProperties_Click);
+			// 
+			// tss_3
+			// 
+			this.tss_3.Name = "tss_3";
+			this.tss_3.Size = new System.Drawing.Size(6, 35);
+			// 
 			// LeadSourceScreen
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.ListTitle = "Lead Sources";
 			this.Name = "LeadSourceScreen";
+			this.Controls.SetChildIndex(this.scMain, 0);
 			this.scMain.Panel1.ResumeLayout(false);
 			this.scMain.Panel1.PerformLayout();
 			this.scMain.Panel2.ResumeLayout(false);
@@ -335,13 +363,9 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			tsbSave.Enabled = false;
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
-			tsbSaveNew.Visible = true;
+			tsbProperties.Enabled = false;
 			
 			Clear();
-
-			MySource = new LeadSource();
-			MySource.CustomerID = MyCustomer.ID;
-			leadSourceControls.MySource = MySource;
 
 			IsDisposable = true;
 		}
@@ -355,13 +379,11 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			tsbSave.Enabled = false;
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
-			tsbSaveNew.Visible = false;
+			tsbProperties.Enabled = true;
 
 			tsbRestore.Visible = MySource.IsArchived;
 			tsbDelete.Visible = !MySource.IsArchived;
 
-			Clear();
-			leadSourceControls.MySource = MySource;
 			IsDisposable = false;
 		}
 
@@ -374,14 +396,9 @@ namespace rkcrm.Objects.Customer.Lead_Source
 			tsbSave.Enabled = false;
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
-			tsbSaveNew.Visible = false;
+			tsbProperties.Enabled = false;
 
 			Clear();
-			leadSourceControls.SetSearchingMode();
-
-			lvwList.ListViewItemSorter = null;
-			lvwList.Sorting = SortOrder.None;
-			lvwList.SelectedItems.Clear();
 
 			if(MyCustomer != null)
 				LoadList();
@@ -561,6 +578,17 @@ namespace rkcrm.Objects.Customer.Lead_Source
 				MySource = MySource;
 
 			LoadList();
+		}
+
+		private void tsbProperties_Click(object sender, EventArgs e)
+		{
+			if (MySource != null && MySource.ID > 0)
+			{
+				Objects.PropertiesWindow oForm = new rkcrm.Objects.PropertiesWindow();
+				oForm.SelectedObject = MySource;
+				oForm.Text = "Lead Source Properties";
+				oForm.Show();
+			}
 		}
 
 		#endregion

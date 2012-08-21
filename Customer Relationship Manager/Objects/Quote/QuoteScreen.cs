@@ -44,6 +44,10 @@ namespace rkcrm.Objects.Quote
 		private ToolStripMenuItem tsmRestore;
 		private ToolStripSeparator mss_2;
 		private ToolStripMenuItem tsmCancel;
+		private ToolStripSeparator tss_4;
+		private ToolStripButton tsbProperties;
+		private ToolStripSeparator mss_3;
+		private ToolStripMenuItem tsmProperties;
 
 		private const int FOLLOW_UP_ON_QUOTES = 5;
 		private const int ADMINISTRATOR = 1;
@@ -138,6 +142,10 @@ namespace rkcrm.Objects.Quote
 			this.tsmRestore = new System.Windows.Forms.ToolStripMenuItem();
 			this.mss_2 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsmCancel = new System.Windows.Forms.ToolStripMenuItem();
+			this.tss_4 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsbProperties = new System.Windows.Forms.ToolStripButton();
+			this.mss_3 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmProperties = new System.Windows.Forms.ToolStripMenuItem();
 			this.scMain.Panel1.SuspendLayout();
 			this.scMain.Panel2.SuspendLayout();
 			this.scMain.SuspendLayout();
@@ -184,7 +192,9 @@ namespace rkcrm.Objects.Quote
             this.tss_3,
             this.tsbReopen,
             this.tsbSell,
-            this.tsbLose});
+            this.tsbLose,
+            this.tss_4,
+            this.tsbProperties});
 			this.tsMain.Location = new System.Drawing.Point(0, 0);
 			this.tsMain.Name = "tsMain";
 			this.tsMain.Size = new System.Drawing.Size(600, 35);
@@ -439,6 +449,36 @@ namespace rkcrm.Objects.Quote
 			this.tsmCancel.Text = "Cancel";
 			this.tsmCancel.Click += new System.EventHandler(this.tsbCancel_Click);
 			// 
+			// tss_4
+			// 
+			this.tss_4.Name = "tss_4";
+			this.tss_4.Size = new System.Drawing.Size(6, 35);
+			// 
+			// tsbProperties
+			// 
+			this.tsbProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.tsbProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsbProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsbProperties.Name = "tsbProperties";
+			this.tsbProperties.Size = new System.Drawing.Size(32, 32);
+			this.tsbProperties.Text = "Properties";
+			this.tsbProperties.EnabledChanged += new System.EventHandler(this.tsbProperties_EnabledChanged);
+			this.tsbProperties.VisibleChanged += new System.EventHandler(this.tsbProperties_VisibleChanged);
+			this.tsbProperties.Click += new System.EventHandler(this.tsbProperties_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.mss_3.Name = "toolStripSeparator1";
+			this.mss_3.Size = new System.Drawing.Size(149, 6);
+			// 
+			// tsmProperties
+			// 
+			this.tsmProperties.Image = global::rkcrm.Properties.Resources.Properties_28x28;
+			this.tsmProperties.Name = "tsmProperties";
+			this.tsmProperties.Size = new System.Drawing.Size(152, 22);
+			this.tsmProperties.Text = "Properties";
+			this.tsmProperties.Click += new System.EventHandler(this.tsbProperties_Click);
+			// 
 			// QuoteScreen
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -465,7 +505,9 @@ namespace rkcrm.Objects.Quote
 				this.tsmDelete,
 				this.tsmRestore,
 				this.mss_2,
-				this.tsmCancel});
+				this.tsmCancel,
+				this.mss_3,
+				this.tsmProperties});
 		}
 
 		private void LoadList()
@@ -535,6 +577,7 @@ namespace rkcrm.Objects.Quote
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
 			tsbSell.Enabled = false;
+			tsbProperties.Enabled = false;
 
 			tsbSaveNew.Visible = false;
 			tsbDelete.Visible = true;
@@ -563,6 +606,7 @@ namespace rkcrm.Objects.Quote
 			tsbSave.Enabled = false;
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
+			tsbProperties.Enabled = true;
 
 			Clear();
 
@@ -584,6 +628,7 @@ namespace rkcrm.Objects.Quote
 			tsbSaveClose.Enabled = false;
 			tsbSaveNew.Enabled = false;
 			tsbSell.Enabled = false;
+			tsbProperties.Enabled = false;
 
 			Clear();
 
@@ -1007,6 +1052,17 @@ namespace rkcrm.Objects.Quote
 			}
 		}
 
+		private void tsbProperties_Click(object sender, EventArgs e)
+		{
+			if (MyQuote != null && MyQuote.ID > 0)
+			{
+				Objects.PropertiesWindow oForm = new rkcrm.Objects.PropertiesWindow();
+				oForm.SelectedObject = MyQuote;
+				oForm.Text = "Quote Properties";
+				oForm.Show();
+			}
+		}
+
 		#endregion
 
 		
@@ -1072,6 +1128,16 @@ namespace rkcrm.Objects.Quote
 		private void tsbLose_VisibleChanged(object sender, EventArgs e)
 		{
 			tsmLose.Visible = tsbLose.Visible;
+		}
+
+		private void tsbProperties_EnabledChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Enabled = tsbProperties.Enabled;
+		}
+
+		private void tsbProperties_VisibleChanged(object sender, EventArgs e)
+		{
+			tsmProperties.Visible = tsbProperties.Visible;
 		}
 
 		#endregion
