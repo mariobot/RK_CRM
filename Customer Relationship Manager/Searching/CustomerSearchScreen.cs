@@ -953,7 +953,7 @@ namespace rkcrm.Searching
 				bool IsCustomer = !string.IsNullOrEmpty(e.Item.SubItems[CUSTOMER_INDEX].Text);
 
 				ShowPreview(e.Item);
-
+				
 				cmsResults.Items[cmsResults.Items.Count - 2].Visible = !IsCustomer;
 				cmsResults.Items[cmsResults.Items.Count - 1].Visible = IsCustomer;
 				tsmActions.DropDownItems[tsmActions.DropDownItems.Count - 2].Visible = !IsCustomer;

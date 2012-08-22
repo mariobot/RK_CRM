@@ -243,7 +243,7 @@ namespace rkcrm.Searching.DropDowns
 				return null;
 		}
 
-		private void DetermineAccess()
+		internal void DetermineAccess()
 		{
 			bolDeleteIsAccessible = thisUser.MyTasks.Contains((int)Tasks.Delete);
 			bolRestoreIsAccessible = thisUser.MyTasks.Contains((int)Tasks.Restore);

@@ -43,7 +43,7 @@ namespace rkcrm.Searching.DropDowns
 		private ToolStripButton tsbEditCustomer;
 
 		private ListView theReferencedList;
-		private int ColumnIndex;
+		private int CustomerIndex;
 		private const int DEACTIVATION = 12;
 		private ToolStripButton tsbActivityStatus;
 		private ToolStripSeparator mss_4;
@@ -51,6 +51,71 @@ namespace rkcrm.Searching.DropDowns
 		private ToolStripSeparator tss_4;
 		private ToolStripButton tsbProperties;
 		private const int ACTIVATION = 13;
+
+		#endregion
+
+
+		#region Security Variables
+
+		private bool bolEditActivityStatus;
+		private bool bolEditCreditExpiration;
+		private bool bolEditTaxExpiration;
+		private bool bolGotoContact;
+		private bool bolGotoCustomer;
+		private bool bolGotoProject;
+		private bool bolSaveCustomer;
+		private bool bolViewInvoices;
+		private bool bolViewProperties;
+
+		#endregion
+
+
+		#region Properties
+
+		public bool EditActivityStatus
+		{
+			get { return bolEditActivityStatus; }
+		}
+
+		public bool EditCreditExpiration
+		{
+			get { return bolEditCreditExpiration; }
+		}
+
+		public bool EditTaxExpiration
+		{
+			get { return bolEditTaxExpiration; }
+		}
+
+		public bool GotoContact
+		{
+			get { return bolGotoContact; }
+		}
+
+		public bool GotoCustomer
+		{
+			get { return bolGotoCustomer; }
+		}
+
+		public bool GotoProject
+		{
+			get { return bolGotoProject; }
+		}
+
+		public bool SaveCustomer
+		{
+			get { return bolSaveCustomer; }
+		}
+
+		public bool ViewInvoices
+		{
+			get { return bolViewInvoices; }
+		}
+
+		public bool ViewProperties
+		{
+			get { return bolViewProperties; }
+		}
 
 		#endregion
 
@@ -390,100 +455,6 @@ namespace rkcrm.Searching.DropDowns
 			tsmProperties.Enabled = true;
 		}
 
-		private void ValidateSecurityAccess()
-		{
-			// this.Items[0] = tdbMenuItems
-			// this.Items[1] = tsbAddCustomer
-			// this.Items[2] = tsbEditCustomer
-			// this.Items[3] = tss_0
-			// this.Items[4] = tsbAddContact
-			// this.Items[5] = tsbAddProject
-			// this.Items[6] = tss_1
-			// this.Items[7] = tsbTaxExcempt
-			// this.Items[8] = tsbCreditCard
-			// this.Items[9] = tss_2
-			// this.Items[10] = tsbActivityStatus
-			// this.Items[11] = tss_3
-			// this.Items[12] = tsbInvoices
-			// this.Items[13] = mss_4
-			// this.Items[14] = tsmProperties
-
-			//string text = string.Empty;
-			//foreach (ToolStripItem c in this.Items)
-			//    text += "this.Items[" + this.Items.IndexOf(c) + "] = " + c.Name + "\r\n";
-			//MessageBox.Show(text);
-
-			// accessCode = 32351 (0b111111001011111) Excludes tsbTaxExcempt, tsbCreditCard and tsbActivityStatus
-			// accessCode = 32735 (0b111111111011111) Excludes tsbActivityStatus
-			// accessCode = 32767 (0b111111111111111) Access to all buttons
-
-			int accessCode = 32767;
-			char[] charArray = Convert.ToString(accessCode, 2).PadRight(this.Items.Count, '0').ToCharArray();
-			int index = 0;
-
-			foreach (ToolStripItem oItem in this.Items)
-			{
-				switch (oItem.Name)
-				{
-					case "tss_1":
-						oItem.Visible = (charArray[index + 1] == '1' || charArray[index + 2] == '1');
-						break;
-					case "tss_2":
-						oItem.Visible = (charArray[index + 1] == '1');
-						break;
-					default:
-						oItem.Visible = charArray[index] == '0' ? false : true;
-						break;
-				}
-
-				index++;
-			}
-
-			// this.Items[0] = tsmAddCustomer
-			// this.Items[1] = tsmEditCustomer
-			// this.Items[2] = mss_0
-			// this.Items[3] = tsmAddContact
-			// this.Items[4] = tsmAddProject
-			// this.Items[5] = mss_1
-			// this.Items[6] = tsmTaxExcempt
-			// this.Items[7] = tsmCreditCard
-			// this.Items[8] = mss_2
-			// this.Items[9] = tsmActivityStatus
-			// this.Items[10] = mss_3
-			// this.Items[11] = tsmInvoices
-			// this.Items[12] = mss_4
-			// this.Items[13] = tsmProperties
-
-			// accessCode = 16175 (0b11111100101111) Excludes tsbTaxExcempt, tsbCreditCard and tsbActivityStatus
-			// accessCode = 16367 (0b11111111101111) Excludes tsbActivityStatus
-			// accessCode = 16383 (0b11111111111111) Access to all buttons
-
-			ToolStripDropDownButton menuItems = (ToolStripDropDownButton)this.Items[0];
-
-			index = 0;
-			accessCode = 16383;
-			charArray = Convert.ToString(accessCode, 2).PadRight(this.Items.Count, '0').ToCharArray();
-
-			foreach (ToolStripItem oItem in menuItems.DropDownItems)
-			{
-
-				switch (oItem.Name)
-				{
-					case "mss_1":
-						oItem.Visible = (charArray[index + 1] == '1' || charArray[index + 2] == '1');
-						break;
-					case "mss_2":
-						oItem.Visible = (charArray[index + 1] == '1');
-						break;
-					default:
-						oItem.Visible = charArray[index] == '0' ? false : true;
-						break;
-				}
-
-				index++;
-			}
-		}
-
 		private NavigationScreen GetNavigationScreen()
 		{
 			Control myNavigation = theReferencedList;
@@ -497,6 +468,35 @@ namespace rkcrm.Searching.DropDowns
 				return null;
 		}
 
+		internal void DetermineAccess()
+		{
+			bolEditActivityStatus = thisUser.MyTasks.Contains((int)Tasks.EditActivityStatus);
+			bolEditCreditExpiration = thisUser.MyTasks.Contains((int)Tasks.EditCreditExpiration);
+			bolEditTaxExpiration = thisUser.MyTasks.Contains((int)Tasks.EditTaxExpiration);
+			bolGotoContact = thisUser.MyTasks.Contains((int)Tasks.GotoContact);
+			bolGotoCustomer = thisUser.MyTasks.Contains((int)Tasks.GotoCustomer);
+			bolGotoProject = thisUser.MyTasks.Contains((int)Tasks.GotoProject);
+			bolSaveCustomer = thisUser.MyTasks.Contains((int)Tasks.SaveCustomer);
+			bolViewInvoices = thisUser.MyTasks.Contains((int)Tasks.ViewInvoices);
+			bolViewProperties = thisUser.MyTasks.Contains((int)Tasks.ViewProperties);
+
+			tsmActivityStatus.Visible = tsbActivityStatus.Visible = bolEditActivityStatus;
+			tsmAddContact.Visible = tsbAddContact.Visible = bolGotoContact;
+			tsmAddCustomer.Visible = tsbAddCustomer.Visible = bolSaveCustomer;
+			tsmAddProject.Visible = tsbAddProject.Visible = bolGotoProject;
+			tsmCreditCard.Visible = tsbCreditCard.Visible = bolEditCreditExpiration;
+			tsmEditCustomer.Visible = tsbEditCustomer.Visible = bolGotoCustomer;
+			tsmInvoices.Visible = tsbInvoices.Visible = bolViewInvoices;
+			tsmProperties.Visible = tsbProperties.Visible = bolViewProperties;
+			tsmTaxExempt.Visible = tsbTaxExcempt.Visible = bolEditTaxExpiration;
+
+			tss_0.Visible = mss_0.Visible = (bolGotoCustomer || bolSaveCustomer) && (bolGotoContact || bolGotoProject);
+			tss_1.Visible = mss_1.Visible = (bolEditCreditExpiration || bolEditTaxExpiration);
+			tss_2.Visible = mss_2.Visible = bolEditActivityStatus;
+			tss_3.Visible = mss_3.Visible = bolViewInvoices;
+			tss_4.Visible = mss_4.Visible = bolViewProperties;
+		}
+
         #endregion
 
 
@@ -505,7 +505,7 @@ namespace rkcrm.Searching.DropDowns
 		void theReferencedList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			if (e.IsSelected)
-				if (e.Item.SubItems[ColumnIndex].Text != string.Empty)
+				if (e.Item.SubItems[CustomerIndex].Text != string.Empty)
 					Enable();
 				else
 					Disable();
@@ -521,7 +521,7 @@ namespace rkcrm.Searching.DropDowns
 
 			using (CustomerController theController = new CustomerController())
 			{
-				MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+				MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
 
 				//Assume deactivation if the user is not a member of a profit center department
 				if (thisUser.HomeDepartment.IsProfitCenter)
@@ -583,7 +583,7 @@ namespace rkcrm.Searching.DropDowns
 
 		private void Invoices_Click(object sender, EventArgs e)
 		{
-			ViewInvoices oForm = new ViewInvoices(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+			ViewInvoices oForm = new ViewInvoices(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
 			oForm.Show();
 		}
 
@@ -593,7 +593,7 @@ namespace rkcrm.Searching.DropDowns
 
 			using (CustomerController theController = new CustomerController())
 			{
-				theCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+				theCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
 			}
 
 			UpdateTaxExpiration oForm = new UpdateTaxExpiration(theCustomer);
@@ -613,7 +613,7 @@ namespace rkcrm.Searching.DropDowns
 
             using (CustomerController theController = new CustomerController())
             {
-                theCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+                theCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
             }
 
             UpdateCreditExpiration oForm = new UpdateCreditExpiration(theCustomer);
@@ -634,7 +634,7 @@ namespace rkcrm.Searching.DropDowns
 
 			using (CustomerController theController = new CustomerController())
 			{
-				myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+				myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
 			}
 			myNavigation.btnCustomer.PerformClick();
 		}
@@ -646,7 +646,7 @@ namespace rkcrm.Searching.DropDowns
 
 			using (CustomerController theController = new CustomerController())
 			{
-				myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+				myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
 			}
 			myNavigation.btnCustomer.PerformClick();
 
@@ -662,7 +662,7 @@ namespace rkcrm.Searching.DropDowns
 
 			using (CustomerController theController = new CustomerController())
 			{
-				myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+				myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
 			}
 			myNavigation.btnCustomer.PerformClick();
 
@@ -680,11 +680,11 @@ namespace rkcrm.Searching.DropDowns
 			Customer theCustomer = null;
 			Objects.PropertiesWindow oForm = null;
 
-			if (!string.IsNullOrEmpty(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text))
+			if (!string.IsNullOrEmpty(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text))
 			{
 				using (CustomerController theController = new CustomerController())
 				{
-					theCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[ColumnIndex].Text));
+					theCustomer = theController.GetCustomer(Convert.ToInt32(theReferencedList.SelectedItems[0].SubItems[CustomerIndex].Text));
 				}
 
 				if (theCustomer != null)
@@ -707,6 +707,24 @@ namespace rkcrm.Searching.DropDowns
 		#endregion
 
 
+		#region Enumerations
+
+		private enum Tasks
+		{
+			EditActivityStatus = 18,
+			EditCreditExpiration = 17,
+			EditTaxExpiration = 16,
+			GotoContact = 5,
+			GotoCustomer = 4,
+			GotoProject = 6,
+			SaveCustomer = 11,
+			ViewInvoices = 19,
+			ViewProperties = 20
+		};
+
+		#endregion
+
+
         #region Constructor
 
         public CustomerDropDown(ListView ReferencedListView, int IdColumn)
@@ -714,14 +732,14 @@ namespace rkcrm.Searching.DropDowns
         {
             InitializeComponent();
 
-			ColumnIndex = IdColumn;
+			CustomerIndex = IdColumn;
 
 			theReferencedList = ReferencedListView;
 			theReferencedList.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(theReferencedList_ItemSelectionChanged);
 
 			Disable();
 
-			ValidateSecurityAccess();
+			DetermineAccess();
         }
 
         #endregion
