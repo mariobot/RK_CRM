@@ -50,6 +50,52 @@ namespace rkcrm.Searching.DropDowns
 		#endregion
 
 
+		#region Security Variables
+
+		private bool bolDelete;
+		private bool bolFollowUp;
+		private bool bolRestore;
+		private bool bolGotoNote;
+		private bool bolViewOtherProjects;
+		private bool bolViewProperties;
+
+		#endregion
+
+
+		#region Properties
+
+		public bool HasDelete
+		{
+			get { return bolDelete; }
+		}
+
+		public bool HasFollowUp
+		{
+			get { return bolFollowUp; }
+		}
+
+		public bool HasRestore
+		{
+			get { return bolRestore; }
+		}
+
+		public bool HasGotoNote
+		{
+			get { return bolGotoNote; }
+		}
+
+		public bool HasViewOtherProjects
+		{
+			get { return bolViewOtherProjects; }
+		}
+
+		public bool HasViewProperties
+		{
+			get { return bolViewProperties; }
+		}
+		#endregion
+
+
 		#region Methods
 
 		private void InitializeComponent()
@@ -426,6 +472,28 @@ namespace rkcrm.Searching.DropDowns
 						oScreen.RefreshData();
 		}
 
+		public void DetermineAccess()
+		{
+			bolDelete = thisUser.MyTasks.Contains((int)Tasks.Delete);
+			bolFollowUp = thisUser.MyTasks.Contains((int)Tasks.FollowUp);
+			bolRestore = thisUser.MyTasks.Contains((int)Tasks.Restore);
+			bolGotoNote = thisUser.MyTasks.Contains((int)Tasks.GotoNote);
+			bolViewOtherProjects = thisUser.MyTasks.Contains((int)Tasks.ViewOtherProjects);
+			bolViewProperties = thisUser.MyTasks.Contains((int)Tasks.ViewProperties);
+
+			tsmDelete.Visible = tsbDelete.Visible = HasDelete;
+			tsmEdit.Visible = tsbEdit.Visible = HasGotoNote;
+			tsmFollowUp.Visible = tsbFollowUp.Visible = HasFollowUp;
+			tsmOtherProjects.Visible = tsbOtherProjects.Visible = HasViewOtherProjects;
+			tsmProperties.Visible = tsbProperties.Visible = HasViewProperties;
+			tsmRestore.Visible = tsbRestore.Visible = HasRestore;
+
+			tss_0.Visible = mss_0.Visible = (HasDelete || HasRestore) && HasGotoNote;
+			tss_1.Visible = mss_1.Visible = HasFollowUp;
+			tss_2.Visible = mss_2.Visible = HasViewOtherProjects;
+			tss_3.Visible = mss_3.Visible = HasViewProperties;
+		}
+
 		#endregion
 
 
@@ -595,6 +663,21 @@ namespace rkcrm.Searching.DropDowns
 		#endregion
 
 
+		#region Enumerations
+
+		private enum Tasks
+		{
+			Delete = 40,
+			FollowUp = 25,
+			Restore = 41,
+			GotoNote = 7,
+			ViewOtherProjects = 26,
+			ViewProperties = 20
+		};
+
+		#endregion
+
+
 		#region Constructor
 
 		public NoteDropDown(ListView ReferencedList, int NoteIDIndex, int ProjectIDIndex, int CustomerIDIndex)
@@ -607,9 +690,9 @@ namespace rkcrm.Searching.DropDowns
 			CustomerIndex = CustomerIDIndex;
 
 			InitializeComponent();
-
 			InitializeOtherDropDowns();
 
+			DetermineAccess();
 			Disable();
 		}
 
