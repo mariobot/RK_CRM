@@ -60,6 +60,59 @@ namespace rkcrm.Searching
 		#endregion
 
 
+		#region Security Variables
+
+		private bool EditCreditExpiration;
+		private bool EditTaxExpiration;
+		private bool GotoContact;
+		private bool GotoCustomer;
+		private bool GotoProject;
+		private bool RestoreProject;
+		private bool ViewProperties;
+
+		#endregion
+
+
+		#region Properties
+
+		public bool HasEditCreditExpiration
+		{
+			get { return EditCreditExpiration; }
+		}
+
+		public bool HasEditTaxExpiration
+		{
+			get { return EditTaxExpiration; }
+		}
+
+		public bool HasGotoContact
+		{
+			get { return GotoContact; }
+		}
+
+		public bool HasGotoCustomer
+		{
+			get { return GotoCustomer; }
+		}
+
+		public bool HasGotoProject
+		{
+			get { return GotoProject; }
+		}
+
+		public bool HasRestoreProject
+		{
+			get { return RestoreProject; }
+		}
+
+		public bool HasViewProperties
+		{
+			get { return ViewProperties; }
+		}
+
+		#endregion
+
+
         #region Methods
 
 		/// <summary>
@@ -797,7 +850,7 @@ namespace rkcrm.Searching
 
 			using (CustomerController theController = new CustomerController())
 			{
-				dsPreview = theController.GetSearchPreview(Convert.ToInt32(SelectedItem.Text));
+				dsPreview = theController.GetSearchPreview(Convert.ToInt32(SelectedItem.Text), HasRestoreProject);
 			}
 
 			if (dsPreview.Tables.Count > 2)
@@ -839,12 +892,12 @@ namespace rkcrm.Searching
 						if (Convert.ToDateTime(theRow["creditcard_expiration"]) > DateTime.Today)
 						{
 							DlblCCExpiration.BackColor = Color.LimeGreen;
-							DlblCCExpiration.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Yes";
+							DlblCCExpiration.Text = HasEditCreditExpiration ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Yes";
 						}
 						else
 						{
 							DlblCCExpiration.BackColor = Color.IndianRed;
-							DlblCCExpiration.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Expired";
+							DlblCCExpiration.Text = HasEditCreditExpiration ? Convert.ToDateTime(theRow["creditcard_expiration"]).ToShortDateString() : "Expired";
 						}
 					}
 
@@ -855,12 +908,12 @@ namespace rkcrm.Searching
 						if (Convert.ToDateTime(theRow["tax_id_expiration"]) > DateTime.Today)
 						{
 							DlblTaxExempt.BackColor = Color.LimeGreen;
-							DlblTaxExempt.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Yes";
+							DlblTaxExempt.Text = HasEditTaxExpiration ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Yes";
 						}
 						else
 						{
 							DlblTaxExempt.BackColor = Color.IndianRed;
-							DlblTaxExempt.Text = thisUser.RoleID == ADMINISTRATOR || thisUser.HomeDepartment.ID == 1 ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Expired";
+							DlblTaxExempt.Text = HasEditTaxExpiration ? Convert.ToDateTime(theRow["tax_id_expiration"]).ToShortDateString() : "Expired";
 						}
 					}
 				}
@@ -884,6 +937,17 @@ namespace rkcrm.Searching
 					}
 				}
 			}
+		}
+
+		public override void DetermineAccess()
+		{
+			EditCreditExpiration = thisUser.MyTasks.Contains((int)Tasks.EditCreditExpiration);
+			EditTaxExpiration = thisUser.MyTasks.Contains((int)Tasks.EditTaxExpiration);
+			GotoContact = thisUser.MyTasks.Contains((int)Tasks.GotoContact);
+			GotoCustomer = thisUser.MyTasks.Contains((int)Tasks.GotoCustomer);
+			GotoProject = thisUser.MyTasks.Contains((int)Tasks.GotoProject);
+			RestoreProject = thisUser.MyTasks.Contains((int)Tasks.RestoreProject);
+			ViewProperties = thisUser.MyTasks.Contains((int)Tasks.ViewProperties);
 		}
 
         #endregion
@@ -954,12 +1018,12 @@ namespace rkcrm.Searching
 
 				ShowPreview(e.Item);
 				
-				cmsResults.Items[cmsResults.Items.Count - 2].Visible = !IsCustomer;
-				cmsResults.Items[cmsResults.Items.Count - 1].Visible = IsCustomer;
-				tsmActions.DropDownItems[tsmActions.DropDownItems.Count - 2].Visible = !IsCustomer;
-				tsmActions.DropDownItems[tsmActions.DropDownItems.Count - 1].Visible = IsCustomer;
-				tsMain.Items[tsMain.Items.Count - 2].Visible = !IsCustomer;
-				tsMain.Items[tsMain.Items.Count - 1].Visible = IsCustomer;
+				cmsResults.Items[cmsResults.Items.Count - 2].Visible = !IsCustomer && HasViewProperties;
+				cmsResults.Items[cmsResults.Items.Count - 1].Visible = IsCustomer && HasViewProperties;
+				tsmActions.DropDownItems[tsmActions.DropDownItems.Count - 2].Visible = !IsCustomer && HasViewProperties;
+				tsmActions.DropDownItems[tsmActions.DropDownItems.Count - 1].Visible = IsCustomer && HasViewProperties;
+				tsMain.Items[tsMain.Items.Count - 2].Visible = !IsCustomer && HasViewProperties;
+				tsMain.Items[tsMain.Items.Count - 1].Visible = IsCustomer && HasViewProperties;
 			}
 			else
 				ClearPreview();
@@ -971,31 +1035,41 @@ namespace rkcrm.Searching
 			{
 				if (string.IsNullOrEmpty(lvwResults.SelectedItems[0].SubItems[CUSTOMER_INDEX].Text))
 				{
-					Objects.Contact.Contact newContact = null;
-					NavigationScreen myNavigation = GetNavigationScreen();
-					myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[0];
-
-					using (Objects.Contact.ContactController theController = new Objects.Contact.ContactController())
+					if (HasGotoContact)
 					{
-						newContact = theController.GetContact(Convert.ToInt32(lvwResults.SelectedItems[0].SubItems[CONTACT_ID_INDEX].Text));
-						myNavigation.btnCustomer.MyCustomer = newContact.GetCustomer();
+						Objects.Contact.Contact newContact = null;
+						NavigationScreen myNavigation = GetNavigationScreen();
+						myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[0];
+
+						using (Objects.Contact.ContactController theController = new Objects.Contact.ContactController())
+						{
+							newContact = theController.GetContact(Convert.ToInt32(lvwResults.SelectedItems[0].SubItems[CONTACT_ID_INDEX].Text));
+							myNavigation.btnCustomer.MyCustomer = newContact.GetCustomer();
+						}
+
+						myNavigation.btnCustomer.PerformClick();
+
+						((Objects.Contact.ContactScreen)myNavigation.CurrentScreen).MyContact = newContact;
 					}
-
-					myNavigation.btnCustomer.PerformClick();
-
-					((Objects.Contact.ContactScreen)myNavigation.CurrentScreen).MyContact = newContact;
+					else
+						MessageBox.Show("You do not have sufficient rights to view contact information.", MySettings.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 				else
 				{
-					NavigationScreen myNavigation = GetNavigationScreen();
-					myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0];
-
-					using (CustomerController theController = new CustomerController())
+					if (HasGotoCustomer)
 					{
-						myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(lvwResults.SelectedItems[0].SubItems[0].Text));
-					}
+						NavigationScreen myNavigation = GetNavigationScreen();
+						myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0];
 
-					myNavigation.btnCustomer.PerformClick();
+						using (CustomerController theController = new CustomerController())
+						{
+							myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(lvwResults.SelectedItems[0].SubItems[0].Text));
+						}
+
+						myNavigation.btnCustomer.PerformClick();
+					}
+					else
+						MessageBox.Show("You do not have sufficient rights to view customer information.", MySettings.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
 		}
@@ -1004,29 +1078,50 @@ namespace rkcrm.Searching
 		{
 			if (lvwProjects.SelectedItems.Count > 0)
 			{
-				NavigationScreen myNavigation = GetNavigationScreen();
-				myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[1];
-
-				using (CustomerController theController = new CustomerController())
+				if (HasGotoProject)
 				{
-					myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(lvwProjects.SelectedItems[0].SubItems[1].Text));
-				}
+					NavigationScreen myNavigation = GetNavigationScreen();
+					myNavigation.btnCustomer.trvOptions.SelectedNode = myNavigation.btnCustomer.trvOptions.Nodes[0].Nodes[1];
 
-				myNavigation.btnCustomer.PerformClick();
+					using (CustomerController theController = new CustomerController())
+					{
+						myNavigation.btnCustomer.MyCustomer = theController.GetCustomer(Convert.ToInt32(lvwProjects.SelectedItems[0].SubItems[1].Text));
+					}
 
-				using (ProjectController theController = new ProjectController())
-				{
-					((ProjectScreen)myNavigation.CurrentScreen).MyProject = theController.GetProject(Convert.ToInt32(lvwProjects.SelectedItems[0].SubItems[0].Text));
+					myNavigation.btnCustomer.PerformClick();
+
+					using (ProjectController theController = new ProjectController())
+					{
+						((ProjectScreen)myNavigation.CurrentScreen).MyProject = theController.GetProject(Convert.ToInt32(lvwProjects.SelectedItems[0].SubItems[0].Text));
+					}
 				}
+				else
+					MessageBox.Show("You do not have sufficient rights to view project information.", MySettings.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 		}
 
         #endregion
 
 
-        #region Constructor
+		#region Enumerations
 
-        public CustomerSearchScreen()
+		private enum Tasks
+		{
+			EditCreditExpiration = 17,
+			EditTaxExpiration = 16,
+			GotoContact = 5,
+			GotoCustomer = 4,
+			GotoProject = 6,
+			RestoreProject = 38,
+			ViewProperties = 20
+		};
+
+		#endregion
+
+
+		#region Constructor
+
+		public CustomerSearchScreen()
             : base()
         {
             InitializeComponent();
@@ -1052,6 +1147,8 @@ namespace rkcrm.Searching
 
 			//These columns are named so that they can be found by the rkcrm.Searching.CustomerDropDown object
 			chProjectCustomerID.Name = "chCustomerID";
+
+			DetermineAccess();
         }
 
         #endregion

@@ -803,7 +803,7 @@ namespace rkcrm.Objects.Customer
 
 			using (CustomerController theController = new CustomerController())
 			{
-				dsPreview = theController.GetSearchPreview(MyCustomer.ID);
+				dsPreview = theController.GetSearchPreview(MyCustomer.ID, thisUser.RoleID == 1);
 				dtActivityStatuses = theController.GetActivityStatuses(MyCustomer.ID);
 			}
 
