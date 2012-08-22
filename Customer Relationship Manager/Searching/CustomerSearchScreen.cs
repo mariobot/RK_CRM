@@ -631,7 +631,7 @@ namespace rkcrm.Searching
 							switch (((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex].Name)
 							{
 								case "tsmEdit":
-									if (myItems.GotoContactIsAccessible)
+									if (myItems.HasGotoContact)
 									{
 										cmsResults.Items.Insert(4, ((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex]);
 										cmsResults.Items.Insert(5, new ToolStripSeparator());
@@ -640,7 +640,7 @@ namespace rkcrm.Searching
 										internalIndex++;
 									break;
 								case "tsmProperties":
-									if (myItems.PropertiesIsAccessible)
+									if (myItems.HasViewProperties)
 									{
 										((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex].Visible = false;
 										cmsResults.Items.Insert(cmsResults.Items.Count - 1, ((ToolStripDropDownButton)myItems.Items[index]).DropDownItems[internalIndex]);
@@ -659,7 +659,7 @@ namespace rkcrm.Searching
 						switch (myItems.Items[index].Name)
 						{
 							case "tsbEdit":
-								if (myItems.GotoContactIsAccessible)
+								if (myItems.HasGotoContact)
 								{
 									tsMain.Items.Insert(4, myItems.Items[index]);
 									tsMain.Items.Insert(5, new ToolStripSeparator());
@@ -668,7 +668,7 @@ namespace rkcrm.Searching
 									index++;
 								break;
 							case "tsbProperties":
-								if (myItems.PropertiesIsAccessible)
+								if (myItems.HasViewProperties)
 								{
 									myItems.Items[index].Visible = false;
 									tsMain.Items.Insert(tsMain.Items.Count - 1, myItems.Items[index]);
@@ -693,7 +693,7 @@ namespace rkcrm.Searching
 							switch (((ToolStripDropDownButton)oItem).DropDownItems[index].Name)
 							{
 								case "tsmEdit":
-									if (myItems.GotoContactIsAccessible)
+									if (myItems.HasGotoContact)
 									{
 										tsmActions.DropDownItems.Insert(4, ((ToolStripDropDownButton)oItem).DropDownItems[index]);
 										tsmActions.DropDownItems.Insert(5, new ToolStripSeparator());
@@ -702,7 +702,7 @@ namespace rkcrm.Searching
 										index++;
 									break;
 								case "tsmProperties":
-									if (myItems.PropertiesIsAccessible)
+									if (myItems.HasViewProperties)
 									{
 										((ToolStripDropDownButton)oItem).DropDownItems[index].Visible = false;
 										tsmActions.DropDownItems.Insert(tsmActions.DropDownItems.Count - 1, ((ToolStripDropDownButton)oItem).DropDownItems[index]);

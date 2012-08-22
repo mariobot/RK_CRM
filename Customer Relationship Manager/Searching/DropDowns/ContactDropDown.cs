@@ -43,22 +43,22 @@ namespace rkcrm.Searching.DropDowns
 
 		#region Properties
 
-		public bool DeleteIsAccessible
+		public bool HasDelete
 		{
 			get { return bolDeleteIsAccessible; }
 		}
 
-		public bool RestoreIsAccessible
+		public bool HasRestore
 		{
 			get { return bolRestoreIsAccessible; }
 		}
 
-		public bool GotoContactIsAccessible
+		public bool HasGotoContact
 		{
 			get { return bolGotoContactIsAccessible; }
 		}
 
-		public bool PropertiesIsAccessible
+		public bool HasViewProperties
 		{
 			get { return bolPropertiesIsAccessible; }
 		}
